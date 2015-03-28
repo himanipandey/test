@@ -13,6 +13,7 @@ include("builder_function.php");
 include("function/functions_priority.php");
 include("common/function.php");
 include("imageService/image_upload.php");
+include_once("includes/send_mail_amazon.php");
 
 AdminAuthentication();
 
@@ -276,8 +277,7 @@ if($_POST['task']=='createComp'){
 
            
     
-    if($mode=='update' && $id!==null){
-        
+    if($mode=='update' && $id!==null){      
         $imageId = $_POST['imageId'];
         $signupformId = $_POST['formId'];
         
@@ -533,6 +533,7 @@ if($_POST['task']=='createComp'){
 
                     
                 }
+                
             }
 
 /****************** save images to Image Service ************************************************/
@@ -695,12 +696,24 @@ if($_POST['task']=='createComp'){
                     $signup = "'{$bef['formSignUpDate']}'";
 
                 $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
-                //die($query);
-
-               
                 $res = mysql_query($query) or die(mysql_error());
+                
+                $sqlCompCode = "SELECT id FROM company_code ORDER BY id DESC LIMIT 1";
+                $resCompCode = mysql_query($sqlCompCode) or die(mysql_error());
+                $dataCompCode= mysql_fetch_assoc($resCompCode);
+                $compCodeId = $dataCompCode['id']+1;
+                
+                $insertCompCodeSqlStr = "INSERT INTO company_code(ID,COMPANY_ID) VALUES({$compCodeId},{$comp_id})";
+                $resInsert = mysql_query($insertCompCodeSqlStr) or die(mysql_error());
+                $channel_partner_id = mysql_insert_id();
+                $channel_partner_id = str_pad($channel_partner_id, 4, '0', STR_PAD_LEFT);
+                
+                $sqlCity = "SELECT ABBREVIATION FROM city WHERE CITY_ID={$bef['signUpBranch']}";
+                $resCity = mysql_query($sqlCity) or die(mysql_error());
+                $dataCity= mysql_fetch_assoc($resCity);
+                $channel_partner_code = $dataCity["ABBREVIATION"]."CP".$channel_partner_id."".date("my");
 
-                $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
+                $query = "update company set active_since='{$bef['since_op']}', unique_code='{$channel_partner_code}' where id='{$comp_id}'";
                 $res = mysql_query($query) or die(mysql_error());
 
                 if($bef['projectType']){
@@ -744,6 +757,13 @@ if($_POST['task']=='createComp'){
                     $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
                     $res = mysql_query($query) or die(mysql_error());
                 }
+                
+                $sqlPtManager = "SELECT pa.ADMINEMAIL as pt_manager_email FROM proptiger.PROPTIGER_ADMIN pa WHERE pa.ADMINID={$bef['ptManager']}";
+                $resPtManager = mysql_query($sqlPtManager) or die(mysql_error());
+                $dataPtManager=mysql_fetch_assoc($resPtManager);
+                $options = array('to'=>$email,'agent_id'=>$channel_partner_code, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email']);
+                send_mail($options);
+                
             }
 
 /****************** save images to Image Service ************************************************/
@@ -810,6 +830,36 @@ if($_POST['task']=='createComp'){
             echo "3";
     }
        
+}
+
+function send_mail($options){
+    $agent_name = ucwords($options['agent_name']);
+    $options['subject'] = 'Welcome to PropTiger.com! Your Channel Partner Code Confirmation';
+    $options['sender'] = 'no-reply@proptiger.com';
+    $options['message'] = "<table width='938' border='1' style='width:562.5pt;border:solid #333333 1.0pt'>"
+            . "<tr><td style='border:none;background:whitesmoke;padding:0in 0in 0in 0in'> "
+            . "<table width='938' style='width:562.5pt'>"
+            . "<tr><td width='656' style='width:393.75pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "<p style='line-height:105%'><img width='190' height='65' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_logo.jpg'></p></td>"            
+            . "<td width='281' style='width:168.75pt;padding:0in 0in 0in 0in'><p style='line-height:105%'>"
+            . "<img width='218' height='35' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_url.jpg'></p></td></tr>"
+            . "</table></td></tr><tr><td style='border:none;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "Dear {$agent_name}, <br>"
+            . "<p>We would like to thank you for choosing PropTiger.com. "
+            . "We have received your signed channel partner signup form and "
+            . "we are delighted to inform that you have been successfully empanelled with us. </p>"
+            . "<p><b>Your Unique Channel Partner Code is “{$options['agent_id']}” </b> <br><br>"
+            . "Please use this Unique Code for all future communications with PropTiger.com <br><br>"
+            . "Our customer service team is there to assist you for any further query / support you need in this regard. "
+            . "Feel free to contact us at +91 92788 92788 or email to customer.service@proptiger.com for any query / support.<br> </p>"
+            . "Thanking you,<br>"
+            . "Customer Service Team <br>"
+            . "PropTiger.com<br>"
+            . "<small>Note : This is system generated email, therefore; please do not reply <small>"
+            . "</td></tr></table>";
+    
+    
+    sendMailFromAmazon($options['to'], $options['subject'], $options['message'], $options['sender'], $options['cc'], null, false);
 }
 
     

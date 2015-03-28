@@ -1303,6 +1303,16 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                {if $projectBrochure}
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Project Brochure:</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{$projectBrochure}">Project Brochure</a>
+                                                    </td>
+                                                 </tr>
+                                                 {/if}
                                                  <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Application Form:</b>
