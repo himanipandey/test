@@ -184,6 +184,7 @@ function editListing(str){
       $("#name").val(jsonDump.owner_name);
       $("#email").val(jsonDump.owner_email);
       $("#number").val(jsonDump.owner_number);
+      $("#alt_number").val(jsonDump.alt_owner_number);
 
       $("#total_floor1").val(jsonDump.total_floor);
 
@@ -601,6 +602,7 @@ $("#lmkSave").click(function(){
     var owner_name = $("#name").val().trim();
     var owner_email = $("#email").val().trim();
     var owner_number = $("#number").val().trim();
+    var alt_owner_number = $("#alt_number").val().trim();
     if(broker_id==pt_broker_id){
           
 
@@ -622,6 +624,12 @@ $("#lmkSave").click(function(){
               alert('Enter Only numeric owner contact no.');
             return false;
             }
+          }
+          if(alt_owner_number !=""){
+               if(!isNumeric(alt_owner_number)){
+                  alert('Enter Only numeric contact no.');
+                  return false;
+                }
           }
             
 
@@ -677,6 +685,7 @@ $("#lmkSave").click(function(){
     var owner_name = $("#name").val().trim();
     var owner_email = $("#email").val().trim();
     var owner_number = $("#number").val().trim();
+    var alt_owner_number = $("#alt_number").val().trim();
 
     var facing = $("#facing2 :selected").val();
     if(facing=='')
@@ -874,7 +883,7 @@ $("#lmkSave").click(function(){
               $("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
 
 
 
@@ -1568,6 +1577,19 @@ function getParameterByName(name) {
                               <td id="name2">
                                   <input type=text name="name" id="name"  style="width:150px;">
                               </td>
+                              
+                              <td id="number1">
+
+                                <font id="number_font" color="red" style="display:none">
+                                    *
+                                </font>
+                                Contact Number:
+                              </td>
+                              <td class="number2">
+                                <input type=text name="number" id="number" style="width:150px;">
+                              </td> 
+                              
+                              
                         </tr>
                         <tr id="name_number2">      
                               <td id="email1">
@@ -1582,10 +1604,10 @@ function getParameterByName(name) {
                                 <font id="number_font" color="red" style="display:none">
                                     *
                                 </font>
-                                Contact Number:
+                                Alternate Contact Number:
                               </td>
                               <td class="number2">
-                                <input type=text name="number" id="number" style="width:150px;">   
+                                <input type=text name="alt_number" id="alt_number" style="width:150px;">   
                                 <input type=hidden value="{$proptiger_broker_id}" name="pt_broker_id" id="pt_broker_id" style="width:100px;">  
                               </td>          
                         </tr>

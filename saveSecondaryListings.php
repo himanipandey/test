@@ -160,6 +160,7 @@ else {
     $owner_name = $_POST['owner_name'];
     $owner_email = $_POST['owner_email'];
     $owner_number = $_POST['owner_number'];
+    $alt_owner_number = $_POST['alt_owner_number'];
 
     $tower = $_POST['tower'];
     $phaseId = $_POST['phase_id'];
@@ -194,6 +195,8 @@ else {
         $jsonDump['owner_email'] = $owner_email;
     if(isset($owner_number) && !empty($owner_number))
         $jsonDump['owner_number'] = $owner_number;
+    if(isset($alt_owner_number) && !empty($alt_owner_number))
+        $jsonDump['alt_owner_number'] = $alt_owner_number;
         
 
 
