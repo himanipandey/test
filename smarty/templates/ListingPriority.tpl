@@ -59,7 +59,7 @@ function downloadClick(){
 
 function isNumeric(val) {
     var validChars = '0123456789.';
-    var validCharsforfirstdigit = '-01234567890';
+    var validCharsforfirstdigit = '-123456789';
     if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
         return false;    
 
@@ -621,18 +621,23 @@ $("#lmkSave").click(function(){
             return false;
           } else {
             if(!isNumeric(owner_number)){
-              alert('Enter Only numeric owner contact no.');
-            return false;
+                alert('Enter Only numeric owner contact no.');
+                return false;
             }
           }
-          if(alt_owner_number !=""){
-               if(!isNumeric(alt_owner_number)){
-                  alert('Enter Only numeric contact no.');
-                  return false;
-                }
-          }
+          
             
 
+    }
+    if(owner_number !="" && owner_number != null && !isNumeric(owner_number)){
+        alert('Enter Only numeric owner contact no.');
+        return false;
+    }
+    if(alt_owner_number !=""){
+        if(!isNumeric(alt_owner_number)){
+           alert('Enter Only numeric alternate contact no.');
+           return false;
+         }
     }
           
     
@@ -1410,11 +1415,11 @@ function populate_total_floor(){
                 });
 }
 
-function isNumeric(val) {
+/*function isNumeric(val) {
         var validChars = '0123456789';
-        //var validCharsforfirstdigit = '1234567890';
-        /*if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
-                return false;*/
+        var validCharsforfirstdigit = '1234567890';
+        if(validCharsforfirstdigit.indexOf(val.charAt(0)) == -1)
+                return false;
         
 
         for(var i = 1; i < val.length; i++) {
@@ -1424,7 +1429,7 @@ function isNumeric(val) {
 
 
         return true;
-}
+}*/
 
 
 function getParameterByName(name) {

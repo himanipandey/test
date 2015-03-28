@@ -69,6 +69,7 @@ try {
                     "Serial" => $start + $k + 1,
                     "City" => $v->property->project->locality->suburb->city->label,
                     "BrokerName" => $v->seller->brokerName,
+                    "ProjectId" => $v->property->project->projectId,
                     "Project" => $v->property->project->name . ", " . $v->property->project->builder->name,
                     "Listing" => $v->property->unitName . "-" . $v->property->size . "-" . $v->property->unitType,
                     "Price" => $price,
@@ -83,6 +84,8 @@ try {
     <tr bgcolor='#f2f2f2'>
     <td>Serial</td>
     <td>Listing Id</td>
+    <td>Project Id</td>
+    <td>Project Name</td>
     <td>City</td>
     <td>Broker Name</td>
     <td>Listing</td>
@@ -92,6 +95,8 @@ try {
         foreach ($tbsorterArr['rows'] as $row) {
             $pdf_content .= "<tr  bgcolor='#FFFFFF' valign='top'><td>".$row['Serial']."</td>";
             $pdf_content .= "<td>".$row['ListingId']."</td>";
+            $pdf_content .= "<td>".$row['ProjectId']."</td>";
+            $pdf_content .= "<td>".$row['Project']."</td>";
             $pdf_content .= "<td>".$row['City']."</td>";
             $pdf_content .= "<td>".$row['BrokerName']."</td>";
             $pdf_content .= "<td>".$row['Listing']."</td>";
