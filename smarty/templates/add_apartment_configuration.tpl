@@ -45,7 +45,7 @@
 
 	 function show_add(id)
 	 {
-		var idValue=id+1;
+		/*var idValue=id+1;
 		var id = "add_"+(id+1);
 		var unitName=$("#txtUnitName_"+idValue).val();
 		var txtPricePerUnitArea=$("#txtPricePerUnitArea_"+idValue).val();
@@ -58,7 +58,7 @@
 		else
 		{
 			document.getElementById(id).style.display = 'none';
-		}
+		}*/
 
 	 }
 /*******function for deletion confirmation***********/
