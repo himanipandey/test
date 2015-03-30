@@ -80,7 +80,40 @@ $dailyEmail = array(
             'attachmentname'=>'expired_project_offers',
             'message'=>"Please extend the offers validity otherwise they will be deactivated.",
             'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>"SELECT options_id,project_id,CARPET_AREA,SIZE FROM `resi_project_options` group by options_id having (((CARPET_AREA / SIZE) *100) < 60 OR ((CARPET_AREA / SIZE) *100) > 80);",
+            'subject'=>'configurations where carpet area is <60% or more than 80%',
+            //'recipients'=>array('ankur.dhawan@proptiger.com','Suneel.kumar@proptiger.com'), 
+            'recipients'=>array('kuldeep.patel_c@proptiger.com'),
+            'attachmentname'=>'Project Configurations',
+            'message'=>"configurations where carpet area is <60% or more than 80%",
+            'sendifnodata'=>0
+        ),
+        array(
+            'sql'=>"SELECT ls.id Listing_ID, ls.created_at Created_Date, c.name Company, cu.name Seller, ph.PROJECT_ID Project_ID, po.options_id Option_id, po.option_name BHK ,tw.Tower_Name Tower, ls.floor Floor_NO, ls.flat_number Flat_NO, lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE 
+                FROM listings ls 
+                inner JOIN resi_project_phase ph ON ls.phase_id = ph.PHASE_ID AND ph.version='Cms' AND ph.STATUS='Active' and ls.status = 'Active' and ls.listing_category !='Primary'
+                inner JOIN resi_project p ON ph.PROJECT_ID = p.PROJECT_ID  and p.version = 'Cms'
+                inner JOIN listing_prices lp ON ls.current_price_id = lp.id 
+                inner JOIN resi_project_options po ON ls.option_id = po.options_id and po.OPTION_CATEGORY !='logical'
+                inner join 
+(SELECT  ls.option_id Option_id,ls.tower_id Tower_id,  lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE 
+                FROM listings ls 
+                inner JOIN listing_prices lp ON ls.current_price_id = lp.id and ls.status = 'Active' and ls.listing_category = 'Resale'
+                where 1=1 GROUP BY ls.option_id,ls.tower_id,UNIT_PRICE,ABS_PRICE HAVING count(*)>1) new2 on po.options_id = new2.Option_id 
+                and (ls.tower_id = new2.Tower_id or ls.tower_id is null) and (lp.price_per_unit_area = new2.UNIT_PRICE and lp.price = new2.ABS_PRICE)
+                LEFT JOIN resi_project_tower_details tw ON ls.tower_id = tw.tower_id 
+                LEFT JOIN company_users cu ON ls.seller_id = cu.user_id
+                LEFT JOIN company c ON cu.company_id = c.id order by Option_id",
+            'subject'=>'Duplicate listings',
+//            'recipients'=>array('jitendra.pathak@proptiger.com'), 
+            'recipients'=>array('suneel.kumar@proptiger.com', 'prakash.kanyal@proptiger.com'),
+            'attachmentname'=>'Duplicate Listings',
+            'message'=>"Hi, Please find the attached list of duplicate listings inserted yesterday",
+            'sendifnodata'=>0
         )
+        
 );
 
 $weeklyEmail = array(
