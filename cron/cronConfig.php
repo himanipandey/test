@@ -90,7 +90,7 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "select rpors.options_id, rpo.project_id , rpo.size,   
+        'sql' => "select rpors.options_id, rpo.project_id , option_name, options_type, rpo.size,   
     sum(((IFNULL(room_length,0)*12 + IFNULL(room_length_inch,0))/12)*((IFNULL(room_breath,0)*12 + IFNULL(room_breath_inch,0)))/12) as carpet_area
         from resi_proj_options_room_size rpors
     inner join resi_project_options rpo on  rpo.options_id = rpors.options_id   
