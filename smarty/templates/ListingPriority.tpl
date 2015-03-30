@@ -52,7 +52,12 @@ function submitButton(){
     return false;
 }
 function downloadClick(){
-    window.location.href="{$dirname}/ajax/downloadListing.php";
+    var cityId = $("#citydd :selected").val();
+    var subUrl = "";
+    if(cityId != "" && cityId != null){
+        subUrl = "cityId="+cityId;
+    }
+    window.location.href="{$dirname}/ajax/downloadListing.php?" + subUrl;
     
     return false;
 }

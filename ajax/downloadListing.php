@@ -23,9 +23,14 @@ try {
     }
 
     if ($cookie_new != '') {
-
+        
+        $cityId = $_REQUEST['cityId'];
+        $cityUrl = "";
+        if(isset($cityId)){
+            $cityUrl = "&cityId=".$cityId;
+        }
         $fields = "seller,seller.fullName,id,listing,listing.createdAt,listing.facingId,listing.jsonDump,listing.description,listing.remark,listing.homeLoanBankId,listing.flatNumber,listing.noOfCarParks,listing.negotiable,listing.transferCharges,listing.plc,listing.towerId,listing.phaseId,property,property.propertyId,property.project.name,property.projectId,property.project.builder,property.project.locality,property.project.locality.suburb,property.project.locality.suburb.city,listingAmenities.amenity,listingAmenities.amenity.amenityMaster,label,masterAmenityIds,name,unitType,unitName,size,currentListingPrice,localityId,floor,pricePerUnitArea,price,otherCharges,jsonDump,latitude,longitude,amenityDisplayName,isDeleted,bedrooms,bathrooms,amenityId";
-        $uriListing = LISTING_API_URL . "?listingCategory=Resale&fields={$fields}";
+        $uriListing = LISTING_API_URL . "?listingCategory=Resale{$cityUrl}&fields={$fields}";
 
         $responseLists = \Httpful\Request::get($uriListing)->addHeader("COOKIE", $cookie_new)->send();
 
