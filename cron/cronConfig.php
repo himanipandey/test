@@ -82,12 +82,12 @@ $dailyEmail = array(
             'sendifnodata'=>0
         ),
         array(
-            'sql'=>"SELECT options_id,project_id,CARPET_AREA,SIZE FROM `resi_project_options` group by options_id having (((CARPET_AREA / SIZE) *100) < 60 OR ((CARPET_AREA / SIZE) *100) > 80);",
-            'subject'=>'configurations where carpet area is <60% or more than 80%',
+            'sql'=>"select option_id, project_id, option_name, options_type from resi_project_options where date(created_at) >='".$past_date ."';",
+            'subject'=>'New Configurations',
             //'recipients'=>array('ankur.dhawan@proptiger.com','Suneel.kumar@proptiger.com'), 
             'recipients'=>array('kuldeep.patel_c@proptiger.com'),
-            'attachmentname'=>'Project Configurations',
-            'message'=>"configurations where carpet area is <60% or more than 80%",
+            'attachmentname'=>'New Configurations',
+            'message'=>"Configurations which have been created yesterday",
             'sendifnodata'=>0
         )
         
