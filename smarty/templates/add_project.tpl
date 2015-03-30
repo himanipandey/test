@@ -142,7 +142,7 @@
 					}
 				});
 		  }
-		  var value = $('select[name="skipUpdationCycle"]').val();
+		  var value = $('select[name="skip_b2b"]').val();
 		 if(value=="0"){
 			$(".skipUpdationCycleBlock").hide();
 		}
@@ -882,7 +882,8 @@
                                                            
                                                            
                                                            
-                               <tr>                         {if $skipUpdtnCycle == 1}
+                                                        <!--<tr>
+                                                            {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
@@ -894,7 +895,20 @@
                                                             {else}
                                                             {/if}
                                                             
-							   </tr>
+							   </tr> -->
+                                                           
+                                                           {if $skipUpdtnCycle == 1}
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
+                                                                        <select name="skip_b2b" onchange="skipUpdationCycleChanged(this.value)">
+                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
+                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
+                                                                        </select>
+                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
+                                                                    </td>
+                                                                    <td width="50%" align="left"><font color="red"></font></td>
+                                                                </tr>
+                                                            {/if}
 
                                                            {if $skipUpdtnCycle == 1}
                                                             {if array_key_exists('SkipUpdationCycleRemark',$projectComments)}   
@@ -918,18 +932,7 @@
                                                                    </td>
                                                             </tr>
                                                             {/if}
-                                                            {if $skipUpdtnCycle == 1}
-                                                                <tr>
-                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
-                                                                        <select name="skip_b2b">
-                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
-                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
-                                                                        </select>
-                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
-                                                                    </td>
-                                                                    <td width="50%" align="left"><font color="red"></font></td>
-                                                                </tr>
-                                                            {/if}
+                                                            
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
