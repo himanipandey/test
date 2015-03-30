@@ -74,7 +74,7 @@ $('document').ready(function(){
 //price change event handler
 
 	$('#prs5').click(function(){
-		//$('#prs3').show(1);
+//		$('#prs3').show(1);
 		if($('#prs5 :selected').val() == '2'){	
 			//$('#other_charges').show();
 			$('#othr_prs2').show();
@@ -86,6 +86,7 @@ $('document').ready(function(){
 			$('#other_charges').hide();
 			$('#othr_prs2').hide();
 			$('#pr').show();
+                        $('#othr_prs2').val('');
 		}
 	}); 
 
