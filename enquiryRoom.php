@@ -74,7 +74,7 @@ if (isset($_POST['newRoom'])) {
             $updatedBy = $_SESSION['adminId'];
             $createdAt = $createdAt;
 
-            if (($lengthFT == '' && $breathFT == '') || $catID == '') {
+            if ((($lengthFT == '' &&  $lengthIH == '') || ($breathFT == '' && $breathIH == '')) || $catID == '') {
                 continue;
             }
 

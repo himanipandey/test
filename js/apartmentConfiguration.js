@@ -50,7 +50,7 @@ $(document).ready(function () {
                             <TH><b>Length(ft)</b><font color='red'>*</font></TH>\n\
                             <TH><b>Length(inch)</b></TH>\n\
                             <TH><b>Breath(ft)</b><font color='red'>*</font></TH>\n\
-                            <TH><b>Length(inch)</b></TH>\n\
+                            <TH><b>Breath(inch)</b></TH>\n\
                         </TR>";
 
                 var j = 1;
