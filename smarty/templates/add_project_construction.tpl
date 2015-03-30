@@ -28,7 +28,7 @@
         return baseURL + "?" + newAdditionalURL + rows_txt;
     }
 
-    function construction_status(EffectiveDateList)
+    function construction_status_validation(EffectiveDateList)
     {
         var flag = 'no';
         if ($("#phaseSelect").val() == -1) {
@@ -383,7 +383,7 @@
                                                                 <td width="90%" align='left' colspan='2'>
                                                                     <input type = "hidden" name = "updateOrInsertRow" id = "updateOrInsertRow">
                                                                     <input type = "hidden" name = "oldCompletionDate" id = "oldCompletionDate" value="{$oldCompletionDate}">
-                                                                    <input type="submit" name="btnSave" id="btnSave" value="Submit"  onclick="return construction_status('{$EffectiveDateList}');"/>
+                                                                    <input type="submit" name="btnSave" id="btnSave" value="Submit"  onclick="return construction_status_validation('{$EffectiveDateList}');"/>
                                                                 </td> 
                                                             </tr>
                                                             {/if}
