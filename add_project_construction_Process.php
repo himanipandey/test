@@ -78,7 +78,7 @@ foreach ($phaseDetail as $k => $val) {
 $smarty->assign("phaseId", $phaseId);
 $smarty->assign("phases", $phases);
 
-$smarty->assign("construction_status", $phaseDetail[0]['CONSTRUCTION_STATUS']);
+$smarty->assign("construction_status", $qrySelect->construction_status);
 
 //end code for phase edit dropdown
 
