@@ -105,7 +105,7 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "select option_id, project_id, option_name, options_type from resi_project_options where date(created_at) >='" . $past_date . "';",
+        'sql' => "select options_id, project_id, option_name, option_type, size from resi_project_options where date(created_at) >='" . $past_date . "';",
         'subject' => 'New Configurations',
         'recipients' => array('ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'New Configurations',
@@ -113,7 +113,7 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "select rpors.options_id, rpo.project_id , option_name, options_type, rpo.size,   
+        'sql' => "select rpors.options_id, rpo.project_id , rpo.option_name, rpo.option_type, rpo.size,   
     sum(((IFNULL(room_length,0)*12 + IFNULL(room_length_inch,0))/12)*((IFNULL(room_breath,0)*12 + IFNULL(room_breath_inch,0)))/12) as carpet_area
         from resi_proj_options_room_size rpors
     inner join resi_project_options rpo on  rpo.options_id = rpors.options_id   
