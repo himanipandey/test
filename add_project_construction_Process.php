@@ -197,7 +197,7 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
     }
     
     if (($construnction_status == UNDER_CONSTRUCTION_ID_1 || $construnction_status == LAUNCHED_ID_7) && !(($fetch_projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $fetch_projectDetail[0]['PROJECT_PHASE_ID'] == 2) || ($fetch_projectDetail[0]['PROJECT_STAGE_ID'] == 2 && $fetch_projectDetail[0]['PROJECT_PHASE_ID'] == 1))) {
-        $construction_status_text = ($construction_status == UNDER_CONSTRUCTION_ID_1) ? "Under construction" : "Launched";
+        $construction_status_text = ($construnction_status == UNDER_CONSTRUCTION_ID_1) ? "Under construction" : "Launched";
         $yearExp = explode("-", $launchDate);
         $yearExp2 = explode("-", $expectedCompletionDate);
 
