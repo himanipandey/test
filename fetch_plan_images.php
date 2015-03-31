@@ -54,6 +54,39 @@ if ($objectType == 'property') {
             array_push($ImageDataListingArrFloor, $data);
         }
     }
+    $cnt = 0;
+    $html = '';
+    foreach ($ImageDataListingArr as $data) {
+
+        $partsFloor = explode('.', $$data['IMAGE_URL']);
+        $lastFloor = array_pop($partsFloor);
+        $strFloor1 = implode('.', $partsFloor);
+        $strFloor1 = $strFloor1 . '-thumb';
+        $strFloor2 = $strFloor1 . '.';
+        $finalStrWithThumbFloor = $strFloor2 . $last;
+
+        if ($cnt != 0 && $cnt % 4 == 0) {
+            $html .= "</tr><tr bgcolor='#ffffff'>";
+        }
+
+        $html .= '<td class = "tdcls_' . $cnt . '" >';
+        $html .= '<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">';
+        $html .= '<a class="pt_reqflrplan" href="' . $data['IMAGE_URL'] . '" target="_blank">';
+        $html .= '<img src="' . $data['thumb_path'] . '" height="70px" width="70px" title = "' . $data['IMAGE_URL'] . '" alt ="' . $data['alt_text'] . '" />';
+        $html .= '</a>';
+        $html .= '<br/>';
+        $html .= '<b>	Image Title : </b>' . $data['NAME'] . '}<br><br>';
+        $html .= '<b> Unit :</b> ' . $data['UNIT_NAME'];
+        $html .= ' (' . ($data['SIZE'] != '') ? $data['SIZE'] : '';
+        $html .= ' ' . ($data['CARPET_AREA'] != '' && $data['SIZE'] != '') ? $data['CARPET_AREA'] . '(Carpet)' : '';
+        $html .= ', ' . $data['MEASURE'];
+        $html .= ', ' . $data['UNIT_TYPE'];
+
+        $html .= '</div>';
+        $html .= '</td>';
+
+        $cnt++;
+    }
 } elseif ($objectType == 'project') {
     $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
 
@@ -105,9 +138,7 @@ if ($objectType == 'property') {
             if ($v1['TOWER_ID'] == $data['tower_id'])
                 $data['TOWER_NAME'] = $v1['TOWER_NAME'];
         }
-        //echo $data['tower_id'];
-        //if($data['tower_id'] == 0) $data['TOWER_NAME']="Other";
-        //var_dump($data['tower_id']);
+       
         $data['PROJECT_ID'] = $v->objectId;
         $data['STATUS'] = $v->active;
         $data['thumb_path'] = $v->absolutePath . "?width=130&height=100";
@@ -118,12 +149,12 @@ if ($objectType == 'property') {
     $html = '';
     foreach ($ImageDataListingArr as $data) {
 
-         $partsFloor = explode('.', $$data['IMAGE_URL']);
-         $lastFloor = array_pop($partsFloor);
-         $strFloor1 = implode('.', $partsFloor);
-         $strFloor1 = $strFloor1.'-thumb';
-         $strFloor2 = $strFloor1.'.';
-         $finalStrWithThumbFloor = $strFloor2.$last;
+        $parts = explode('.', $data['PLAN_IMAGE']);
+        $last = array_pop($parts);
+        $str1 = implode('.', $parts);
+        $str1 = $str1 . '-thumb';
+        $str2 = $str1 . '.';
+        $finalStrWithThumb = $str2 . $last;
 
         if ($cnt != 0 && $cnt % 4 == 0) {
             $html .= "</tr><tr bgcolor='#ffffff'>";
@@ -131,24 +162,29 @@ if ($objectType == 'property') {
 
         $html .= '<td class = "tdcls_' . $cnt . '" >';
         $html .= '<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">';
-        
-        $html .= '<a class="pt_reqflrplan" href="'.$data['IMAGE_URL'].'" target="_blank">';
-        $html .= '<img src="'.$data['thumb_path'].'" height="70px" width="70px" title = "'.$data['IMAGE_URL'].'" alt ="'.$data['alt_text'].'" />';
+
+        $html .= '<a class="pt_reqflrplan" href="' . $data['PLAN_IMAGE'] . '" target="_blank">';
+        $html .= '<img src="' . $data['thumb_path'] . '" height="70px" width="70px" title = "' . $data['PLAN_IMAGE'] . '" alt ="' . $data['alt_text'] . '" />';
         $html .= '</a>';
-        
+
         $html .= '<br/>';
-        $html .= '<b>	Image Title : </b>'.$data['NAME'].'}<br><br>';
+        $html .= '<b>Image Type : </b>' . $data['PLAN_TYPE'] . '<br><br>';
+        $html .= '<br/>';
+        $html .= '<b>Image Title : </b>' . $data['TITLE'] . '<br><br>';
         
-        $html .= '<b> Unit :</b> '.$data['UNIT_NAME'];
-        
-        $html .= ' ('.($data['SIZE'] != '')?$data['SIZE']:'';
-        
-        $html .= ' '.($data['CARPET_AREA'] != '' && $data['SIZE'] != '')?$data['CARPET_AREA'].'(Carpet)':'';
-        
-        $html .= ', '.$data['MEASURE'];
-        
-        $html .= ', '.$data['UNIT_TYPE'];
-        
+        if ($data['PLAN_TYPE'] == 'Construction Status') {
+            $html .= '<b>Tagged Date : </b>' . date('F Y', strtotime($data['tagged_month'])) . '<br><br>';
+            $html .= '<b>Tagged Tower : </b>' . ($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '' . '<br><br>';
+        }
+
+        if ($data['PLAN_TYPE'] == 'Project Image') {
+            $html .= '<b>Display Order : </b>' . $data['display_order'] . '<br><br>';
+           
+        }
+
+        if ($data['PLAN_TYPE'] == 'Cluster Plan') {            
+            $html .= '<b>Tagged Tower : </b>' . ($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '' . '<br><br>';
+        }
 
 
         $html .= '</div>';
@@ -158,10 +194,12 @@ if ($objectType == 'property') {
     }
 }
 
-
-//print "<pre>" . print_r($ImageDataListingArr, 1) . "</pre>";
 ?>
 <?php
-
-echo $html;
+    if($html == ''){
+       echo '<td>Data not found!</td>'; 
+    }else{
+       echo $html; 
+    }
+        
 ?>
