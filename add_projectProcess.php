@@ -106,7 +106,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $special_offer = trim($_POST["special_offer"]);
         $offer_heading = trim($_POST["offer_heading"]);
         $offer_desc = trim($_POST["offer_desc"]);
-        $skipUpdationCycle = $_POST["skipUpdationCycle"];
+//        $skipUpdationCycle = $_POST["skipUpdationCycle"];
         $updationCycleIdOld = $_POST["updationCycleIdOld"];
         $numberOfTowers = $_POST["numberOfTowers"];
         $completionDate = $_POST["completionDate"];
@@ -213,7 +213,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
         $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
-        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
+//        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
         $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
         $smarty->assign("numberOfTowers", $numberOfTowers);
         $smarty->assign("completionDate", $completionDate);
