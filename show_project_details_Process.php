@@ -248,7 +248,7 @@ foreach ($imgPath->data as $k => $v) {
 
 $smarty->assign("ImageDataListingArr", $ImageDataListingArr);
 
-$ImageDataListingArrFloor = allProjectFloorImages($projectId);
+//$ImageDataListingArrFloor = allProjectFloorImages($projectId);
 //print'<pre>';
 //print_r($ImageDataListingArr);
 $ImageDataListingArrFloor = array();
