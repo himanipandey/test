@@ -315,6 +315,7 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
                              where PROJECT_ID = $projectId and version = 'Cms'";
             $success = mysql_query($qry) OR die(mysql_error() . " project update");
             projectStatusUpdate($projectId);//update project status
+            updateD_Availablitiy($projectId); // update D_availability
         }
         if ($success)
         //header("Location:ProjectList.php?projectId=".$projectId);
