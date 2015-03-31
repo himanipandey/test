@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -480,14 +480,18 @@
                 type: "post",
                 url: "fetch_plan_images.php",
                 data: "objectId=" + objectId + "&objectType=" + objectType,
-                success: function (dt) {
-                    alert($('#'+contentArea).html());
+                beforeSend: function(){
+                    console.log('in ajax beforeSend');
+                    $("body").addClass("loading");
+                  },
+                success: function (dt) {                    
                     $('#'+contentArea).html(dt);
+                    $("body").removeClass("loading");
                 }
             });
     }
 </script>
-
+<div class="modal">Please Wait..............</div>
 
 <form  action="show_project_details.php?projectId={$projectId}" method="POST" id="changePhaseForm">
     <input type="hidden" id="forwardFlag" name="forwardFlag" value=""/>
@@ -2053,14 +2057,14 @@
 
                                                                                 <tr>
                                                                                     <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-                                                                                        {if is_array($ImageDataListingArrFloor)}
+                                                                                        
                                                                                             <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 
                                                                                                 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                                                                                                     <tr>
                                                                                                         <td align="left"  nowrap colspan ="4">
                                                                                                             <a href="javascript:void(0)" onclick="fetchPlanImages('property','{$projectId}', 'floorPlanImages')"><b>Floor Plans</b></a>
-                                                                                                            <b>Floor Plans</b><button class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
+                                                                                                            <button class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
                                                                                                         </td>
                                                                                                     </tr>
                                                                                                 {/if}
@@ -2076,36 +2080,9 @@
                                                                                                     </tr>
                                                                                                 {/if}
                                                                                                 <tr bgcolor='#ffffff' id="floorPlanImages"></tr>
-                                                                                                <tr bgcolor='#ffffff'>
-
-                                                                                                    {$cnt = 0}
-                                                                                                    {section name=data loop=$ImageDataListingArrFloor}
-
-                                                                                                        {if $cnt != 0 && $cnt%4 == 0}</tr><tr bgcolor='#ffffff'>{/if}
-
-                                                                                                        <td class = "tdcls_{$cnt}" >
-                                                                                                            <div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
-
-                                                                                                                <a class="pt_reqflrplan" href="{$ImageDataListingArrFloor[data].IMAGE_URL}
-                                                                                                                   " target="_blank">
-                                                                                                                    {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
-                                                                                                                    {$lastFloor = array_pop($partsFloor)}
-                                                                                                                    {$strFloor1 = implode('.', $partsFloor)}
-                                                                                                                    {$strFloor1 = $strFloor1|cat:'-thumb'}
-                                                                                                                    {$strFloor2 = $strFloor1|cat:'.'}
-                                                                                                                    {$finalStrWithThumbFloor = $strFloor2|cat:$last}
-                                                                                                                    <img src="{$ImageDataListingArrFloor[data].thumb_path}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].alt_text}" />
-                                                                                                                </a>
-                                                                                                                <br>
-                                                                                                                <b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
-                                                                                                                <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({if $ImageDataListingArrFloor[data].SIZE != ''}{$ImageDataListingArrFloor[data].SIZE}{/if} {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE != ''} , {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if}  {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE == ''} {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
-                                                                                                            </div>
-                                                                                                        </td>
-                                                                                                        {$cnt = $cnt+1} 		
-                                                                                                    {/section}
-                                                                                                </tr>
+                                                                                                
                                                                                             </table>
-                                                                                        {/if}
+                                                                                        
                                                                                     </td>
                                                                                 </tr>
 

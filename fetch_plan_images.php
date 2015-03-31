@@ -14,7 +14,7 @@ $objectId = $_POST['objectId'];
 
 if ($objectType == 'property') {
     $ImageDataListingArrFloor = array();
-    $optionsArr = getAllProjectOptionsExceptPlot($projectId);
+    $optionsArr = getAllProjectOptionsExceptPlot($objectId);
 
     foreach ($optionsArr as $k1 => $v1) {
         $objectType = "property";
@@ -54,9 +54,10 @@ if ($objectType == 'property') {
             array_push($ImageDataListingArrFloor, $data);
         }
     }
+
     $cnt = 0;
     $html = '';
-    foreach ($ImageDataListingArr as $data) {
+    foreach ($ImageDataListingArrFloor as $data) {
 
         $partsFloor = explode('.', $$data['IMAGE_URL']);
         $lastFloor = array_pop($partsFloor);
@@ -75,12 +76,12 @@ if ($objectType == 'property') {
         $html .= '<img src="' . $data['thumb_path'] . '" height="70px" width="70px" title = "' . $data['IMAGE_URL'] . '" alt ="' . $data['alt_text'] . '" />';
         $html .= '</a>';
         $html .= '<br/>';
-        $html .= '<b>	Image Title : </b>' . $data['NAME'] . '}<br><br>';
-        $html .= '<b> Unit :</b> ' . $data['UNIT_NAME'];
-        $html .= ' (' . ($data['SIZE'] != '') ? $data['SIZE'] : '';
-        $html .= ' ' . ($data['CARPET_AREA'] != '' && $data['SIZE'] != '') ? $data['CARPET_AREA'] . '(Carpet)' : '';
-        $html .= ', ' . $data['MEASURE'];
-        $html .= ', ' . $data['UNIT_TYPE'];
+        $html .= '<b>	Image Title : </b>' . $data['NAME'] . '<br><br>';
+        $html .= '<b> Unit :</b> ' . $data['UNIT_NAME']." (";
+        $html .= ($data['SIZE'] != '') ? $data['SIZE'] : '';
+        $html .=  ($data['CARPET_AREA'] != '' && $data['SIZE'] != '') ? ', ' .$data['CARPET_AREA'] . '(Carpet)' : '';
+        $html .= $data['MEASURE'] ;
+        $html .= ', ' . $data['UNIT_TYPE'].")";
 
         $html .= '</div>';
         $html .= '</td>';
