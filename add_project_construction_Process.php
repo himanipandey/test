@@ -193,27 +193,31 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
     $comp_eff_date = costructionDetail($projectId);
     $project_status = fetch_project_status($projectId, $construnction_status, $_REQUEST['phaseSelect'], false);
     
-    //print "Project Status: ".$project_status; die;
-
     $project_completion_date = '';
     if ($phase_created->cnt) {
         if ($expectedCompletionDate >= $comp_eff_date['COMPLETION_DATE'])
             $project_completion_date = $expectedCompletionDate;
         if ($expectedCompletionDate < $comp_eff_date['COMPLETION_DATE'])
             $project_completion_date = $comp_eff_date['COMPLETION_DATE'];
+        if ($_REQUEST['phaseSelect'] == $comp_eff_date['PHASE_ID'])
+            $project_completion_date = $expectedCompletionDate;
         if ($project_completion_date == '0000-00-00')
             $project_completion_date = '';
     } else
         $project_completion_date = $expectedCompletionDate;
+    
+    
+    //print "Project Status: ".$project_completion_date." - ".$expectedCompletionDate." - <pre>".print_r($comp_eff_date,1); 
+    //print "Project Status: ".$project_status; die;
 
     if ($project_status == OCCUPIED_ID_3 || $project_status == READY_FOR_POSSESSION_ID_4) {
         $yearExp = explode("-", $project_completion_date);
         if ($yearExp[0] == date("Y")) {
             if (intval($yearExp[1]) > intval(date("m"))) {
-                $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+                $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month in case project status is Completed.";
             }
         } else if (intval($yearExp[0]) > intval(date("Y"))) {
-            $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month";
+            $errorMsg['CompletionDateGreater'] = "Completion date cannot be greater current month in case project status is Completed.";
         }
     }
 
@@ -221,10 +225,10 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
         $yearExp = explode("-", $project_completion_date);
         if ($yearExp[0] == date("Y")) {
             if (intval($yearExp[1]) < intval(date("m"))) {
-                $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+                $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month in case project status is Under Construction.";
             }
         } else if (intval($yearExp[0]) < intval(date("Y"))) {
-            $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month.";
+            $errorMsg['CompletionDateGreater'] = "Completion date cannot be less than the current month  in case project status is Under Construction.";
         }
     }
 
