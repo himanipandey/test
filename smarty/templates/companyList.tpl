@@ -58,13 +58,15 @@
 
 {literal}
     <script language="javascript">
-
-
+        var isEdit = false;
         jQuery(document).ready(function() {
 
 
             $("#create_button").click(function() {
                 cleanFields();
+                $(".show-logo").hide();
+                $(".show-broker-image").hide();
+                isEdit = false;
 
                 $('#search_bottom').hide('slow');
                 $('#create_company').show('slow');
@@ -961,7 +963,9 @@
 
         function editCompany(str, action) {
             //id,name,type, broker_info_type, des, status, pan, email, address, city, pin, compphone, imgpath, imgid, imgalttext, ipsstr, person, compfax, phone, active_since, web, a, action
-
+            $(".show-logo").show();
+            isEdit = true;
+            
             cleanFields();
             str = JSON.parse(unescape(str));
             console.log("here123");
@@ -1988,6 +1992,10 @@
                 }
                 if ($("#brokerId").val() != '')
                     $("#broker_id").show();
+                
+                if(isEdit == false){
+                    $(".show-broker-image").hide();
+                }
             }
             else {
                 $("#broker_switch").hide();
@@ -2215,14 +2223,14 @@
                                                                 <td colspan="3"><hr></td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="show-logo">
                                                                 <td width="20%" align="right" >Company Logo : </td>
                                                                 <td width="30%" align="left" id="imgPlaceholder"></td> <td width="20%" align="left" id=""><input type="hidden" name='imgid' id="imgid"></td>
                                                             </tr>
 
                                                     </form>
                                                     <form action="saveCompanyLogo.php" target="uploadiframe" name="uploadForm" id="uploadForm" method="POST" enctype = "multipart/form-data">
-                                                        <tr>
+                                                        <tr class="show-logo">
                                                             <td width="20%" align="right" >Change Logo : </td>
                                                             <td width="30%" align="left"><input type="file" name='companyImg' id="companyImg" onchange="onNewImageUpload()"><input type="hidden" name='imgUploadStatus' id="imgUploadStatus" value="0"><input type="hidden" name='uploadedImage' id="uploadedImage" value=""><input type="submit" id="upload" value="Upload" name="submit"></td> <td width="20%" align="left" id="errmsglogo"></td>
                                                         </tr>
@@ -2659,14 +2667,14 @@
                                                                       <td width="20%" align="left" id="errmsgsignupform"></td>
                                                                     </tr> -->
 
-                                                                    <tr>
+                                                                    <tr class="show-broker-image">
                                                                         <td width="20%" align="right" >Uploaded SignUp Form : </td>
                                                                         <td width="30%" align="left" id="signUpPlaceholder"></td> <td width="20%" align="left" id=""><input type="hidden" name='formid' id="formid"></td>
                                                                     </tr>
 
                                                     </form>
                                                     <form action="saveCompanyLogo.php" target="uploadiframeSignup" name="uploadSignUpForm" id="uploadSignUpForm" method="POST" enctype = "multipart/form-data">
-                                                        <tr>
+                                                        <tr class="show-broker-image">
                                                             <td width="20%" align="right" >Upload Signup Form Soft Copy: </td>
                                                             <td width="30%" align="left"><input type="file" name='signUpForm' id="signUpForm" onchange="onNewSignUpFormUpload()"><input type="hidden" name='signUpFormUploadStatus' id="signUpFormUploadStatus" value="0"><input type="hidden" name='uploadedSignUpForm' id="uploadedSignUpForm" value=""><input type="submit" id="uploadSignUp" value="uploadSignUp" name="submit"></td> <td width="20%" align="left" id="errmsgsignupform"></td>
                                                         </tr>
