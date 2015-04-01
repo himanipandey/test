@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -473,9 +473,30 @@ function broker_call_edit(callId, brokerId)
 		
 	});
 });
+function fetchPlanImages(objectType, objectId, contentArea){
+        $.ajax({
+                type: "post",
+                url: "fetch_plan_images.php",
+                data: "objectId=" + objectId + "&objectType=" + objectType,
+                beforeSend: function(){
+                    console.log('in ajax beforeSend');
+                    $("body").addClass("loading");
+                  },
+                success: function (dt) {                    
+                    $('#'+contentArea).html(dt);
+                    $("body").removeClass("loading");    
+                    if(dt.trim() != '<td>Data not found!</td>' && objectType == 'property'){
+                        $('#edit-floor-images').show();
+                    }else if(dt.trim() != '<td>Data not found!</td>' && objectType == 'project'){
+                        $('#edit-plan-images').show();
+                    }
+                    
+                }
+            });
+    }
 </script>
 
-
+<div class="modal">Please Wait..............</div>
 <form  action="show_project_details.php?projectId={$projectId}" method="POST" id="changePhaseForm">
   <input type="hidden" id="forwardFlag" name="forwardFlag" value=""/>
   <input type="hidden" id="currentPhase" name="currentPhase" value=""/>
@@ -1973,7 +1994,10 @@ function broker_call_edit(callId, brokerId)
 					
 						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 						  	<tr>
-							  <td width="20%" align="left"><b>Project Plans {$path}</b><button class="clickbutton" onclick="$(this).trigger('event4');">Edit</button></td>
+							  <td width="20%" align="left">
+                                                                <a href="javascript:void(0)" onclick="fetchPlanImages('project','{$projectId}', 'projectPlanImages')"><b>Project Plans</b></a>
+                                                                <button style="display:none" id="edit-plan-images" class="clickbutton" onclick="$(this).trigger('event4');">Edit</button>
+                                                            </td>
 							</tr>
 						{/if}
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
@@ -1986,60 +2010,24 @@ function broker_call_edit(callId, brokerId)
 							  
 						  </tr>
 						{/if}
+                                                <tr bgcolor='#ffffff' id="projectPlanImages"></tr>
 					
-						  <tr bgcolor='#ffffff'>
-											
-								{$cnt = 0}
-								{section name=data loop=$ImageDataListingArr}
-								
-								{if $cnt != 0 && $cnt%4 == 0}</tr><tr bgcolor='#ffffff'>{/if}
-								
-								<td class = "tdcls_{$cnt}" >
-								
-									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
-										
-											<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
-                                                                                            {$last = array_pop($parts)}
-                                                                                            {$str1 = implode('.', $parts)}
-                                                                                            {$str1 = $str1|cat:'-thumb'}
-                                                                                            {$str2 = $str1|cat:'.'}
-                                                                                            {$finalStrWithThumb = $str2|cat:$last}
-                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].alt_text}" />
-												</a>
-												<br>
-											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
-											<br><br>
-										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
-											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
-										{/if}
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
-											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
-										{/if}
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
-										{/if}
-
-									</div>
-								</td>
-								{$cnt = $cnt+1} 		
-								{/section}
-							</tr>
 					</table>
 				</td>
 		   </tr>
 
 		  <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
 						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
-						  		<td align="left"  nowrap colspan ="4"><b>Floor Plans</b><button class="clickbutton" onclick="$(this).trigger('event11');">Edit</button></td>
-							</tr>
+                                                            <td align="left"  nowrap colspan ="4">
+                                                                <a href="javascript:void(0)" onclick="fetchPlanImages('property','{$projectId}', 'floorPlanImages')"><b>Floor Plans</b></a>
+                                                                <button  style="display:none" id="edit-floor-images"  class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
+                                                            </td>
+                                                        </tr>
 						{/if}
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
@@ -2052,36 +2040,9 @@ function broker_call_edit(callId, brokerId)
 							  
 						  </tr>
 						{/if}
-						  <tr bgcolor='#ffffff'>
-											
-								{$cnt = 0}
-								{section name=data loop=$ImageDataListingArrFloor}
-								
-								{if $cnt != 0 && $cnt%4 == 0}</tr><tr bgcolor='#ffffff'>{/if}
-								
-								<td class = "tdcls_{$cnt}" >
-									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
-										
-											<a class="pt_reqflrplan" href="{$ImageDataListingArrFloor[data].IMAGE_URL}
-														" target="_blank">
-                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
-                                                                                            {$lastFloor = array_pop($partsFloor)}
-                                                                                            {$strFloor1 = implode('.', $partsFloor)}
-                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
-                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
-                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
-												<img src="{$ImageDataListingArrFloor[data].thumb_path}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].alt_text}" />
-											</a>
-											<br>
-										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
-                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({if $ImageDataListingArrFloor[data].SIZE != ''}{$ImageDataListingArrFloor[data].SIZE}{/if} {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE != ''} , {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if}  {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE == ''} {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
-									</div>
-								</td>
-								{$cnt = $cnt+1} 		
-								{/section}
-							</tr>
+                                                <tr bgcolor='#ffffff' id="floorPlanImages"></tr>						 
 					</table>
-				{/if}
+				
 				</td>
 		   </tr>
 		   		   

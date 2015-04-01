@@ -77,7 +77,7 @@
     $NumRows =  $city = $builder = $project_name = '';
 //echo "<pre>";print_r($_REQUEST);//die;
     $citylist = City::CityArr();
-    $builderList = ResiBuilder::BuilderEntityArr();
+    $builderList = ResiBuilder::ProjectSearchBuilderEntityArr();//ResiBuilder::BuilderEntityArr();
     $projectStatus = ResiProject::projectStatusMaster();
     $UpdationArr = UpdationCycle::updationCycleTable();
     $getProjectStages = ProjectStage::getProjectStages();
@@ -96,7 +96,7 @@
     $transfer = $_REQUEST['transfer'];
     $search = $_REQUEST['search'];
     $city = $_REQUEST['city'];
-    $builder = $_REQUEST['builder'];
+    $builder = ($_REQUEST['builder'] != '' && trim($_REQUEST['builderName']) != '')?$_REQUEST['builder'] : '';
     $authority = $_REQUEST['authority'];
     $phase = $_REQUEST['phase'];
     $arrPhase = explode('|',$_REQUEST['stage']);
@@ -221,7 +221,7 @@
              }
 
             
-             if($_REQUEST['builder'] != '')
+             if($_REQUEST['builder'] != '' && trim($_REQUEST['builderName']) != '')
              {
                  $QueryMember .= $and." BUILDER_ID = '".$_REQUEST['builder']."'";
                  $and  = ' AND ';
@@ -444,5 +444,6 @@
     }
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."transferProject.tpl");
+    include("builder_suggest_auto.php");
     $smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");	
 ?>
