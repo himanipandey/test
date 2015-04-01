@@ -2048,7 +2048,7 @@ function fetchPlanImages(objectType, objectId, contentArea){
 		   		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
 						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
@@ -2104,7 +2104,7 @@ function fetchPlanImages(objectType, objectId, contentArea){
 				</td>
 			</tr>
 						
-                {/if}
+                {*{/if}*}
                     <tr class="headingrowcolor" height="30px;">
 						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
@@ -2324,7 +2324,7 @@ function fetchPlanImages(objectType, objectId, contentArea){
 			
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
@@ -2423,13 +2423,13 @@ function fetchPlanImages(objectType, objectId, contentArea){
 						{/if}
 						  
 					</table>
-				{/if}
+				{*{/if}*}
 				</td>
 		   </tr>
 		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
@@ -2733,7 +2733,7 @@ function fetchPlanImages(objectType, objectId, contentArea){
 								
 							</tr>
 						</table>
-				{/if}
+				{*{/if}*}
 				</td>
 		   </tr>
 		   <tr>
