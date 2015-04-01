@@ -872,7 +872,7 @@ $("#lmkSave").click(function(){
      if(phase_id=='' || !phase_id){
       error += "Phase is compulsory field. "
      }
-     if(floor>total_floor){
+     if(total_floor !=null && (floor>total_floor)){
          alert('Floor number should be less than or equal to total number of floors');
          return false;
      }
