@@ -107,11 +107,19 @@ if ($_REQUEST['type'] == 'suburb') {
     $rs = mysql_query('select id, township_name FROM townships where township_name like "' . mysql_real_escape_string($_REQUEST['term']) . '%"  order by township_name ASC limit 0,10');
     if ($rs && mysql_num_rows($rs)) {
         while ($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
-            $data[] = array(
-                'label' => $row['township_name'],
-                'value' => $row['township_name'],
-                'id' => $row['id']
-            );
+
+            if ($_REQUEST['id'] == true) {
+                $data[] = array(
+                    'label' => $row['id'] ." - ". $row['township_name'],
+                    'value' => $row['id'] ." - ". $row['township_name'],
+                    'id' => $row['id']
+                );
+            } else {
+                $data[] = array(
+                    'label' => $row['township_name'],
+                    'value' => $row['township_name']                    
+                );
+            }
         }
     }
 } else if ($_REQUEST['type'] == 'forumUser') {
@@ -124,7 +132,7 @@ if ($_REQUEST['type'] == 'suburb') {
             );
         }
     }
-}else if ($_REQUEST['type'] == 'builder') {
+} else if ($_REQUEST['type'] == 'builder') {
     $rs = mysql_query('select builder_id, entity FROM resi_builder where entity like "' . mysql_real_escape_string($_REQUEST['term']) . '%" and builder_status = 0 order by entity ASC limit 0,10');
     if ($rs && mysql_num_rows($rs)) {
         while ($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {

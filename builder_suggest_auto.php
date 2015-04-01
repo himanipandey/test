@@ -10,7 +10,7 @@ jQuery(document).ready(function(){
         }
     });
     $('#townshipName').autocomplete({
-        source:"suggest_auto.php?type=townships", 
+        source:"suggest_auto.php?type=townships&id=true", 
         minLength:1,
         select: function( event, ui ) {
           $("#townshipId").val(ui.item.id);

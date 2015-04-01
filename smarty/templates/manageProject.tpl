@@ -389,7 +389,7 @@ $(function() {
                                     <tr>
                                          <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Township:</b></td>
                                         <td width="50" align="left" style = "padding-left:20px;">
-                                         <input type="text" id="townshipName" value="{$arrTownshipDetail[$townshipId]}">
+                                         <input type="text" id="townshipName" name="townshipName" value="{$arrTownshipDetail[$townshipId]}">
                                          <input type="hidden" name="townshipId" id="townshipId" value="{$townshipId}">                                        
                                         </td>
                                     </tr>
