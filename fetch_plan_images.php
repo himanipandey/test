@@ -193,8 +193,7 @@ if ($objectType == 'property') {
     $html .= '</tr></table></td>';
   
 }
-?>
-<?php
+
     if($cnt == 0){
        echo '<td>Data not found!</td>'; 
     }else{
