@@ -51,7 +51,8 @@ if ($objectType == 'property') {
     }
 
     $cnt = 0;
-    $html = '';
+    $html = '<td>';
+    $html .= '<table><tr>';
     foreach ($ImageDataListingArrFloor as $data) {
 
         $partsFloor = explode('.', $$data['IMAGE_URL']);
@@ -83,6 +84,7 @@ if ($objectType == 'property') {
 
         $cnt++;
     }
+    $html .= '</tr></table></td>';
 } elseif ($objectType == 'project') {
     $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
 
@@ -140,7 +142,8 @@ if ($objectType == 'property') {
         array_push($ImageDataListingArr, $data);
     }
     $cnt = 0;
-    $html = '';
+    $html = '<td>';
+    $html .= '<table><tr>';
     foreach ($ImageDataListingArr as $data) {
 
         $parts = explode('.', $data['PLAN_IMAGE']);
@@ -186,10 +189,13 @@ if ($objectType == 'property') {
 
         $cnt++;
     }
+    
+    $html .= '</tr></table></td>';
+  
 }
 ?>
 <?php
-    if($html == ''){
+    if($cnt == 0){
        echo '<td>Data not found!</td>'; 
     }else{
        echo $html; 
