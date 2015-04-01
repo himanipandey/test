@@ -301,13 +301,9 @@ $(function() {
                                      <tr>
                                           <td align="right" style = "padding-left:20px;"><b>Builder:</b></td>
                                           <td align="left" style = "padding-left:20px;">
-                                            <select name = 'builder' id = "builder" onchange = 'selectedBuilderValue(this.value);'>
-                                                <option value = "">Select Builder</option>
-                                                {foreach from = $builderList key= key item = val}
-
-                                                        <option value = "{$key}" {if $builder == $key} selected  {else}{/if}>{$val}</option>
-                                                {/foreach}
-                                            </select>
+                                              
+                                            <input type="text" id="builderName" name="builderName" value="{$builderList[$builder]}"/>
+                                            
                                           </td>
                                     </tr>
                                    <tr><td>&nbsp;</td></tr>
@@ -393,12 +389,8 @@ $(function() {
                                     <tr>
                                          <td width="50" align="right" style = "padding-left:20px;" nowrap><b>Township:</b></td>
                                         <td width="50" align="left" style = "padding-left:20px;">
-                                        <select name="townshipId" id="townshipId" >
-                                          <option value="">Select Township</option>
-                                           {foreach from = $arrTownshipDetail key = key item = value}
-                                               <option value="{$key}" {if $key == $townshipId} selected {/if}>{$key} - {$value}</option>
-                                           {/foreach}
-                                       </select>
+                                         <input type="text" id="townshipName" value="{$arrTownshipDetail[$townshipId]}">
+                                         <input type="hidden" name="townshipId" id="townshipId" value="{$townshipId}">                                        
                                         </td>
                                     </tr>
                                     <tr><td>&nbsp;</td></tr>
