@@ -52,7 +52,7 @@ if ($objectType == 'property') {
 
     $cnt = 0;
     $html = '<td>';
-    $html .= '<table><tr>';
+    $html .= '<table width="100%"><tr>';
     foreach ($ImageDataListingArrFloor as $data) {
 
         $partsFloor = explode('.', $$data['IMAGE_URL']);
@@ -143,7 +143,7 @@ if ($objectType == 'property') {
     }
     $cnt = 0;
     $html = '<td>';
-    $html .= '<table><tr>';
+    $html .= '<table width="100%"><tr>';
     foreach ($ImageDataListingArr as $data) {
 
         $parts = explode('.', $data['PLAN_IMAGE']);
@@ -193,8 +193,7 @@ if ($objectType == 'property') {
     $html .= '</tr></table></td>';
   
 }
-?>
-<?php
+
     if($cnt == 0){
        echo '<td>Data not found!</td>'; 
     }else{
