@@ -1992,16 +1992,16 @@
                 }
                 if ($("#brokerId").val() != '')
                     $("#broker_id").show();
-                
-                if(isEdit == false){
-                    $(".show-broker-image").hide();
-                }
             }
             else {
                 $("#broker_switch").hide();
                 $('#main_table tbody tr').show();
                 $("#broker_extra_field").hide();
                 $("#legalType").hide();
+            }
+            if(isEdit == false){
+                $(".show-broker-image").hide();
+                $(".show-logo").hide();
             }
         }
 
