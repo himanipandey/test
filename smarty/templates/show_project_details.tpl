@@ -1303,6 +1303,16 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                {if $projectBrochure}
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b>Project Brochure:</b>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{$projectBrochure}">Project Brochure</a>
+                                                    </td>
+                                                 </tr>
+                                                 {/if}
                                                  <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Application Form:</b>
@@ -1317,7 +1327,7 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
-                                                <tr height="25px;">
+                                                <!--<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
                                                     </td>
@@ -1328,7 +1338,7 @@ function broker_call_edit(callId, brokerId)
                                                                No
                                                         {/if}
                                                     </td>
-						</tr>
+						</tr>-->
                                                 
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">

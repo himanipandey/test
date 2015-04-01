@@ -1,4 +1,6 @@
-  <script type="text/javascript" src="js/jquery.js"></script>
+
+                 
+<script type="text/javascript" src="js/jquery.js"></script>
 
    <script type="text/javascript" src="js/apartmentConfiguration.js"></script>
 
@@ -43,7 +45,7 @@
 
 	 function show_add(id)
 	 {
-		var idValue=id+1;
+		/*var idValue=id+1;
 		var id = "add_"+(id+1);
 		var unitName=$("#txtUnitName_"+idValue).val();
 		var txtPricePerUnitArea=$("#txtPricePerUnitArea_"+idValue).val();
@@ -56,7 +58,7 @@
 		else
 		{
 			document.getElementById(id).style.display = 'none';
-		}
+		}*/
 
 	 }
 /*******function for deletion confirmation***********/
@@ -122,6 +124,7 @@
 </SCRIPT>
 
 
+<input type="hidden" value="{$roomTypeAuth}" id="room-type-auth">
 
 </TD>
   </TR>
@@ -157,7 +160,7 @@
 
 		  <div id="mainDiv">
 		<div id='roomCategory' style='display:none;' >
-				<select name='roomCategory' >
+				<select name='roomCategory' disabled>
 				<option value=''>Select</option>
 				{$j=0}
 				{foreach from=$RoomCategoryArr key=k item=v}
@@ -815,6 +818,7 @@
                  {if $edit_project == ''}
                   <input type="submit" name="Skip" id="Skip" value="Skip" />
                  {/if}
+                 
 
                  <input type="submit" name="btnSave" id="btnSave" {if $edit_project == ''} value="Next" {else} value="Save" {/if} onclick = "return chkConfirm();" />
 								 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: swapnil
  * Date: 7/19/13
@@ -226,8 +227,8 @@ function writeToImageService($imageParams){
                    // print_r($service_extra_paramsArr);//die();
 
             if($params['delete']=="yes"){
-                if($params['dtype']=="3D"){
-                    $extra_paramsArr = array("dtype" => "3D");
+                if($params['dtype']=="Document"){
+                    $extra_paramsArr = array("dtype" => $params['dtype']);
                     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
                     $postArr[$k] = $s3upload->delete();
                 }
@@ -315,7 +316,8 @@ function writeToImageService($imageParams){
         }
     }
      
-  // print'<pre>';   print_r($postArr);die();
+  // print'<pre>';   print_r($postArr);die(); 
+
   // array of curl handles
     $curly = array();
   // data to be returned
@@ -342,11 +344,17 @@ $logger = Logger::getLogger("main");
             $url = DOC_SERVICE_URL;
         }
     }
+ 
     /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
         if($imageParams[$id]['params']['dtype']=="3D"){
             $url = DOC_SERVICE_URL;
         }
     }*/
+
+
+//print'<pre>';
+//print_r($d); die();
+
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");
@@ -570,4 +578,21 @@ function prd($data){
     print_r($data);
     echo "<pre>";
     die;
+}
+/**
+ * getProjectBrochure : fetch the project brochure link
+ */
+function getProjectBrochure($projectId){
+    
+    $url = ImageServiceUpload::$doc_upload_url."?objectType=project&objectId=".$projectId."&documentType=projectBrouchure";
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        if($k1==0){
+            $arr['projectBrouchure']['service_image_path'] = $v1->absoluteUrl;
+            $arr['projectBrouchure']['service_image_id'] = $v1->id;
+        }
+    }    
+    return $arr;
 }

@@ -106,7 +106,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $special_offer = trim($_POST["special_offer"]);
         $offer_heading = trim($_POST["offer_heading"]);
         $offer_desc = trim($_POST["offer_desc"]);
-        $skipUpdationCycle = $_POST["skipUpdationCycle"];
+//        $skipUpdationCycle = $_POST["skipUpdationCycle"];
         $updationCycleIdOld = $_POST["updationCycleIdOld"];
         $numberOfTowers = $_POST["numberOfTowers"];
         $completionDate = $_POST["completionDate"];
@@ -150,10 +150,10 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
 
         $smarty->assign("constructionContractor", $constructionContractor);
         $smarty->assign("constructionContractorId", $constructionContractorId);
-        
+
         $smarty->assign("maintenanceContractor", $maintenanceContractor);
         $smarty->assign("maintenanceContractorId", $maintenanceContractorId);
-        
+
         $smarty->assign("landscapeArchitect", $landscapeArchitect);
         $smarty->assign("landscapeArchitectId", $landscapeArchitectId);
 
@@ -213,7 +213,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
         $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
-        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
+//        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
         $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
         $smarty->assign("numberOfTowers", $numberOfTowers);
         $smarty->assign("completionDate", $completionDate);
@@ -296,7 +296,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             }
         }
 //echo $skipUpdationCycle."<br>".$txtSkipUpdationRemark;
-        if ($skipUpdationCycle == skipUpdationCycle_Id && empty($txtSkipUpdationRemark)) {
+        if ($_REQUEST['skip_b2b'] !=0 && empty($txtSkipUpdationRemark)) {
             $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
         }
 
@@ -519,6 +519,44 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         if (count($ErrorMsg) > 0) {
             // Do Nothing
         } else {
+
+            if ($projectId != '') {//uploading project brouchure
+                if(isset($_POST['brochureDel'])){                    
+                    $unitImageArr['upload_from_tmp'] = "yes";
+                    $unitImageArr['method'] = "DELETE";
+                    $unitImageArr['url'] = DOC_SERVICE_URL."/".$_POST['brochureDel'];                    
+                    $postArr[0] = $unitImageArr;                    
+                    $serviceResponse = writeToImageService($postArr);                    
+                }
+                if (isset($_FILES['project_brochure'])) {
+                    $doc = array();
+                    $doc['error'] = $_FILES["project_brochure"]["error"];
+                    $doc['type'] = $_FILES["project_brochure"]["type"];
+                    $doc['name'] = $_FILES["project_brochure"]["name"];
+                    $doc['tmp_name'] = $_FILES["project_brochure"]["tmp_name"];
+                    
+                    $tmp = array();
+                    $tmp['file'] = "@" . $_FILES["project_brochure"]["tmp_name"]. ';filename=' . $_FILES['project_brochure']['name']. ';type=' . $_FILES['project_brochure']['type'];
+                    $tmp['objectId'] = $projectId;
+                    $tmp['objectType'] = "project";
+                    $tmp['documentType'] = "projectBrouchure";
+                    $tmp['priority'] = 1;
+                    $unitImageArr['upload_from_tmp'] = "yes";
+                    $unitImageArr['method'] = "POST";
+                    $unitImageArr['url'] = DOC_SERVICE_URL;
+                    $unitImageArr['params'] = $tmp;
+                    $postArr[0] = $unitImageArr;
+                    $serviceResponse = writeToImageService($postArr);
+                    
+                }
+                
+                if (isset($serviceResponse[0]->error)) {
+                    $ErrorMsg["projectBrouchureError"] = $serviceResponse[0]->error->msg;                    
+                    $smarty->assign("ErrorMsg", $ErrorMsg);
+                    return;
+                }
+            }
+
             $app = '';
 
             $dir = $applicationFormPath;
@@ -602,10 +640,10 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             if (isset($_REQUEST['skip_b2b']))
                 $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
 
-            if ($skipUpdationCycle == skipUpdationCycle_Id)
-                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
-            else if ($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
-                $arrInsertUpdateProject['updation_cycle_id'] = null;
+//            if ($skipUpdationCycle == skipUpdationCycle_Id)
+//                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
+//            else if ($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
+//                $arrInsertUpdateProject['updation_cycle_id'] = null;
 
             $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
 
@@ -647,7 +685,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
                 $consContractor->updated_by = $_SESSION['adminId'];
                 $consContractor->save();
             }
-            
+
             TableAttributes::delete_all(array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'MaintenanceContractor', 'table_name' => 'resi_project')));
             if ($maintenanceContractorId) {
                 $maintContractor = new TableAttributes();
@@ -915,22 +953,24 @@ elseif ($projectId != '') {
         $smarty->assign("constructionContractor", $companyTemp[0]->name);
     }
 
-    $mContractor = TableAttributes::find('all', array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'MaintenanceContractor', 'table_name' => 'resi_project')));    
+    $mContractor = TableAttributes::find('all', array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'MaintenanceContractor', 'table_name' => 'resi_project')));
     if ($mContractor[0]->attribute_value) {
         $companyTemp = Company::getCompanyById($mContractor[0]->attribute_value);
         $smarty->assign("maintenanceContractor", $companyTemp[0]->name);
         $smarty->assign("maintenanceContractorId", $mContractor[0]->attribute_value);
     }
 
-    $lArchitect = TableAttributes::find('all', array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'LandscapeArchitect', 'table_name' => 'resi_project')));    
+    $lArchitect = TableAttributes::find('all', array('conditions' => array('table_id' => $projectId, 'attribute_name' => 'LandscapeArchitect', 'table_name' => 'resi_project')));
     if ($lArchitect[0]->attribute_value) {
         $companyTemp = Company::getCompanyById($lArchitect[0]->attribute_value);
         $smarty->assign("landscapeArchitect", $companyTemp[0]->name);
         $smarty->assign("landscapeArchitectId", $lArchitect[0]->attribute_value);
     }
-
-
     /* END */
+
+    $brochure = getProjectBrochure($projectId);
+    $smarty->assign("projectBrochure", $brochure['projectBrouchure']['service_image_path']);
+    $smarty->assign("oldProjectBrochure", $brochure['projectBrouchure']['service_image_id']);
 
     $smarty->assign("dept", $_SESSION['DEPARTMENT']);
 }

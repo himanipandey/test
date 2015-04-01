@@ -22,6 +22,9 @@
     $companyAuth = isUserPermitted('company', 'manage');
     $smarty->assign("companyAuth", $companyAuth);
     
+    $roomTypeAuth = isUserPermitted('room-type', 'manage');
+    $smarty->assign("roomTypeAuth", $roomTypeAuth );
+    
     $companyOrderAdminAuth = isUserPermitted('comp-orders-mgmt', 'admin');
     $smarty->assign("companyOrderAdminAuth", $companyOrderAdminAuth);
     

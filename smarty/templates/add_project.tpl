@@ -111,6 +111,11 @@
 		$('#app_pdf').css("display","block");
 		$('#application').val("pdf-del");
  }
+ function delete_brochure(docID){
+		$('#old_brochure').css("display","none");
+		$('#new_brochure').css("display","block");
+		$('#brochureDel').val(docID);
+ }
  
     $(document).ready(function(){
 	
@@ -137,7 +142,7 @@
 					}
 				});
 		  }
-		  var value = $('select[name="skipUpdationCycle"]').val();
+		  var value = $('select[name="skip_b2b"]').val();
 		 if(value=="0"){
 			$(".skipUpdationCycleBlock").hide();
 		}
@@ -681,26 +686,42 @@
 								  </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
-							   
+                                                           {if $projectId}                                                               
+                                                           <tr>
+                                                               <td width="32%" align="right" valign ="top"><b>Upload Project Brochure :</b> </td>
+                                                               <td width="30%" align="left">                                                                  
+                                                                   <input type = "file" name = "project_brochure" id="new_brochure" {if $projectBrochure}style="display:none"{/if}/>
+                                                                   {if $projectBrochure}
+                                                                       <span id="old_brochure">
+                                                                           <a href="{$projectBrochure}">Project Brochure</a>
+                                                                           <input type = "hidden" name = "brochureDel" id="brochureDel" value = "">
+                                                                        &nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick='delete_brochure("{$oldProjectBrochure}")' title="Delete Brouchure"/>
+                                                                       </span>
+                                                                   {/if}
+                                                               </td>
+                                                               <td width="50%" align="left">
+                                                                    <font color="red">{if $ErrorMsg["projectBrouchureError"] != ''} {$ErrorMsg["projectBrouchureError"]} {/if}</font>
+								</td>							   
 							   <tr>
+                                                           {/if}
 								  <td width="32%" align="right" valign ="top"><b>Application form in pdf:</b> </td><td width="30%" align="left">
 									  
 									   
                                                            
                                                          <span id = "app_form_pdf" >
-															{if $app_form}
-																<input type = "hidden" name = "application" id="application" value = "pdf-old">
-																<span id="old_pdf">
-																{$app_form}
-																&nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_pdf()" title="Delete PDF"/>
-																</span>
-																
-																<input type = "file" name = "app_pdf" id="app_pdf" style="display:none" />
-															{else}
-																 
-																<input type = "hidden" name = "application" id="application" value = "pdf-new">
-																<input type = "file" name = "app_pdf" />
-															{/if}
+                                                            {if $app_form}
+                                                                    <input type = "hidden" name = "application" id="application" value = "pdf-old">
+                                                                    <span id="old_pdf">
+                                                                    {$app_form}
+                                                                    &nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick="delete_pdf()" title="Delete PDF"/>
+                                                                    </span>
+
+                                                                    <input type = "file" name = "app_pdf" id="app_pdf" style="display:none" />
+                                                            {else}
+
+                                                                    <input type = "hidden" name = "application" id="application" value = "pdf-new">
+                                                                    <input type = "file" name = "app_pdf" />
+                                                            {/if}
                                                           </span>
                                                             
                                                                        
@@ -861,7 +882,8 @@
                                                            
                                                            
                                                            
-                               <tr>                         {if $skipUpdtnCycle == 1}
+                                                        <!--<tr>
+                                                            {if $skipUpdtnCycle == 1}
 								<td width="20%" align="right" valign ="top"><b> Skip Updation Cycle: </b> </td><td width="30%" align="left">
                                                                     <select name="skipUpdationCycle" onchange="skipUpdationCycleChanged(this.value)">
                                                                         <option value="0" {if $skipUpdationCycle == 0} selected = selected {/if}>No</option>
@@ -873,7 +895,20 @@
                                                             {else}
                                                             {/if}
                                                             
-							   </tr>
+							   </tr> -->
+                                                           
+                                                           {if $skipUpdtnCycle == 1}
+                                                                <tr>
+                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
+                                                                        <select name="skip_b2b" onchange="skipUpdationCycleChanged(this.value)">
+                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
+                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
+                                                                        </select>
+                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
+                                                                    </td>
+                                                                    <td width="50%" align="left"><font color="red"></font></td>
+                                                                </tr>
+                                                            {/if}
 
                                                            {if $skipUpdtnCycle == 1}
                                                             {if array_key_exists('SkipUpdationCycleRemark',$projectComments)}   
@@ -897,18 +932,7 @@
                                                                    </td>
                                                             </tr>
                                                             {/if}
-                                                            {if $skipUpdtnCycle == 1}
-                                                                <tr>
-                                                                    <td width="20%" align="right" valign ="top"><b> Skip B2B: </b> </td><td width="30%" align="left">
-                                                                        <select name="skip_b2b">
-                                                                            <option value="0" {if $skip_b2b == 0} selected = selected {/if}>No</option>
-                                                                            <option value="1" {if $skip_b2b == 1} selected {/if}>Yes</option>
-                                                                        </select>
-                                                                        <input type="hidden" name = "updationCycleIdOld" value="{$updationCycleIdOld}">
-                                                                    </td>
-                                                                    <td width="50%" align="left"><font color="red"></font></td>
-                                                                </tr>
-                                                            {/if}
+                                                            
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
