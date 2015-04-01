@@ -111,7 +111,7 @@ class ProjectLivability extends ActiveRecord\Model {
     }
 
     static function populateBuilder() {
-        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, " . self::$custom_project_livability_expression['builder'] . " BUILDER_RATING from resi_project rp inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID where rp.version = 'Website') t on pl.PROJECT_ID = t.PROJECT_ID set pl.builder = BUILDER_RATING";
+        $sql = "update project_livability pl inner join (select rp.PROJECT_ID, rb.builder_score from resi_project rp inner join resi_builder rb on rp.BUILDER_ID = rb.BUILDER_ID where rp.version = 'Website') t on pl.PROJECT_ID = t.PROJECT_ID set pl.builder = t.builder_score";
         self::connection()->query($sql);
         self::normalizeColumnOnCity('builder');
     }

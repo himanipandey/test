@@ -1327,7 +1327,7 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
-                                                <tr height="25px;">
+                                                <!--<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
                                                     </td>
@@ -1338,7 +1338,7 @@ function broker_call_edit(callId, brokerId)
                                                                No
                                                         {/if}
                                                     </td>
-						</tr>
+						</tr>-->
                                                 
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">

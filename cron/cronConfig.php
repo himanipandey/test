@@ -241,7 +241,7 @@ $weeklyEmail = array(
                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList) OR rp.LATITUDE is null OR rp.LONGITUDE is null)
                 AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
         'subject' => 'Missing Latitude and Longitude List',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Ravi.srivastava@proptiger.com'),
+        'recipients' => array('ankur.dhawan@proptiger.com', 'Ravi.srivastava@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Missing_latitude_longitude_list',
         'sendifnodata' => 0
     )

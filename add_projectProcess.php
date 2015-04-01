@@ -106,7 +106,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $special_offer = trim($_POST["special_offer"]);
         $offer_heading = trim($_POST["offer_heading"]);
         $offer_desc = trim($_POST["offer_desc"]);
-        $skipUpdationCycle = $_POST["skipUpdationCycle"];
+//        $skipUpdationCycle = $_POST["skipUpdationCycle"];
         $updationCycleIdOld = $_POST["updationCycleIdOld"];
         $numberOfTowers = $_POST["numberOfTowers"];
         $completionDate = $_POST["completionDate"];
@@ -213,7 +213,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $smarty->assign("fieldSurveyRemark", $fieldSurveyRemark);
         $smarty->assign("fieldSurveyRemarkDisplay", $fieldSurveyRemarkDisplay);
 
-        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
+//        $smarty->assign("skipUpdationCycle", $skipUpdationCycle);
         $smarty->assign("updationCycleIdOld", $updationCycleIdOld);
         $smarty->assign("numberOfTowers", $numberOfTowers);
         $smarty->assign("completionDate", $completionDate);
@@ -296,7 +296,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             }
         }
 //echo $skipUpdationCycle."<br>".$txtSkipUpdationRemark;
-        if ($skipUpdationCycle == skipUpdationCycle_Id && empty($txtSkipUpdationRemark)) {
+        if ($_REQUEST['skip_b2b'] !=0 && empty($txtSkipUpdationRemark)) {
             $ErrorMsg["txtSkipUpdationCycle"] = "Please enter Remarks for skipping update cycle!.";
         }
 
@@ -640,10 +640,10 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             if (isset($_REQUEST['skip_b2b']))
                 $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
 
-            if ($skipUpdationCycle == skipUpdationCycle_Id)
-                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
-            else if ($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
-                $arrInsertUpdateProject['updation_cycle_id'] = null;
+//            if ($skipUpdationCycle == skipUpdationCycle_Id)
+//                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
+//            else if ($skipUpdationCycle == 0 && $updationCycleIdOld == skipUpdationCycle_Id)
+//                $arrInsertUpdateProject['updation_cycle_id'] = null;
 
             $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
 

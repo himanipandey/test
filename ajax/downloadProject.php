@@ -164,10 +164,14 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                         on ta.table_id = RP.PROJECT_ID AND ta.table_name='resi_project' AND ta.attribute_name='HOUSING_AUTHORITY_ID'  
                     ";
 
-    if ($_POST['dwnld_skip_B2B'] != '')
-      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
-    else
-      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
+    if ($_POST['dwnld_skip_B2B'] != ''){
+//      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
+      $and = " WHERE RP.version='Cms' and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
+    }
+    else{
+//      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and ";
+      $and = " WHERE RP.version='Cms' and ";
+    }
     if($_POST['dwnld_projectId'] == '')
     {
         if($_REQUEST['dwnld_Availability'] != '')
