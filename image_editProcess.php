@@ -355,6 +355,8 @@ if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) {
 
 
         foreach ($arrValue as $k => $val) {
+            
+            print "<pre>".print_r($val,1)."</pre>";
           
             $unitImageArr = array();
 
@@ -408,11 +410,19 @@ if (isset($_POST['btnSave']) && !is_array($ErrorMsg)) {
                 $tmp['altText'] = $altText;
                 $tmp['update'] = "yes";
                 $tmp['service_image_id'] = $service_image_id;
+                
+                if ($_REQUEST['PType'][$k] == "Cluster Plan"){
+                    $tmp['jsonDump'] = json_encode(array("tower_id" => $arrTowerId[$k]));                    
+                }elseif ($_REQUEST['PType'][$k] == "Construction Status"){                   
+                    $tmp['takenAt'] = $arrTaggedDate[$k];
+                    $tmp['jsonDump'] = json_encode(array("tower_id" => $arrTowerId[$k]));
+                }
+                
                 $unitImageArr['upload_from_tmp'] = "yes";
                 $unitImageArr['method'] = "POST";
                 $unitImageArr['url'] = IMAGE_SERVICE_URL."/".$service_image_id;
                 $unitImageArr['params'] = $tmp;
-                $postArr[$key] = $unitImageArr;
+                $postArr[$key] = $unitImageArr;              
 
             }
             
