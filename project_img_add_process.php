@@ -240,6 +240,14 @@ if (isset($_POST['Next'])) {
                 $tmp['priority'] = $arrDisplayOrder[$key];
                 $tmp['title'] = $arrTitle[$key];
                 $tmp['altText'] = $altText;
+                
+                if ($_REQUEST['PType'] == "Cluster Plan"){
+                    $tmp['jsonDump'] = json_encode(array("tower_id" => $arrTowerId[$key]));                    
+                }elseif ($_REQUEST['PType'] == "Construction Status"){
+                    $tmp['takenAt'] = $arrTaggedDate[$key];
+                    $tmp['jsonDump'] = json_encode(array("tower_id" => $arrTowerId[$key]));
+                }
+                
                 $unitImageArr['upload_from_tmp'] = "yes";
                 $unitImageArr['method'] = "POST";
                 $unitImageArr['url'] = IMAGE_SERVICE_URL;
