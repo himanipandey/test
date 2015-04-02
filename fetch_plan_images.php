@@ -74,8 +74,8 @@ if ($objectType == 'property') {
         $html .= '<br/>';
         $html .= '<b>	Image Title : </b>' . $data['NAME'] . '<br><br>';
         $html .= '<b> Unit :</b> ' . $data['UNIT_NAME']." (";
-        $html .= ($data['SIZE'] != '') ? $data['SIZE'] : '';
-        $html .=  ($data['CARPET_AREA'] != '' && $data['SIZE'] != '') ? ', ' .$data['CARPET_AREA'] . '(Carpet)' : '';
+        $html .= (($data['SIZE'] != '') ? $data['SIZE'] : '');
+        $html .=  (($data['CARPET_AREA'] != '' && $data['SIZE'] != '') ? ', ' .$data['CARPET_AREA'] . '(Carpet)' : '');
         $html .= $data['MEASURE'] ;
         $html .= ', ' . $data['UNIT_TYPE'].")";
 
@@ -171,7 +171,7 @@ if ($objectType == 'property') {
         
         if ($data['PLAN_TYPE'] == 'Construction Status') {
             $html .= '<b>Tagged Date : </b>' . date('F Y', strtotime($data['tagged_month'])) . '<br><br>';
-            $html .= '<b>Tagged Tower : </b>' . ($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '' . '<br><br>';
+            $html .= '<b>Tagged Tower : </b>' . (($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '') . '<br><br>';
         }
 
         if ($data['PLAN_TYPE'] == 'Project Image') {
@@ -180,7 +180,7 @@ if ($objectType == 'property') {
         }
 
         if ($data['PLAN_TYPE'] == 'Cluster Plan') {            
-            $html .= '<b>Tagged Tower : </b>' . ($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '' . '<br><br>';
+            $html .= '<b>Tagged Tower : </b>' . (($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '') . '<br><br>';
         }
 
 
