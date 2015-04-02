@@ -86,6 +86,9 @@ if ($objectType == 'property') {
     }
     $html .= '</tr></table></td>';
 } elseif ($objectType == 'project') {
+    
+    $towerDetail = fetch_towerDetails($objectId);
+    
     $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
 
     $content = file_get_contents($url);
