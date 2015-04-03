@@ -1992,14 +1992,16 @@ function fetchPlanImages(objectType, objectId, contentArea){
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 						  	<tr>
 							  <td width="20%" align="left">
                                                                 <a href="javascript:void(0)" onclick="fetchPlanImages('project','{$projectId}', 'projectPlanImages')"><b>Project Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                                                                 <button style="display:none" id="edit-plan-images" class="clickbutton" onclick="$(this).trigger('event4');">Edit</button>
+                                                                {/if}
                                                             </td>
 							</tr>
-						{/if}
+						
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
@@ -2021,14 +2023,16 @@ function fetchPlanImages(objectType, objectId, contentArea){
 				
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 							<tr>
                                                             <td align="left"  nowrap colspan ="4">
                                                                 <a href="javascript:void(0)" onclick="fetchPlanImages('property','{$projectId}', 'floorPlanImages')"><b>Floor Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                                                                 <button  style="display:none" id="edit-floor-images"  class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
+                                                                {/if}
                                                             </td>
                                                         </tr>
-						{/if}
+						
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
