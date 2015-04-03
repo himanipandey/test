@@ -290,12 +290,14 @@ $(function() {
                                   <tr  bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Builder:</b></td>
                                       <td align="left" style = "padding-left:20px;" height='35'>
-                                          <select name = 'builder' id = "builder"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
+                                          <input type="text" id="builderName" name="builderName" value="{$builderList[$builder]}"/>
+                                          <input type="hidden" name = 'builder' id = "builder" value="{$builder}"/>
+                                          {*<select name = 'builder' id = "builder"  style='width:220px;border:1px solid #c2c2c2;padding:3px;height:28px;'>
                                            <option value = "">Select Builder</option>
                                            {foreach from = $builderList key= key item = val}
                                               <option value = "{$key}" {if $builder == $key} selected {/if}>{$val}</option>
                                            {/foreach}
-                                         </select>
+                                         </select>*}
                                       </td>
                                  </tr>
 

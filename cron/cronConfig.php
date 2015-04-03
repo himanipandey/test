@@ -82,19 +82,20 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "SELECT ls.id Listing_ID, ls.created_at Created_Date, c.name Company, cu.name Seller, ph.PROJECT_ID Project_ID, po.options_id Option_id, po.option_name BHK ,tw.Tower_Name Tower, ls.floor Floor_NO, ls.flat_number Flat_NO, lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE 
+        'sql' => "SELECT ls.id Listing_ID, ls.created_at Created_Date, c.name Company, cu.name Seller, ph.PROJECT_ID Project_ID, po.options_id Option_id, po.option_name BHK ,tw.Tower_Name Tower, ls.floor Floor_NO, ls.flat_number Flat_NO, lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE, ms.direction facing 
                 FROM listings ls 
                 inner JOIN resi_project_phase ph ON ls.phase_id = ph.PHASE_ID AND ph.version='Cms' AND ph.STATUS='Active' and ls.status = 'Active' and ls.listing_category !='Primary'
                 inner JOIN resi_project p ON ph.PROJECT_ID = p.PROJECT_ID  and p.version = 'Cms'
                 inner JOIN listing_prices lp ON ls.current_price_id = lp.id 
                 inner JOIN resi_project_options po ON ls.option_id = po.options_id and po.OPTION_CATEGORY !='logical'
                 inner join 
-(SELECT  ls.option_id Option_id,ls.tower_id Tower_id,  lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE 
+(SELECT  ls.option_id Option_id,ls.tower_id Tower_id,  lp.price_per_unit_area UNIT_PRICE, lp.price ABS_PRICE, ls.facing_id, ls.floor 
                 FROM listings ls 
                 inner JOIN listing_prices lp ON ls.current_price_id = lp.id and ls.status = 'Active' and ls.listing_category = 'Resale'
-                where 1=1 GROUP BY ls.option_id,ls.tower_id,UNIT_PRICE,ABS_PRICE HAVING count(*)>1) new2 on po.options_id = new2.Option_id 
-                and (ls.tower_id = new2.Tower_id or ls.tower_id is null) and (lp.price_per_unit_area = new2.UNIT_PRICE and lp.price = new2.ABS_PRICE)
+                where 1=1 GROUP BY ls.option_id,ls.tower_id,ls.facing_id,ls.floor,UNIT_PRICE,ABS_PRICE HAVING count(*)>1) new2 on po.options_id = new2.Option_id 
+                and (new2.facing_id = ls.facing_id or ls.facing_id is null) and (new2.floor = ls.floor or ls.floor is null) and  (ls.tower_id = new2.Tower_id or ls.tower_id is null) and (lp.price_per_unit_area = new2.UNIT_PRICE and lp.price = new2.ABS_PRICE)
                 LEFT JOIN resi_project_tower_details tw ON ls.tower_id = tw.tower_id 
+                LEFT JOIN master_directions ms on ms.id = ls.facing_id
                 LEFT JOIN company_users cu ON ls.seller_id = cu.user_id
                 LEFT JOIN company c ON cu.company_id = c.id order by Option_id",
         'subject' => 'Duplicate listings',
@@ -105,7 +106,7 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "select options_id, project_id, option_name, option_type, size from resi_project_options where date(created_at) >='" . $past_date . "';",
+        'sql' => "select options_id, project_id, option_name, option_type, size from resi_project_options where option_category = 'Actual' and  date(created_at) >='" . $past_date . "';",
         'subject' => 'New Configurations',
         'recipients' => array('ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'New Configurations',
