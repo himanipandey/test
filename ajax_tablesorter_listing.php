@@ -9,6 +9,8 @@ $size = filter_input(INPUT_GET, "size");
 $projectId = filter_input(INPUT_GET, "project");
 $listingId = filter_input(INPUT_GET, "listingId");
 $cityId = filter_input(INPUT_GET, "city");
+$search_term = filter_input(INPUT_GET, "search_term");
+$search_value = filter_input(INPUT_GET, "search_value");
 
 
 $start = $page * $size;
@@ -21,6 +23,9 @@ if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($proje
 }
 if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
     $filterArr["and"][] = array("equal" => array("listingId" => $listingId));
+}
+if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
+    $filterArr["and"][] = array("equal" => array($search_term => $search_value));
 }
 $tbsorterArr = array();
 

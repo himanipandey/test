@@ -42,13 +42,7 @@ function selectLocality(value){
   	window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+value;
 }
 function submitButton(){ 
-    var cityid = $('#citydd').val();
-    var projectid = null;
-    if($("#project_search").val().trim()!=''){
-        projectid = $('#selProjId').val();
-    }
-    var projectName = $('#project_search').val().trim();
-    var listingIdUrl = "";
+    
     var queryStrUrl = "";
     if($('#citydd').val() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"citydd=" + $('#citydd').val();
@@ -62,12 +56,14 @@ function submitButton(){
     if($('#listingId_search').val().trim() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
     }
-    if($("#listingId_search").val().trim()){
-        listingIdUrl = "&listingId=" + $("#listingId_search").val().trim();
+    if(($("#search_term option:selected").val() != "") && $("#search_value").val().trim()!=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + $('#search_value').val().trim();
     }
-    queryStrUrl = "?" + queryStrUrl;
-    //window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName+""+listingIdUrl;
-    window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
+    queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
+    if(queryStrUrl){
+        window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
+    }
     return false;
 }
 function downloadClick(){
@@ -154,7 +150,6 @@ function editListing(str){
     get_towers(projectId);
     $("#towerIdHidden").val(str.towerId);
     $("#phaseIdHidden").val(str.phaseId);
-
 
     if(str.seller!=null){
       var seller_id = str.seller.id;
@@ -426,6 +421,8 @@ $('#project_search').val(getParameterByName('projectName'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 $('#listingId_search').val(getParameterByName('listingId'));
+$('#search_term').val(getParameterByName('search_term'));
+$('#search_value').val(getParameterByName('search_value'));
 
 // tablesorter ajax pager
  tableSotderUrl='';
@@ -494,6 +491,10 @@ selProject = $("#selProjId").val();*/
           }
           if($("#listingId_search").val()){
              url += '&listingId=' + $("#listingId_search").val();
+          }
+          if($("#search_term").val() && $("#search_value").val()){
+             url += '&search_term=' + $("#search_term").val();
+             url += '&search_value=' + $("#search_value").val();
           }
           // trigger my custom event
           $(table).trigger('changingUrl', url);
@@ -1531,20 +1532,21 @@ function getParameterByName(name) {
                                                 <td height="25" align="left" valign="top" style="padding-left: 10px;">
                                                     <input type=text name="listingId_serach" id="listingId_search" placeholder="Listing ID"  style="width:210px;">
                                                 </td>
-		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+		                                <!--<td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
 		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
-		                                </td>
+		                                </td>-->
                                             </tr>
-                                            <!--<tr>
+                                            <tr>
                                                 <td>
-                                                    <select name="serach_term" it="search_term">
+                                                    <select name="serach_term" id="search_term">
                                                         <option value="">--Select--</option>
                                                         <option value="price">Absolute Price</option>
-                                                        <option value="pricePerUnitArea">Price Per Unit Area</option>
+                                                        <option value="listingPricesPricePerUnitArea">Price Per Unit Area</option>
                                                         <option value="otherCharges">Other Charges</option>
+{*                                                        <option value="listingCreatedAt">Created Date</option>*}
                                                     </select>
                                                 </td>
                                                 <td style="padding-left: 10px;">
@@ -1554,7 +1556,7 @@ function getParameterByName(name) {
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
                                                     <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
                                                 </td>
-                                            </tr>-->
+                                            </tr>
                                         </table>
                                     </form>
 		                </div> 
