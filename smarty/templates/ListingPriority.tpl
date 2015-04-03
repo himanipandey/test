@@ -48,7 +48,26 @@ function submitButton(){
         projectid = $('#selProjId').val();
     }
     var projectName = $('#project_search').val().trim();
-    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+    var listingIdUrl = "";
+    var queryStrUrl = "";
+    if($('#citydd').val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"citydd=" + $('#citydd').val();
+    }
+    if($('#selProjId').val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectId=" + $('#selProjId').val();
+    }
+    if($('#project_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectName=" + $('#project_search').val().trim();
+    }
+    if($('#listingId_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
+    }
+    if($("#listingId_search").val().trim()){
+        listingIdUrl = "&listingId=" + $("#listingId_search").val().trim();
+    }
+    queryStrUrl = "?" + queryStrUrl;
+    //window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName+""+listingIdUrl;
+    window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
     return false;
 }
 function downloadClick(){
@@ -406,6 +425,7 @@ $("#exit_button").click(function(){
 $('#project_search').val(getParameterByName('projectName'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
+$('#listingId_search').val(getParameterByName('listingId'));
 
 // tablesorter ajax pager
  tableSotderUrl='';
@@ -466,9 +486,15 @@ selProject = $("#selProjId").val();*/
       // modify the url after all processing has been applied
       customAjaxUrl: function(table, url) {
           // manipulate the url string as you desire
-           url += '&city=' + $("#citydd :selected").val();  
-           //if($("#project_search").val().trim()!='')
-            url += '&project=' + $("#selProjId").val(); 
+          if($("#citydd :selected").val()){
+             url += '&city=' + $("#citydd :selected").val();
+          }
+          if($("#selProjId").val()){
+             url += '&project=' + $("#selProjId").val();
+          }
+          if($("#listingId_search").val()){
+             url += '&listingId=' + $("#listingId_search").val();
+          }
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
@@ -526,7 +552,7 @@ selProject = $("#selProjId").val();*/
 //alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==8){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==9){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -536,7 +562,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 9){
+                   }else if(indx == 10){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -1492,7 +1518,7 @@ function getParameterByName(name) {
 		            	            <tr>
 		                                <td height="25" align="left" valign="top">
                                                     <select id="citydd" name="citydd" >
-                                                       <option value=''>select city</option>
+                                                       <option value=''>Select City</option>
                                                        {foreach from=$cityArray key=k item=v}
                                                            <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
                                                        {/foreach}
@@ -1502,6 +1528,9 @@ function getParameterByName(name) {
                                                     <input type=text name="project_search" id="project_search" placeholder="Project"  style="width:210px;">
                                                   <input type=hidden name="selProjId" id="selProjId" >
                                                 </td>
+                                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                    <input type=text name="listingId_serach" id="listingId_search" placeholder="Listing ID"  style="width:210px;">
+                                                </td>
 		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
 		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
 		                                </td>
@@ -1509,6 +1538,23 @@ function getParameterByName(name) {
 		                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
 		                                </td>
                                             </tr>
+                                            <!--<tr>
+                                                <td>
+                                                    <select name="serach_term" it="search_term">
+                                                        <option value="">--Select--</option>
+                                                        <option value="price">Absolute Price</option>
+                                                        <option value="pricePerUnitArea">Price Per Unit Area</option>
+                                                        <option value="otherCharges">Other Charges</option>
+                                                    </select>
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type="text" name="search_value" id="search_value" placeholder="Search Value">
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
+                                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
+                                                </td>
+                                            </tr>-->
                                         </table>
                                     </form>
 		                </div> 
@@ -2067,6 +2113,7 @@ function getParameterByName(name) {
                                   <TH align="center">Listing</TH>
                                   <TH align="center">Price</TH>
                                   <TH align="center">Created Date</TH>
+                                  <TH align="center">Photo</TH>
                                   <TH align="center">Save</TH>
                                   <TH align="center">Delete</TH>
                                 </TR>
@@ -2090,6 +2137,7 @@ function getParameterByName(name) {
                                 <th>8</th>
                                 <th>9</th>
                                 <th>10</th>
+                                <th>11</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
