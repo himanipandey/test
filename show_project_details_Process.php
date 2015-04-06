@@ -473,6 +473,7 @@ if (!isset($_POST['forwardFlag']))
     $_POST['forwardFlag'] = '';
 
 $arrNotLaunchOnHOldCancled = array('2', '5', '6');
+
 if ($_POST['forwardFlag'] == 'yes') {
     $returnURLPID = $_POST['returnURLPID'];
     $currentPhase = $_POST['currentPhase'];
@@ -498,7 +499,7 @@ if ($_POST['forwardFlag'] == 'yes') {
         $phaseIdNext = mysql_fetch_assoc($resNext);
         /*         * ***code for update project assignment status is 
          * done if project move in audit1 if assigned in survey ******* */
-
+       
         if ($v == 'Audit1') {
             //code for if next stage is audit1
             //then check all phase should have logical entry    
@@ -508,7 +509,7 @@ if ($_POST['forwardFlag'] == 'yes') {
                                           join resi_project_options rpo on l.option_id = rpo.OPTIONS_ID
                                       where l.phase_id = " . $valPhaseId . " and l.listing_category='Primary' and rpo.OPTION_CATEGORY = 'Logical'";
                     $resPhaseActual = mysql_query($qryPhaseActual) or die(mysql_error());
-                    if (mysql_num_rows($resPhaseActual) == 0 && (!in_array($projectDetails[0]['PROJECT_STATUS_ID'], $arrNotLaunchOnHOldCancled) && $projectDetails[0]['RESIDENTIAL_FLAG'] == 'Residential')) {
+                    if ( ($projectDetails[0]['STATUS'] != 'Inactive' && $projectDetails[0]['SKIP_B2B'] != 1) && mysql_num_rows($resPhaseActual) == 0 && (!in_array($projectDetails[0]['PROJECT_STATUS_ID'], $arrNotLaunchOnHOldCancled) && $projectDetails[0]['RESIDENTIAL_FLAG'] == 'Residential')) {
                         $flgLogical = 1;
                         //echo $flgLogical."ghdf";
                     }
@@ -528,18 +529,22 @@ if ($_POST['forwardFlag'] == 'yes') {
                 $resUp = mysql_query($qryUp) or die(mysql_error() . " update query");
             }
         }
-        if ($phaseIdCurrent['id'] == $phaseId['id'] && $flgLogical == 0) {
+       
+        if ($phaseIdCurrent['id'] == $phaseId['id'] && $flgLogical == 0) {           
             updateProjectPhase($projectId, $phaseIdNext['id'], $stageId['id']);
             //updating new remark
             if ($currentPhase == 'Audit1' && $_POST['newRemarkId'])
                 update_remark_status($_POST['newRemarkId']);
         }
     }
+    
     if ($flgLogical == 1) {
         $errorValidation = "<font color = 'red'>Please enter supply for all phases</font>";
         $smarty->assign("errorValidation", $errorValidation);
-    } else
+    } 
+    else
         header("Location:$returnURLPID");
+    
 }
 if ($_POST['forwardFlag'] == 'update') {
     $returnURLPID = $_POST['returnURLPID'];
