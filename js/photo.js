@@ -291,13 +291,18 @@ function updateDisplayLocation(id) {
                 else 
                      $('#img-name').html("").val("");
             }
-            $("#imgName").val($('#img-name').val()); 
+            
+            var kimageTitle = $('#img-name').val();            
+            kimageTitle = kimageTitle.replace("_", " ");            
+            $("#imgName").val(camelCase(kimageTitle)); 
             return;
         }
         else{
             $('#area-txt-name').html( "Landmark" + " : "  );
             $('#img-name').html("").val("");
-            $("#imgName").val($('#img-name').val()); 
+            var kimageTitle = $('#img-name').val();            
+            kimageTitle = kimageTitle.replace("_", " ");            
+            $("#imgName").val(camelCase(kimageTitle));  
         }
     }
     else if(radio=="1"){
@@ -573,6 +578,12 @@ function saveDetails() {
     //  reloading the photos and their corresponding data
     getPhotos();
 }
+
+function camelCase(str){
+        return str.replace(/(?:^|\s)\w/g, function (match) {
+             return match.toUpperCase();
+          });
+    }
 
 //landmark related code
 
