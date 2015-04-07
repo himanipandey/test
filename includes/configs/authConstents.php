@@ -179,4 +179,7 @@
         $micrositeFlgExec = 1;
     $smarty->assign("micrositeFlgExec",$micrositeFlgExec);
     
+    $mapVarifyAuth = isUserPermitted('map-varification', 'manage');
+    $smarty->assign("mapVarifyAuth", $mapVarifyAuth );
+    
 ?>
