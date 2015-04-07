@@ -153,8 +153,9 @@ else {
         
     $dataArr['otherInfo'] = $otherInfo;
 
-    if(isset($_POST['floor']) && !empty($_POST['floor']))
+    if(isset($_POST['floor']) && $_POST['floor'] !=""){
         $dataArr['floor'] = $_POST['floor'];
+    }
     
     $jsonDump = array();
     $owner_name = $_POST['owner_name'];
@@ -229,6 +230,9 @@ else {
     if($_POST['negotiable'] != null)  {
         $dataArr['negotiable'] = $_POST['negotiable'];    
     }
+    if($_POST['bookingStatusId'] != "")  {
+        $dataArr['booking_status_id'] = $_POST['bookingStatusId'];    
+    }
     
 
     $masterAmenityIds = array(
@@ -280,7 +284,7 @@ else {
 //print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
-    //print_r($dataArr); die;
+    //echo($dataJson); die;
      //var_dump($dataJson);   
 
 

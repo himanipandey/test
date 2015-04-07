@@ -11,6 +11,9 @@ $listingId = filter_input(INPUT_GET, "listingId");
 $cityId = filter_input(INPUT_GET, "city");
 $search_term = filter_input(INPUT_GET, "search_term");
 $search_value = filter_input(INPUT_GET, "search_value");
+$search_range = filter_input(INPUT_GET, "search_range");
+$range_from = filter_input(INPUT_GET, "range_from");
+$range_to = filter_input(INPUT_GET, "range_to");
 
 
 $start = $page * $size;
@@ -27,11 +30,21 @@ if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listi
 if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
     $filterArr["and"][] = array("equal" => array($search_term => $search_value));
 }
+if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
+    if ($range_from != "" || $range_to != "") {
+        $tempRange["range"][$search_range]["from"] = ($range_from != "") ? (int) $range_from : 1;
+    }
+    if ($range_to != "") {
+        $tempRange["range"][$search_range]["to"] = (int) $range_to;
+    }
+    $filterArr["and"][] = $tempRange;
+}
 $tbsorterArr = array();
 
 $filter = json_encode($filterArr);
-$fields = '"fields":["seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId"]}';
+$fields = '"fields":["seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $fields . '}';
+
 try {
     $responseLists = \Httpful\Request::get($uriListing)->send();
     if ($responseLists->body->statusCode == "2XX") {
@@ -67,7 +80,7 @@ try {
                 "Save" => json_encode($row),
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
-                "Photo" => ($row->property->project->imagesCount>0)?"Done":"Not Done",
+                "Photo" => ($row->property->project->imagesCount > 0) ? "Done" : "Not Done",
                 "Delete" => ''
             );
             array_push($tbsorterArr['rows'], $data_rows);
@@ -89,4 +102,5 @@ function getBroker($seller_id) {
         return array(null, null);
     }
 }
+
 ?>
