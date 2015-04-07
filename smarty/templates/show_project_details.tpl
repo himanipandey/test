@@ -129,6 +129,13 @@ function towerSelect(towerId)
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
+                
+                var skipValidationFlag = 0; //if = 1 then all validation will be skip
+                /*******check if validation will be skip********/
+                if("{$projectDetails[0].SKIP_B2B}" == 1 || "{$projectDetails[0].STATUS}" == 'Inactive'){
+                    skipValidationFlag = 1;
+                }                
+                
                 /*******code for check user have access to move project or not******/
                 if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999 
                     && ((phase == 'DataCollection' && (stg == 'UpdationCycle' || stg == 'SecondaryPriceCycle')) || phase == 'DcCallCenter')){
@@ -137,7 +144,8 @@ function towerSelect(towerId)
                     
                 }
                 /*******end code for check user have access to move project or not******/
-		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
+                console.log("Phase: "+phase, "Stage: "+stg, "SkipFlag:"+skipValidationFlag);
+		if(skipValidationFlag == 0 && dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
 			if(phaseId != '')
 			{
@@ -184,17 +192,17 @@ function towerSelect(towerId)
 			flgChk = 1;
 		}
 		      //alert(configSizeFlag + phase);
-				if(dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
+				if(skipValidationFlag == 0 && dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
                     alert("Config sizes are required!");
                     return false;
                 }
 				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
-				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
+				if(skipValidationFlag == 0 && dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
                     alert("Supply is not verified!");
                     return false;
                 }
                 
-                if(dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
+                if(skipValidationFlag == 0 && dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
                     alert("Supply order should be in descending order!\nCurrent order is "+availOrder+" for bedroom "+bedRoomOrder);
                     return false;
                 }
@@ -205,7 +213,7 @@ function towerSelect(towerId)
 			remarkTxt = "{$projectComments['audit2Remark']->comment_text}";
 			remarkId = "{$projectComments['audit2Remark']->comment_id}";
 			if(dir=='forward'){
-				if(isNewRemark == 'New' && phase == "Audit1"){
+				if(skipValidationFlag == 0 && isNewRemark == 'New' && phase == "Audit1"){
 					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
 					{
 						$('#newRemarkId').val(remarkId);
@@ -239,7 +247,7 @@ function towerSelect(towerId)
 			}
 			else if(dir=='updation')
 			{
-				if(isNewRemark == 'New' && phase == "Audit1"){
+				if(skipValidationFlag == 0 && isNewRemark == 'New' && phase == "Audit1"){
 					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
 					{   
 						$('#newRemarkId').val(remarkId);
@@ -1992,14 +2000,16 @@ function fetchPlanImages(objectType, objectId, contentArea){
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 						  	<tr>
 							  <td width="20%" align="left">
                                                                 <a href="javascript:void(0)" onclick="fetchPlanImages('project','{$projectId}', 'projectPlanImages')"><b>Project Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                                                                 <button style="display:none" id="edit-plan-images" class="clickbutton" onclick="$(this).trigger('event4');">Edit</button>
+                                                                {/if}
                                                             </td>
 							</tr>
-						{/if}
+						
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
@@ -2021,14 +2031,16 @@ function fetchPlanImages(objectType, objectId, contentArea){
 				
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 							<tr>
                                                             <td align="left"  nowrap colspan ="4">
                                                                 <a href="javascript:void(0)" onclick="fetchPlanImages('property','{$projectId}', 'floorPlanImages')"><b>Floor Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
                                                                 <button  style="display:none" id="edit-floor-images"  class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
+                                                                {/if}
                                                             </td>
                                                         </tr>
-						{/if}
+						
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
