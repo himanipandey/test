@@ -356,7 +356,7 @@ $(function() {
                                   <tr>
                                         <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b> Is Smoothed ?: </b> </td>
                                         <td width="50" align="left" style = "padding-left:20px;">
-                                            <select name="is_smoothed" id = "skipB2B">
+                                            <select name="is_smoothed" id = "is_smoothed">
                                               <option   value="">Select </option>
                                                <option {if $is_smoothed=='1'} selected="selected" {/if} value="1">Yes </option>
                                                <option {if $is_smoothed=='0'} selected="selected" {/if} value="0">No </option>    
@@ -520,6 +520,29 @@ $(function() {
                                </table>
                                <br>
                                {if $flagcheck == 1}
+                               <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
+                                    <tr bgcolor='#DCDCDC'>
+                                        <td height="35" align="center" colspan= "2" style='border-bottom:1px solid #c2c2c2;color:#333;'>
+                                           <b>Update - "Is Smoothed"</b>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td height="25" align="center" colspan= "2"  style = "padding:10px;">
+                                          <select name="is_smoothed_flag" id = "is_smoothed_flag">
+                                              <option   value="">Select </option>
+                                               <option {if $is_smoothed=='1'} selected="selected" {/if} value="1">Yes </option>
+                                               <option {if $is_smoothed=='0'} selected="selected" {/if} value="0">No </option>    
+                                           </select>
+                                        </td>
+                                    </tr>	
+                                     <tr>
+                                        <td height="25" align="center" colspan= "2"  style = "padding:10px;">
+                                          <input onclick = "removeExtraCode();" type = "submit" value = "Update - Is Smoothed" name = "updateSmoothed" 
+                                            style="border:1px solid #c2c2c2;height:30px;width:175px;background:#999999;color:#fff;
+                                            font-weight:bold;cursor:hand;pointer:hand;">
+                                        </td>
+                                    </tr>	
+                                </table>
                                <table width="502" border="0" align="left" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
                                     <tr bgcolor='#DCDCDC'>
                                         <td height="35" align="center" colspan= "2" style='border-bottom:1px solid #c2c2c2;color:#333;'>
