@@ -936,9 +936,17 @@
 							   <tr>
 								  <td width="20%" align="right" valign ="top"><b> Redevelopment Project: </b> </td><td width="30%" align="left">
 									<input type="checkbox" name="redevelopmentProject" {if $redevelopmentProject} checked {/if} />
-                                  </td>
+                                                                   </td>
 								  <td width="50%" align="left"><font color="red"></font></td>
 							   </tr>
+                                                           {if $projectId && $isSmoothedAuth}	
+                                                                <tr>
+                                                                        <td width="20%" align="right" valign ="top"><b> Is Smoothed ?: </b> </td><td width="30%" align="left">
+                                                                            <input type="checkbox" name="is_smoothed" {if $is_smoothed} checked {/if} />
+                                                                        </td>
+                                                                        <td width="50%" align="left"><font color="red"></font></td>
+                                                                </tr>
+                                                           {/if}
 							   
 								  <td>&nbsp;</td>
 								  <td align="left" style="padding-left:152px;">

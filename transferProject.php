@@ -52,6 +52,9 @@
     if(!isset($_REQUEST['skipB2B']) || $_REQUEST['skipB2B']=='')
         $_REQUEST['skipB2B'] = '';
     
+    if(!isset($_REQUEST['is_smoothed']) || $_REQUEST['is_smoothed']=='')
+        $_REQUEST['is_smoothed'] = '';
+    
     $errorMsg = '';
     if(isset($_REQUEST['exp_supply_date_from']) && isset($_REQUEST['exp_supply_date_to'])){
             if(date($exp_supply_date_from) > date($exp_supply_date_to)){
@@ -103,6 +106,7 @@
     $stage = $arrPhase[0];
     $updationCycle = $_REQUEST['updationCycle'];
     $skipB2B = $_REQUEST['skipB2B']; //die("skip:".$skipB2B);
+    $is_smoothed = $_REQUEST['is_smoothed'];
     $Status = $_REQUEST['Status'];
     $Active = $_REQUEST['Active'];
     $Availability = $_REQUEST['Availability'];
@@ -111,7 +115,8 @@
     $smarty->assign("citylist", $citylist);
     $smarty->assign("builderList", $builderList);	
     $smarty->assign("UpdationArr", $UpdationArr);
-    $smarty->assign("skipB2B", $skipB2B);	
+    $smarty->assign("skipB2B", $skipB2B);
+    $smarty->assign("is_smoothed", $is_smoothed);
     $smarty->assign("search", $search);
     $smarty->assign("Residential", $_REQUEST['Residential']);
     $smarty->assign("Status", $_REQUEST['Status']);
@@ -274,6 +279,9 @@
             if($skipB2B !=""){
                 $QueryMember .= " and SKIP_B2B ='".$skipB2B."' ";
             }
+            if($is_smoothed !=""){
+                $QueryMember .= " and IS_SMOOTHED ='".$is_smoothed."' ";
+            }
         }
         else
         {
@@ -286,6 +294,9 @@
             $QueryMember .= $and. " PROJECT_ID IN (".$_REQUEST['projectId'].") AND version = 'Cms' ";
             if($skipB2B !=""){
                 $QueryMember .= " and SKIP_B2B ='".$skipB2B."' ";
+            }
+            if($is_smoothed !=""){
+                $QueryMember .= " and IS_SMOOTHED ='".$is_smoothed."' ";
             }
         }
        $QueryMember2	= $QueryMember2. $QueryMember." GROUP BY PROJECT_PHASE_ID,PROJECT_STAGE_ID ORDER BY PROJECT_STAGE_ID";

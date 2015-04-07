@@ -214,6 +214,7 @@ $(function() {
 <input type='hidden' name='dwnld_builder' id='dwnld_builder' value="{$_POST['builder']}">
 <input type='hidden' name='dwnld_authority' id='dwnld_authority' value="{$_POST['authority']}">
 <input type='hidden' name='dwnld_skip_B2B' id='dwnld_skip_B2B' value="{$_POST['skipB2B']}">
+<input type='hidden' name='dwnld_is_smoothed' id='dwnld_is_smoothed' value="{$_POST['is_smoothed']}">
 
 <input type='hidden' name='dwnld_phase' id='dwnld_phase' value="{$_POST['phase']}">
 <input type='hidden' name='dwnld_stage' id='dwnld_stage' value="{$_POST['stage']}">
@@ -351,6 +352,18 @@ $(function() {
                                            </select>
                                         </td>
                                   </tr>
+                                  
+                                  <tr>
+                                        <td width="50" align="right" style = "padding-left:20px;" height='35' nowrap><b> Is Smoothed ?: </b> </td>
+                                        <td width="50" align="left" style = "padding-left:20px;">
+                                            <select name="is_smoothed" id = "skipB2B">
+                                              <option   value="">Select </option>
+                                               <option {if $is_smoothed=='1'} selected="selected" {/if} value="1">Yes </option>
+                                               <option {if $is_smoothed=='0'} selected="selected" {/if} value="0">No </option>    
+                                           </select>
+                                        </td>
+                                        
+                                    </tr>
 
                                   <tr bgcolor='#fcfcfc'>
                                       <td align="right" style = "padding-left:20px;" height='35'><b>Stage:</b></td>
