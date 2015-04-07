@@ -389,8 +389,7 @@ if (isset($_REQUEST['upImg']) && $_REQUEST['upImg'] == 1) {
                                 $tmp['service_image_id'] = $ImgID;
                                 $tmp['update'] = "yes";
                                 $unitImageArr['url'] = IMAGE_SERVICE_URL . "/" . $ImgID;
-                                $unitImageArr['upload_from_tmp'] = "yes";
-                                $unitImageArr['url'] = IMAGE_SERVICE_URL;
+                                $unitImageArr['upload_from_tmp'] = "yes";                                
                                 $unitImageArr['method'] = "POST";
                                 $unitImageArr['params'] = $tmp;
                                 $postArr[$k] = $unitImageArr;
@@ -467,8 +466,7 @@ if (isset($_REQUEST['upImg']) && $_REQUEST['upImg'] == 1) {
                     $tmp['service_image_id'] = $ImgID;
                     $tmp['update'] = "yes";
                     $unitImageArr['url'] = IMAGE_SERVICE_URL . "/" . $ImgID;
-                    $unitImageArr['upload_from_tmp'] = "yes";
-                    $unitImageArr['url'] = IMAGE_SERVICE_URL;
+                    $unitImageArr['upload_from_tmp'] = "yes";                    
                     $unitImageArr['method'] = "POST";
                     $unitImageArr['params'] = $tmp;
                     $postArr[$k] = $unitImageArr;
