@@ -293,7 +293,8 @@ function updateDisplayLocation(id) {
             }
             
             var kimageTitle = $('#img-name').val();            
-            kimageTitle = kimageTitle.replace("_", " ");            
+            kimageTitle = kimageTitle.replace("_", " ");  
+            $('#img-name').html(camelCase(kimageTitle));
             $("#imgName").val(camelCase(kimageTitle)); 
             return;
         }
@@ -301,7 +302,8 @@ function updateDisplayLocation(id) {
             $('#area-txt-name').html( "Landmark" + " : "  );
             $('#img-name').html("").val("");
             var kimageTitle = $('#img-name').val();            
-            kimageTitle = kimageTitle.replace("_", " ");            
+            kimageTitle = kimageTitle.replace("_", " ");   
+            $('#img-name').html(camelCase(kimageTitle));
             $("#imgName").val(camelCase(kimageTitle));  
         }
     }
