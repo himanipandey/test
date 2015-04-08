@@ -128,6 +128,13 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
 
 
         $skip_b2b = $_REQUEST['skip_b2b'];
+        
+        $is_smoothed = 0;
+        if (isset($_REQUEST['is_smoothed'])){
+           $is_smoothed =  ($_REQUEST['is_smoothed'] == 'on')? 1 : 0;
+        }
+             
+        
         /*         * *************Query for suburb selected*********** */
         if ($_POST['cityId'] != '') {
             $suburbSelect = Suburb::SuburbArr($_POST['cityId']);
@@ -221,6 +228,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $smarty->assign("govtAuthorityProject", $govtAuthorityProject);
         $smarty->assign("txtSkipUpdationRemark", $txtSkipUpdationRemark);
         $smarty->assign("skip_b2b", $skip_b2b);
+        $smarty->assign("is_smoothed", $is_smoothed);
 
         /*         * *********Folder name********* */
         if (!empty($builderId)) {
@@ -639,6 +647,8 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
             if (isset($_REQUEST['skip_b2b']))
                 $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
+            
+            $arrInsertUpdateProject['is_smoothed'] = $is_smoothed;
 
 //            if ($skipUpdationCycle == skipUpdationCycle_Id)
 //                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;
@@ -932,6 +942,7 @@ elseif ($projectId != '') {
     $smarty->assign("bank_arr", projectBankList($projectId));
     $smarty->assign("numberOfTowers", $ProjectDetail->no_of_towers);
     $smarty->assign("skip_b2b", $ProjectDetail->skip_b2b);
+    $smarty->assign("is_smoothed", $ProjectDetail->is_smoothed);
 
     $booking_status_id = ResiProjectPhase::find('all', array('conditions' => array('project_id' => $projectId, 'phase_type' => 'Logical'), 'select' =>
                 'BOOKING_STATUS_ID'));
