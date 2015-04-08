@@ -231,7 +231,7 @@ else {
         $dataArr['negotiable'] = $_POST['negotiable'];    
     }
     if($_POST['bookingStatusId'] != "")  {
-        $dataArr['booking_status_id'] = $_POST['bookingStatusId'];    
+        $dataArr['bookingStatusId'] = $_POST['bookingStatusId'];    
     }
     
 
@@ -284,7 +284,7 @@ else {
 //print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
-//    echo($dataJson); die;
+    //echo($dataJson); die;
      //var_dump($dataJson);   
 
 
