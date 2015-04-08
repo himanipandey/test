@@ -284,7 +284,7 @@ else {
 //print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
-    //echo($dataJson); die;
+//    echo($dataJson); die;
      //var_dump($dataJson);   
 
 
@@ -330,6 +330,8 @@ else {
             $returnArr = array();
             if($listing_id!=''){
                 $uri = $uri."/".$listing_id;
+//                echo($uri);
+//                die($dataJson);
                 $response = \Httpful\Request::put($uri)           
                 ->sendsJson()                               
                 ->body($dataJson)

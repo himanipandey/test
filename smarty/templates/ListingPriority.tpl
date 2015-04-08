@@ -18,7 +18,9 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/js/jss.js"></script> 
 
-
+<style>
+    .hide-input{ display: none !important; }
+</style>
 <script language="javascript">
 var pid;
 var bt = [];
@@ -54,9 +56,9 @@ function submitButton(){
     if($('#listingId_search').val().trim() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
     }
-    if(($("#search_term option:selected").val() != "") && $("#search_value").val().trim()!=""){
+    if(($("#search_term option:selected").val() != "") && ($("#search_value").val().trim()!="" || $("#search_landmark").val().trim()!="")){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
-        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + $('#search_value').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : window.googlePlaceId);
     }
     
     if(($("#search_range option:selected").val() != "") && ($("#range_from").val().trim() != "" || $("#range_to").val().trim() !="")){
@@ -424,11 +426,23 @@ $('#project_search').val(getParameterByName('projectName'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
 $('#listingId_search').val(getParameterByName('listingId'));
-$('#search_term').val(getParameterByName('search_term'));
-$('#search_value').val(getParameterByName('search_value'));
 $('#search_range').val(getParameterByName('search_range'));
 $('#range_from').val(getParameterByName('range_from'));
 $('#range_to').val(getParameterByName('range_to'));
+$('#search_term').val(getParameterByName('search_term'));
+
+
+if($('#search_term').val()=="gpid"){
+    $("#search_landmark").val(getParameterByName('search_value'));
+    $('#search_value').addClass("hide-input");
+    $('#search_landmark').removeClass("hide-input");
+    window.googlePlaceId = getParameterByName('search_value');
+    
+}else{
+    $('#search_value').val(getParameterByName('search_value'));
+    $('#search_value').removeClass("hide-input");
+    $('#search_landmark').addClass("hide-input");
+}
 
 // tablesorter ajax pager
  tableSotderUrl='';
@@ -1568,11 +1582,13 @@ function getParameterByName(name) {
                                                 <td>
                                                     <select name="search_term" id="search_term">
                                                         <option value="">--Select--</option>
-                                                        <option value="bedrooms">Bedrooms</option>
+                                                        <option value="bedrooms">Search By Bedrooms</option>
+                                                        <option value="gpid">Search By Landmark</option>
                                                     </select>
                                                 </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type="text" name="search_value" id="search_value" placeholder="Search Value">
+                                                    <input type="text" name="search_landmark" id="search_landmark" placeholder="Search Landmark" class="hide-input">
                                                 </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
@@ -2229,6 +2245,64 @@ $(document).ready(function(){
         }
         
     });
+    
+    //***** Filter *************
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _renderItem: function( ul, item ) {
+          return $( "<li>" )
+            .append( $( "<a>" ).text( item.label )).appendTo( ul );
+        },
+    });
+    $( "#search_landmark" ).catcomplete({
+        source: function( request, response ) {
+
+          $.ajax({
+            url: "https://proptiger.com/columbus/app/v4/typeahead",
+            dataType: "json",
+            data: {
+              query: $("#search_landmark").val(),
+              enhance: "gp", 
+              city: ($("#citydd").val()) ? $("#citydd :selected").text().trim() : ""
+            }, 
+
+            success: function( data ) { 
+              response( $.map( data.data, function( item ) {              
+                  return {
+                  label: item.displayText,
+                  googlePlaceId: item.googlePlaceId,
+                  id:item.id,
+                  }
+
+              }));
+            }
+          });      
+        },
+
+        select: function( event, ui ) {
+          window.googlePlaceId = ui.item.googlePlaceId;
+        },
+        open: function() {
+          $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+        },
+        close: function() {
+          $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+        },
+
+    });
+    $("#search_term").change(function(){
+        $( "#search_landmark" ).val("");
+        $( "#search_value" ).val("");
+            
+        if($("#search_term").val() == "gpid"){
+            $( "#search_landmark" ).removeClass("hide-input");
+            $( "#search_value" ).addClass("hide-input");
+        }else{
+            $( "#search_landmark" ).addClass("hide-input");
+            $( "#search_value" ).removeClass("hide-input");
+        }
+    });
+    
+    
 });
 
 </script>
