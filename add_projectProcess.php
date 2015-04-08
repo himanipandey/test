@@ -129,9 +129,9 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
 
         $skip_b2b = $_REQUEST['skip_b2b'];
         
-        $is_smoothed = 0;
+        $is_smoothed = '';
         if (isset($_REQUEST['is_smoothed'])){
-           $is_smoothed =  ($_REQUEST['is_smoothed'] == 'on')? 1 : 0;
+           $is_smoothed =  $_REQUEST['is_smoothed'];
         }
              
         
@@ -647,8 +647,8 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             $arrInsertUpdateProject['no_of_towers'] = $numberOfTowers;
             if (isset($_REQUEST['skip_b2b']))
                 $arrInsertUpdateProject['skip_b2b'] = $skip_b2b;
-            
-            $arrInsertUpdateProject['is_smoothed'] = $is_smoothed;
+            if($is_smoothed != '')
+             $arrInsertUpdateProject['is_smoothed'] = $is_smoothed;
 
 //            if ($skipUpdationCycle == skipUpdationCycle_Id)
 //                $arrInsertUpdateProject['updation_cycle_id'] = skipUpdationCycle_Id;

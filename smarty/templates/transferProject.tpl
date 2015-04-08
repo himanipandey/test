@@ -529,9 +529,8 @@ $(function() {
                                     <tr>
                                         <td height="25" align="center" colspan= "2"  style = "padding:10px;">
                                           <select name="is_smoothed_flag" id = "is_smoothed_flag">
-                                              <option   value="">Select </option>
-                                               <option {if $is_smoothed=='1'} selected="selected" {/if} value="1">Yes </option>
-                                               <option {if $is_smoothed=='0'} selected="selected" {/if} value="0">No </option>    
+                                              <option   value="">Select </option>                                               
+                                               <option value="0">No </option>    
                                            </select>
                                         </td>
                                     </tr>	
