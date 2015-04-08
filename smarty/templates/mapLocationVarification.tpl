@@ -1,6 +1,7 @@
 
 
 <script type="text/javascript" src="js/jquery.js"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script language="javascript">
     function GetXmlHttpObject()
     {
@@ -126,10 +127,11 @@
                                                 <form method = "get" action = "" onsubmit = "return validation();">
                                                     <tr>
                                                         <td height="25" align="center" colspan= "2">
-                                                            <span id = "errmsg" style = "display:none;"><font color = "red">Please select atleast one field</font></span>
-                                                                {if $errorMsg} {$errorMsg} {/if}
+                                                            <span>
+                                                                <font color = "red">{if $errorMsg} {$errorMsg} {/if}</font>
+                                                            </span>                                                                
                                                         </td>
-                                                    </tr>
+                                                    </tr>                                                    
                                                     <tr>
                                                         <td align="right" style = "padding-left:20px;" width='35%'><b>City:</b></td>
                                                         <td align="left" style = "padding-left:20px;" width='65%'>
@@ -165,6 +167,9 @@
                                                         <td align="right" style = "padding-left:20px;"><b>Project Id:</b></td>
                                                         <td align="left" style = "padding-left:20px;">
                                                             <input type = "text" name = "projectId" id = "projectId" value = "{$projectId}">
+                                                            <span>
+                                                                <font color = "green">{if $project_name} {$project_name} {/if}</font>
+                                                            </span>
                                                         </td>
                                                     </tr>
                                                     <tr><td>&nbsp;</td></tr>
@@ -176,11 +181,120 @@
                                                     <tr><td>&nbsp;</td></tr>
                                                 </form>
                                             </TABLE> 
+                                            <table width="90%" border="0" align="center" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
+                                                <tr>
+                                                    <td>
+                                                        <div id="map" style="width: 950px; height: 600px;">
+                                                            <script>
+                                                                // Define your locations: HTML content for the info window, latitude, longitude
+                                                                var locations = [
+                                                                    ['<h4>Srishti</h4>', 28.51576233, 77.38371277],
+                                                                    ['<h4>Silver City</h4>', 28.51964760, 77.38769531]
+
+                                                                ];
+
+                                                                // Setup the different icons and shadows
+                                                                var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+
+                                                                var icons = [
+                                                                    iconURLPrefix + 'red-dot.png',
+                                                                    iconURLPrefix + 'green-dot.png',
+                                                                    iconURLPrefix + 'blue-dot.png',
+                                                                    iconURLPrefix + 'orange-dot.png',
+                                                                    iconURLPrefix + 'purple-dot.png',
+                                                                    iconURLPrefix + 'pink-dot.png',
+                                                                    iconURLPrefix + 'yellow-dot.png'
+                                                                ]
+                                                                var iconsLength = icons.length;
+
+                                                                var map = new google.maps.Map(document.getElementById('map'), {
+                                                                    zoom: 11,
+                                                                    center: new google.maps.LatLng(28.51770401, 77.38570404),
+                                                                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                                                                    mapTypeControl: false,
+                                                                    streetViewControl: false,
+                                                                    panControl: false,
+                                                                    zoomControlOptions: {
+                                                                        position: google.maps.ControlPosition.LEFT_BOTTOM
+                                                                    }
+                                                                });
+
+                                                                var infowindow = new google.maps.InfoWindow({
+                                                                    maxWidth: 160
+                                                                });
+
+                                                                var markers = new Array();
+
+                                                                var iconCounter = 0;
+
+                                                                // Add the markers and infowindows to the map
+                                                                for (var i = 0; i < locations.length; i++) {
+                                                                    var marker = new google.maps.Marker({
+                                                                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                                                        map: map,
+                                                                        icon: icons[iconCounter]
+                                                                    });
+
+                                                                    markers.push(marker);
+
+                                                                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                                                                        return function () {
+                                                                            infowindow.setContent(locations[i][0]);
+                                                                            infowindow.open(map, marker);
+                                                                        }
+                                                                    })(marker, i));
+
+                                                                    iconCounter++;
+                                                                    // We only have a limited number of possible icon colors, so we may have to restart the counter
+                                                                    if (iconCounter >= iconsLength) {
+                                                                        iconCounter = 0;
+                                                                    }
+                                                                }
+
+                                                                // Define the LatLng coordinates for the polygon's path.
+                                                                var triangleCoords = [
+                                                                    new google.maps.LatLng(28.51964760, 77.38371277),
+                                                                    new google.maps.LatLng(28.51576233, 77.38371277),
+                                                                    new google.maps.LatLng(28.51576233, 77.38769531),
+                                                                    new google.maps.LatLng(28.51964760, 77.38769531),
+                                                                ];
+
+                                                                // Construct the polygon.
+                                                                bermudaTriangle = new google.maps.Polygon({
+                                                                    paths: triangleCoords,
+                                                                    strokeColor: '#FF0000',
+                                                                    strokeOpacity: 0.8,
+                                                                    strokeWeight: 2,
+                                                                    fillColor: '#FF0000',
+                                                                    fillOpacity: 0.35
+                                                                });
+
+                                                                bermudaTriangle.setMap(map);
+
+
+
+                                                                function autoCenter() {
+                                                                    //  Create a new viewpoint bound
+                                                                    var bounds = new google.maps.LatLngBounds();
+
+
+                                                                    //  Go through each...
+                                                                    for (var i = 0; i < markers.length; i++) {
+                                                                        bounds.extend(markers[i].position);
+                                                                    }
+                                                                    //  Fit these bounds to the map
+                                                                    map.fitBounds(bounds);
+                                                                }
+                                                                autoCenter();
+                                                            </script>
+
+
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </table>                                            
                                         </div> 
-
-
-
-
 
                                     </TD>
                                 </TR>
