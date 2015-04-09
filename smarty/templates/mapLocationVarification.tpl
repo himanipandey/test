@@ -1,7 +1,7 @@
 
 
 <script type="text/javascript" src="js/jquery.js"></script>
-<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=false&key={$googleMapKey}"></script>
 <script language="javascript">
     function GetXmlHttpObject()
     {
@@ -189,10 +189,9 @@
                                                             <div id="map" style="width: 950px; height: 600px;{if $errorMsg}display:none;{/if}">
                                                                 <script>
                                                                     // Define your locations: HTML content for the info window, latitude, longitude
-                                                                    var locations = [
-                                                                        ["<h4>{$project_name}</h4>", "{$projectLatitude}", "{$projectLongitude}"],
-                                                                    ];
-
+                                                                    locations = JSON.parse('{$projectArray|@json_encode}');
+                                                                    console.log(locations);
+                                                                    
                                                                     // Setup the different icons and shadows
                                                                     var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
@@ -208,7 +207,7 @@
                                                                     var iconsLength = icons.length;
 
                                                                     var mapOptions = {
-                                                                        zoom: 5,
+                                                                        zoom: 14,
                                                                         center: new google.maps.LatLng("{$localityLatitude}", "{$localityLongitude}"),
                                                                         mapTypeId: google.maps.MapTypeId.TERRAIN
                                                                     };
@@ -244,7 +243,7 @@
                                                                         iconCounter++;
                                                                         // We only have a limited number of possible icon colors, so we may have to restart the counter
                                                                         if (iconCounter >= iconsLength) {
-                                                                            iconCounter = 0;
+                                                                            iconCounter = iconsLength - 1;
                                                                         }
                                                                     }
 
@@ -282,7 +281,7 @@
                                                                         //  Fit these bounds to the map
                                                                         map.fitBounds(bounds);
                                                                     }
-                                                                    autoCenter();
+                                                                    //autoCenter();
                                                                 </script>
 
 
