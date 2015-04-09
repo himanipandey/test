@@ -754,6 +754,9 @@ $smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
 
 $smarty->assign("arrAllType",$arrAllType);
 
+//gooogle map api key
+$smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
+
 /********config for project type of residential/nonresidential******************/
 
 

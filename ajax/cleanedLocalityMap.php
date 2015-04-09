@@ -69,7 +69,7 @@ if (count($allProject) > 0) {
                 var iconsLength = icons.length;
 
                 var mapOptions = {
-                    zoom: 15,
+                    zoom: 14,
                     center: new google.maps.LatLng("<?php echo $localityLatitude ?>", "<?php echo $localityLongitude ?>"),
                     mapTypeId: google.maps.MapTypeId.TERRAIN,
                     panControl: true,
@@ -159,14 +159,14 @@ if (count($allProject) > 0) {
                     //  Fit these bounds to the map
                     map.fitBounds(bounds);
                 }
-                autoCenter();
+                //autoCenter();
 
                 //google.maps.event.trigger(map, 'resize');
 
                 $(document).ready(function () {
                     setTimeout(function () {
                         google.maps.event.trigger(map, 'resize');
-                        autoCenter();
+                        //autoCenter();
                         // $.goMap.fitBounds();
                     }, 100)
                     $('#ok').click(function () {

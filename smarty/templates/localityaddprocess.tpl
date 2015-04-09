@@ -1,4 +1,4 @@
-<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+{*<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">*}
 <link rel="stylesheet" type="text/css" href="js/bootstrap-tagsinput/bootstrap-tagsinput.css">
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
@@ -8,7 +8,7 @@
 <script type="text/javascript" src="js/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
- <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=false&key={$googleMapKey}"></script>
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
