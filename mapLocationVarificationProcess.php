@@ -41,8 +41,10 @@ if (isset($_REQUEST['generateMap'])) {
         $projectLatitude = $project->latitude;
         $projectLongitude = $project->longitude; 
         
-        if($projectLatitude || $projectLatitude){
-            print "<pre>Project Cooridinates: (".$projectLatitude.", ".$projectLongitude.")"."</pre>";
+        if($projectLatitude || $projectLatitude){             
+            $smarty->assign("project_name", $projectName);
+            $smarty->assign("projectLatitude", $projectLatitude);
+            $smarty->assign("projectLongitude", $projectLongitude);
         }else{
             $errorMsg = "Project Lat or Long not available!";
         }
@@ -51,17 +53,24 @@ if (isset($_REQUEST['generateMap'])) {
         $localityDetail = Locality::getLocalityById($locality);
         
         $localityLatitude = $localityDetail[0]->latitude;
-        $localityLatitude = $localityDetail[0]->longitude;
+        $localityLongitude = $localityDetail[0]->longitude;
         $localityLatMax = $localityDetail[0]->max_latitude;
         $localityLongMax = $localityDetail[0]->max_longitude;
         $localityLongMin = $localityDetail[0]->min_longitude;
         $localityLatMin = $localityDetail[0]->min_latitude;
         
-        if($localityLatMax || $localityLongMax || $localityLongMin || $localityLatMin ){
-            print "<pre>Localities Cooridinates: (".$localityLatMax.", ".$localityLongMax.", ".$localityLongMin.",".$localityLatMin.")"."</pre>";
+        if($localityLatMax || $localityLongMax || $localityLongMin || $localityLatMin ){           
+            $smarty->assign("localityLatitude", $localityLatitude);
+            $smarty->assign("localityLongitude", $localityLongitude);
+            $smarty->assign("localityLatMax", $localityLatMax);
+            $smarty->assign("localityLongMax", $localityLongMax);
+            $smarty->assign("localityLongMin", $localityLongMin);
+            $smarty->assign("localityLatMin", $localityLatMin);
+            
         }else{
             $errorMsg = "Locality Boundaries not available!";
         }
+        
         
         
     }else{
@@ -72,11 +81,7 @@ if (isset($_REQUEST['generateMap'])) {
     $smarty->assign("errorMsg", $errorMsg);
     $smarty->assign("city", $city);
     $smarty->assign("projectId", $_GET['projectId']);
-    $smarty->assign("locality", $locality);
-    $smarty->assign("project_name", $projectName);
-   
-    
-
-    print "<pre>" . print_r($_REQUEST, 1) . "</pre>";
+    $smarty->assign("locality", $locality);    
+ 
 }
 ?>

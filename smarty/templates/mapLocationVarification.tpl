@@ -109,192 +109,190 @@
                     <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
                     <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
 
-                        <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
-                                <TR>
-                                    <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
-                                        <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
-                                                <TR>
-                                                    <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Map Location Varification Tool<findOTP/TD>
-                                                </TR>
-                                            </TBODY></TABLE>
-                                    </TD>
-                                </TR>
-                                <TR>
-                                    <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+                        {if $mapVarifyAuth == true}
 
-                                        <div id='create_agent' align="left">
-                                            <table width="90%" border="0" align="center" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
-                                                <form method = "get" action = "" onsubmit = "return validation();">
-                                                    <tr>
-                                                        <td height="25" align="center" colspan= "2">
-                                                            <span>
-                                                                <font color = "red">{if $errorMsg} {$errorMsg} {/if}</font>
-                                                            </span>                                                                
-                                                        </td>
-                                                    </tr>                                                    
-                                                    <tr>
-                                                        <td align="right" style = "padding-left:20px;" width='35%'><b>City:</b></td>
-                                                        <td align="left" style = "padding-left:20px;" width='65%'>
-                                                            <select name = 'city' id = "city" onchange = "update_locality(this.value);">
-                                                                <option value = "">Select City</option>
-                                                                {foreach from = $citylist key= key item = val}
+                            <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
+                                    <TR>
+                                        <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
+                                            <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
+                                                    <TR>
+                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Map Location Varification Tool<findOTP/TD>
+                                                    </TR>
+                                                </TBODY></TABLE>
+                                        </TD>
+                                    </TR>
+                                    <TR>
+                                        <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
 
-                                                                    <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
-                                                                {/foreach}
-                                                                <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
-                                                            </select>
-                                                        </td>
+                                            <div id='create_agent' align="left">
+                                                <table width="90%" border="0" align="center" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
+                                                    <form method = "get" action = "" onsubmit = "return validation();">
+                                                        <tr>
+                                                            <td height="25" align="center" colspan= "2">
+                                                                <span>
+                                                                    <font color = "red">{if $errorMsg} {$errorMsg} {/if}</font>
+                                                                </span>                                                                
+                                                            </td>
+                                                        </tr>                                                    
+                                                        <tr>
+                                                            <td align="right" style = "padding-left:20px;" width='35%'><b>City:</b></td>
+                                                            <td align="left" style = "padding-left:20px;" width='65%'>
+                                                                <select name = 'city' id = "city" onchange = "update_locality(this.value);">
+                                                                    <option value = "">Select City</option>
+                                                                    {foreach from = $citylist key= key item = val}
 
-                                                    </tr>
-                                                    <tr><td>&nbsp;</td></tr>
-                                                    <tr>
-                                                        <td align="right" style = "padding-left:20px;"><b>Locality:</b></td>
-                                                        <td align="left" style = "padding-left:20px;">
-                                                            <span id = "LocalityList">
-                                                                <select name = 'locality' id = "locality" onchange="localitySelect(this.value);">
-                                                                    <option value = "">Select Locality</option>
-                                                                    {foreach from = $getLocality item = value}
-                                                                        <option value = "{$value->locality_id}" 
-                                                                                {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
+                                                                        <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
                                                                     {/foreach}
+                                                                    <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
                                                                 </select>
-                                                            </span>
-                                                        </td>
-                                                    <input id="localitySelectText" type="hidden" name="locality" />
-                                                    </tr>
-                                                    <tr><td>&nbsp;</td></tr>
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr><td>&nbsp;</td></tr>
+                                                        <tr>
+                                                            <td align="right" style = "padding-left:20px;"><b>Locality:</b></td>
+                                                            <td align="left" style = "padding-left:20px;">
+                                                                <span id = "LocalityList">
+                                                                    <select name = 'locality' id = "locality" onchange="localitySelect(this.value);">
+                                                                        <option value = "">Select Locality</option>
+                                                                        {foreach from = $getLocality item = value}
+                                                                            <option value = "{$value->locality_id}" 
+                                                                                    {if $locality == $value->locality_id} selected {/if} >{if $city == "othercities"}{$value->cityname} - {/if}{$value->label}</option>
+                                                                        {/foreach}
+                                                                    </select>
+                                                                </span>
+                                                            </td>
+                                                        <input id="localitySelectText" type="hidden" name="locality" />
+                                                        </tr>
+                                                        <tr><td>&nbsp;</td></tr>
+                                                        <tr>
+                                                            <td align="right" style = "padding-left:20px;"><b>Project Id:</b></td>
+                                                            <td align="left" style = "padding-left:20px;">
+                                                                <input type = "text" name = "projectId" id = "projectId" value = "{$projectId}">
+                                                                <span>
+                                                                    <font color = "green">{if $project_name} {$project_name} {/if}</font>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td>&nbsp;</td></tr>
+                                                        <tr>
+                                                            <td height="25" align="center" colspan= "2"  style = "padding-right:40px;">
+                                                                <input type = "submit" value = "Generate Map" name = "generateMap" style="border:1px solid #c2c2c2;height:30px;width:120px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td>&nbsp;</td></tr>
+                                                    </form>
+                                                </TABLE> 
+                                                <table width="90%" border="0" align="center" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
                                                     <tr>
-                                                        <td align="right" style = "padding-left:20px;"><b>Project Id:</b></td>
-                                                        <td align="left" style = "padding-left:20px;">
-                                                            <input type = "text" name = "projectId" id = "projectId" value = "{$projectId}">
-                                                            <span>
-                                                                <font color = "green">{if $project_name} {$project_name} {/if}</font>
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                    <tr><td>&nbsp;</td></tr>
-                                                    <tr>
-                                                        <td height="25" align="center" colspan= "2"  style = "padding-right:40px;">
-                                                            <input type = "submit" value = "Generate Map" name = "generateMap" style="border:1px solid #c2c2c2;height:30px;width:120px;background:#999999;color:#fff;font-weight:bold;cursor:hand;pointer:hand;">
-                                                        </td>
-                                                    </tr>
-                                                    <tr><td>&nbsp;</td></tr>
-                                                </form>
-                                            </TABLE> 
-                                            <table width="90%" border="0" align="center" cellpadding="0" cellspacing="1" bgColor="#fcfcfc" style = "border:1px solid #c2c2c2;margin: 20px;">
-                                                <tr>
-                                                    <td>
-                                                        <div id="map" style="width: 950px; height: 600px;">
-                                                            <script>
-                                                                // Define your locations: HTML content for the info window, latitude, longitude
-                                                                var locations = [
-                                                                    ['<h4>Srishti</h4>', 28.51576233, 77.38371277],
-                                                                    ['<h4>Silver City</h4>', 28.51964760, 77.38769531]
+                                                        <td>
+                                                            <div id="map" style="width: 950px; height: 600px;{if $errorMsg}display:none;{/if}">
+                                                                <script>
+                                                                    // Define your locations: HTML content for the info window, latitude, longitude
+                                                                    var locations = [
+                                                                        ["<h4>{$project_name}</h4>", "{$projectLatitude}", "{$projectLongitude}"],
+                                                                    ];
 
-                                                                ];
+                                                                    // Setup the different icons and shadows
+                                                                    var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
-                                                                // Setup the different icons and shadows
-                                                                var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
+                                                                    var icons = [
+                                                                        iconURLPrefix + 'red-dot.png',
+                                                                        iconURLPrefix + 'green-dot.png',
+                                                                        iconURLPrefix + 'blue-dot.png',
+                                                                        iconURLPrefix + 'orange-dot.png',
+                                                                        iconURLPrefix + 'purple-dot.png',
+                                                                        iconURLPrefix + 'pink-dot.png',
+                                                                        iconURLPrefix + 'yellow-dot.png'
+                                                                    ]
+                                                                    var iconsLength = icons.length;
 
-                                                                var icons = [
-                                                                    iconURLPrefix + 'red-dot.png',
-                                                                    iconURLPrefix + 'green-dot.png',
-                                                                    iconURLPrefix + 'blue-dot.png',
-                                                                    iconURLPrefix + 'orange-dot.png',
-                                                                    iconURLPrefix + 'purple-dot.png',
-                                                                    iconURLPrefix + 'pink-dot.png',
-                                                                    iconURLPrefix + 'yellow-dot.png'
-                                                                ]
-                                                                var iconsLength = icons.length;
+                                                                    var mapOptions = {
+                                                                        zoom: 5,
+                                                                        center: new google.maps.LatLng("{$localityLatitude}", "{$localityLongitude}"),
+                                                                        mapTypeId: google.maps.MapTypeId.TERRAIN
+                                                                    };
 
-                                                                var map = new google.maps.Map(document.getElementById('map'), {
-                                                                    zoom: 11,
-                                                                    center: new google.maps.LatLng(28.51770401, 77.38570404),
-                                                                    mapTypeId: google.maps.MapTypeId.ROADMAP,
-                                                                    mapTypeControl: false,
-                                                                    streetViewControl: false,
-                                                                    panControl: false,
-                                                                    zoomControlOptions: {
-                                                                        position: google.maps.ControlPosition.LEFT_BOTTOM
-                                                                    }
-                                                                });
+                                                                    var map = new google.maps.Map(document.getElementById('map'),
+                                                                            mapOptions);
 
-                                                                var infowindow = new google.maps.InfoWindow({
-                                                                    maxWidth: 160
-                                                                });
-
-                                                                var markers = new Array();
-
-                                                                var iconCounter = 0;
-
-                                                                // Add the markers and infowindows to the map
-                                                                for (var i = 0; i < locations.length; i++) {
-                                                                    var marker = new google.maps.Marker({
-                                                                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                                                                        map: map,
-                                                                        icon: icons[iconCounter]
+                                                                    var infowindow = new google.maps.InfoWindow({
+                                                                        maxWidth: 160
                                                                     });
 
-                                                                    markers.push(marker);
+                                                                    var markers = new Array();
 
-                                                                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                                                                        return function () {
-                                                                            infowindow.setContent(locations[i][0]);
-                                                                            infowindow.open(map, marker);
+                                                                    var iconCounter = 0;
+
+                                                                    // Add the markers and infowindows to the map
+                                                                    for (var i = 0; i < locations.length; i++) {
+                                                                        var marker = new google.maps.Marker({
+                                                                            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                                                            map: map,
+                                                                            icon: icons[iconCounter]
+                                                                        });
+
+                                                                        markers.push(marker);
+
+                                                                        google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                                                                            return function () {
+                                                                                infowindow.setContent(locations[i][0]);
+                                                                                infowindow.open(map, marker);
+                                                                            }
+                                                                        })(marker, i));
+
+                                                                        iconCounter++;
+                                                                        // We only have a limited number of possible icon colors, so we may have to restart the counter
+                                                                        if (iconCounter >= iconsLength) {
+                                                                            iconCounter = 0;
                                                                         }
-                                                                    })(marker, i));
-
-                                                                    iconCounter++;
-                                                                    // We only have a limited number of possible icon colors, so we may have to restart the counter
-                                                                    if (iconCounter >= iconsLength) {
-                                                                        iconCounter = 0;
                                                                     }
-                                                                }
 
-                                                                // Define the LatLng coordinates for the polygon's path.
-                                                                var triangleCoords = [
-                                                                    new google.maps.LatLng(28.51964760, 77.38371277),
-                                                                    new google.maps.LatLng(28.51576233, 77.38371277),
-                                                                    new google.maps.LatLng(28.51576233, 77.38769531),
-                                                                    new google.maps.LatLng(28.51964760, 77.38769531),
-                                                                ];
+                                                                    // Define the LatLng coordinates for the polygon's path.
+                                                                    var triangleCoords = [
+                                                                        new google.maps.LatLng("{$localityLatMax}", "{$localityLongMin}"),
+                                                                        new google.maps.LatLng("{$localityLatMin}", "{$localityLongMin}"),
+                                                                        new google.maps.LatLng("{$localityLatMin}", "{$localityLongMax}"),
+                                                                        new google.maps.LatLng("{$localityLatMax}", "{$localityLongMax}"),
+                                                                    ];
 
-                                                                // Construct the polygon.
-                                                                bermudaTriangle = new google.maps.Polygon({
-                                                                    paths: triangleCoords,
-                                                                    strokeColor: '#FF0000',
-                                                                    strokeOpacity: 0.8,
-                                                                    strokeWeight: 2,
-                                                                    fillColor: '#FF0000',
-                                                                    fillOpacity: 0.35
-                                                                });
+                                                                    // Construct the polygon.
+                                                                    bermudaTriangle = new google.maps.Polygon({
+                                                                        paths: triangleCoords,
+                                                                        strokeColor: '#FF0000',
+                                                                        strokeOpacity: 0.8,
+                                                                        strokeWeight: 2,
+                                                                        fillColor: '#FF0000',
+                                                                        fillOpacity: 0.35
+                                                                    });
 
-                                                                bermudaTriangle.setMap(map);
-
+                                                                    bermudaTriangle.setMap(map);
 
 
-                                                                function autoCenter() {
-                                                                    //  Create a new viewpoint bound
-                                                                    var bounds = new google.maps.LatLngBounds();
+
+                                                                    function autoCenter() {
+                                                                        //  Create a new viewpoint bound
+                                                                        var bounds = new google.maps.LatLngBounds();
 
 
-                                                                    //  Go through each...
-                                                                    for (var i = 0; i < markers.length; i++) {
-                                                                        bounds.extend(markers[i].position);
+                                                                        //  Go through each...
+                                                                        for (var i = 0; i < markers.length; i++) {
+                                                                            bounds.extend(markers[i].position);
+                                                                        }
+                                                                        //  Fit these bounds to the map
+                                                                        map.fitBounds(bounds);
                                                                     }
-                                                                    //  Fit these bounds to the map
-                                                                    map.fitBounds(bounds);
-                                                                }
-                                                                autoCenter();
-                                                            </script>
+                                                                    autoCenter();
+                                                                </script>
 
 
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
 
-                                            </table>                                            
-                                        </div> 
+                                                </table>                                            
+                                            </div> 
+                                        {/if}
 
                                     </TD>
                                 </TR>
