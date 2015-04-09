@@ -58,7 +58,10 @@ function submitButton(){
     }
     if(($("#search_term option:selected").val() != "") && ($("#search_value").val().trim()!="" || $("#search_landmark").val().trim()!="")){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
-        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : window.googlePlaceId);
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : $("#search_landmark").val().trim());
+    }
+    if($("#search_term option:selected").val() == "gpid"){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"gpid=" + $("#hidden_gpid").val();
     }
     
     if(($("#search_range option:selected").val() != "") && ($("#range_from").val().trim() != "" || $("#range_to").val().trim() !="")){
@@ -433,10 +436,10 @@ $('#search_term').val(getParameterByName('search_term'));
 
 
 if($('#search_term').val()=="gpid"){
+    $('#hidden_gpid').val(getParameterByName('gpid'))
     $("#search_landmark").val(getParameterByName('search_value'));
     $('#search_value').addClass("hide-input");
     $('#search_landmark').removeClass("hide-input");
-    window.googlePlaceId = getParameterByName('search_value');
     
 }else{
     $('#search_value').val(getParameterByName('search_value'));
@@ -512,9 +515,14 @@ selProject = $("#selProjId").val();*/
           if($("#listingId_search").val()){
              url += '&listingId=' + $("#listingId_search").val();
           }
-          if($("#search_term").val() && $("#search_value").val()){
-             url += '&search_term=' + $("#search_term").val();
-             url += '&search_value=' + $("#search_value").val();
+          if($("#search_term").val()){
+              if($("#search_value").val()){
+                    url += '&search_term=' + $("#search_term").val();
+                    url += '&search_value=' + $("#search_value").val();
+              }
+              else if($("#search_landmark").val()){
+                  url += '&gpid=' + $("#hidden_gpid").val();
+              }
           }
           if($("#search_range").val() && ($("#range_from").val() || $("#range_to").val())){
              url += '&search_range=' + $("#search_range").val();
@@ -1585,6 +1593,7 @@ function getParameterByName(name) {
                                                         <option value="bedrooms">Search By Bedrooms</option>
                                                         <option value="gpid">Search By Landmark</option>
                                                     </select>
+                                                    <input type="hidden" id="hidden_gpid">
                                                 </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type="text" name="search_value" id="search_value" placeholder="Search Value">
@@ -2279,7 +2288,7 @@ $(document).ready(function(){
         },
 
         select: function( event, ui ) {
-          window.googlePlaceId = ui.item.googlePlaceId;
+          $("#hidden_gpid").val(ui.item.googlePlaceId);
         },
         open: function() {
           $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );

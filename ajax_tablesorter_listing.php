@@ -14,6 +14,7 @@ $search_value = filter_input(INPUT_GET, "search_value");
 $search_range = filter_input(INPUT_GET, "search_range");
 $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
+$gpid = filter_input(INPUT_GET, "gpid");
 
 
 $start = $page * $size;
@@ -39,11 +40,15 @@ if (isset($search_range) && !empty($search_range) && ($search_range != "null") &
     }
     $filterArr["and"][] = $tempRange;
 }
+$gpidFilter = "";
+if (isset($gpid) && $gpid != "") {
+    $gpidFilter = "gpid=" . $gpid . "&";
+}
 $tbsorterArr = array();
 
 $filter = json_encode($filterArr);
 $fields = '"fields":["imageCount","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
-$uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $fields . '}';
+$uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $fields . '}';
 
 try {
     $responseLists = \Httpful\Request::get($uriListing)->send();
