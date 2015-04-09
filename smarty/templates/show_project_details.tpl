@@ -1466,6 +1466,18 @@ function fetchPlanImages(objectType, objectId, contentArea){
                                                         {$redevelopment_flag}
                                                     </td>
 						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> IS Smoothed ?: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].IS_SMOOTHED == 0}
+                                                               No
+                                                        {else}
+                                                               Yes
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                 
 					</table>
 				</td>
