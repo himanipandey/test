@@ -13,7 +13,7 @@ if (!isset($_REQUEST['term']))
     exit;
 $data = array();
 if ($_REQUEST['type'] == 'suburb') {
-    $rs = mysql_query('select LABEL, PRIORITY, SUBURB_ID FROM ' . SUBURB . ' where CITY_ID="' . $_REQUEST["cityId"] . '" AND (LABEL like "' . mysql_real_escape_string($_REQUEST['term']) . '%" OR SUBURB_ID like "' . mysql_real_escape_string($_REQUEST['term']) . '%") order by LABEL ASC limit 0,10');
+    $rs = mysql_query('select LABEL, PRIORITY, SUBURB_ID FROM ' . SUBURB . ' where STATUS="Active" AND CITY_ID="' . $_REQUEST["cityId"] . '" AND (LABEL like "%' . mysql_real_escape_string($_REQUEST['term']) . '%" OR SUBURB_ID like "' . mysql_real_escape_string($_REQUEST['term']) . '%") order by LABEL ASC limit 0,10');
     if ($rs && mysql_num_rows($rs)) {
         while ($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
             $data[] = array(
