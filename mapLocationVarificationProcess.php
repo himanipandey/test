@@ -5,6 +5,8 @@ $smarty->assign("citylist", $citylist);
 
 $errorMsg = '';
 
+$latLongList = '0,1,2,3,4,5,6,7,8,9';
+
 if (isset($_REQUEST['generateMap'])) {
     if (!isset($_REQUEST['city']))
         $_REQUEST['city'] = '';
@@ -40,8 +42,10 @@ if (isset($_REQUEST['generateMap'])) {
         $projectName = $project->project_name;
         $projectLatitude = $project->latitude;
         $projectLongitude = $project->longitude;
+        
+        //print $projectLatitude." - ".$projectLongitude;
 
-        if ($projectLatitude && $projectLatitude) {
+        if (($projectLatitude && $projectLongitude) && ($projectLatitude != '0.000000' && $projectLongitude != '0.000000')) {
             $smarty->assign("project_name", $projectName);
             $smarty->assign("projectLatitude", $projectLatitude);
             $smarty->assign("projectLongitude", $projectLongitude);
@@ -59,7 +63,7 @@ if (isset($_REQUEST['generateMap'])) {
         $localityLongMin = $localityDetail[0]->min_longitude;
         $localityLatMin = $localityDetail[0]->min_latitude;
 
-        if ($localityLatMax && $localityLongMax && $localityLongMin && $localityLatMin) {
+        if (($localityLatMax && $localityLongMax && $localityLongMin && $localityLatMin ) && ($localityLatMax != '0.000000' && $localityLongMax != '0.000000' && $localityLongMin != '0.000000' && $localityLatMin != '0.000000')) {
             $smarty->assign("localityLatitude", $localityLatitude);
             $smarty->assign("localityLongitude", $localityLongitude);
             $smarty->assign("localityLatMax", $localityLatMax);

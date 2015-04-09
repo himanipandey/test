@@ -44,9 +44,10 @@ if (count($allProject) > 0) {
     ?>
 
     <?php
-    if ($localityLatMax && $localityLongMax && $localityLongMin && $localityLatMin) {
+    if (($localityLatMax && $localityLongMax && $localityLongMin && $localityLatMin ) && ($localityLatMax != '0.000000' && $localityLongMax != '0.000000' && $localityLongMin != '0.000000' && $localityLatMin != '0.000000')) {
+        
         ?>
-        <div id="map" style="width: 550px; height: 400px;">
+        <div id="map" style="width: 850px; height: 500px;">
 
             <script>
                 // Define your locations: HTML content for the info window, latitude, longitude
@@ -69,7 +70,7 @@ if (count($allProject) > 0) {
                 var iconsLength = icons.length;
 
                 var mapOptions = {
-                    zoom: 14,
+                    zoom: 12,
                     center: new google.maps.LatLng("<?php echo $localityLatitude ?>", "<?php echo $localityLongitude ?>"),
                     mapTypeId: google.maps.MapTypeId.TERRAIN,
                     panControl: true,
