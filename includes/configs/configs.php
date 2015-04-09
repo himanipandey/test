@@ -754,6 +754,9 @@ $smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
 
 $smarty->assign("arrAllType",$arrAllType);
 
+$smarty->assign('errorUrl', FIND_ERRORS_URL);
+
+
 /********config for project type of residential/nonresidential******************/
 
 

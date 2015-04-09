@@ -1,7 +1,4 @@
 <?php
-
-    $smarty->assign('errorUrl', FIND_ERRORS_URL);
-
     $accessLocality = '';
     if( $localityAuth == false )
        $accessLocality = "No Access";
