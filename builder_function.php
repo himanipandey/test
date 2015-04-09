@@ -1245,7 +1245,7 @@ function ViewCityDetails($cityID) {
 
 function getAllCities() {
 
-    $allCities = "SELECT * FROM " . CITY . " WHERE 1 ORDER BY LABEL";
+    $allCities = "SELECT * FROM " . CITY . " WHERE status='Active' ORDER BY LABEL";
     $execQry = mysql_query($allCities);
     while ($cityArr = mysql_fetch_assoc($execQry)) {
         $allCityArr[] = $cityArr;
