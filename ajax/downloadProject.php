@@ -58,6 +58,9 @@ if(!isset($_POST['dwnld_Residential']))
 if(!isset($_POST['dwnld_skip_B2B']))
   $_POST['dwnld_skip_B2B'] = '';
 
+if(!isset($_REQUEST['dwnld_is_smoothed']) || $_REQUEST['dwnld_is_smoothed']=='')
+        $_REQUEST['dwnld_is_smoothed'] = '';
+
 if(!isset($_POST['dwnld_Active']))
 	$_POST['dwnld_Active'] = '';
 
@@ -135,7 +138,7 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
     $QueryMember1 = "SELECT RP.updation_cycle_id,RP.PROJECT_ID,RB.BUILDER_NAME,RP.PROJECT_NAME,PP.name as PROJECT_PHASE,
                 PS.name as PROJECT_STAGE,ct.LABEL AS CITY_NAME, psm.project_status as 
                     PROJECT_STATUS,rpp.phase_type,rpp.booking_status_id,
-                L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL
+                L.LABEL LOCALITY, PSH.DATE_TIME, PA.FNAME, UC.LABEL UPDATION_LABEL, RP.IS_SMOOTHED
                  FROM
                     resi_project RP
                  LEFT JOIN
@@ -163,7 +166,6 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
                   left join table_attributes ta 
                         on ta.table_id = RP.PROJECT_ID AND ta.table_name='resi_project' AND ta.attribute_name='HOUSING_AUTHORITY_ID'  
                     ";
-
     if ($_POST['dwnld_skip_B2B'] != ''){
 //      $and = " WHERE RP.version='Cms' and (RP.updation_cycle_id != '15' OR RP.updation_cycle_id is null) and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
       $and = " WHERE RP.version='Cms' and RP.SKIP_B2B='".$_POST['dwnld_skip_B2B'] ."' and ";
@@ -197,6 +199,10 @@ if($search != '' OR $transfer != '' OR $_POST['dwnld_projectId'] != '')
         if($_POST['dwnld_project_name'] != '')
         {
             $QueryMember .= $and." RP.PROJECT_NAME LIKE '%".$_POST['dwnld_project_name']."%'";
+            $and  = ' AND ';
+        }
+        if ($_POST['dwnld_is_smoothed'] != ''){            
+            $QueryMember .= $and." RP.IS_SMOOTHED = '".$_POST['dwnld_is_smoothed']."'";
             $and  = ' AND ';
         }
         if($_POST['dwnld_Residential'] != '')
@@ -310,6 +316,7 @@ $arrAll['STAGE'] = '';
 $arrAll['STAGE MOVEMENT DATE'] = '';
 $arrAll['STAGE MOVEMENT DONE BY'] = '';
 $arrAll['UPDATION LABEL'] = '';
+$arrAll['IS SMOOTHED?'] = '';
 
 while($ob1 = mysql_fetch_assoc($QueryExecute))
 {
@@ -324,6 +331,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         $date_time = $ob1['DATE_TIME'];
         $stage_move_by = $ob1['FNAME'];
         $localityname = $ob1['LOCALITY'];
+        $is_smoothed = $ob1['IS_SMOOTHED'];
 	
 	$proj_status = $ob1['PROJECT_STATUS'];
 	
@@ -356,6 +364,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         $arrAll['STAGE MOVEMENT DATE'][] = $date_time;
         $arrAll['STAGE MOVEMENT DONE BY'][] = $stage_move_by;
         $arrAll['UPDATION LABEL'][] = $updation_label;
+        $arrAll['IS SMOOTHED?'][] = $is_smoothed;
 
 	$cnt++;
 
@@ -386,6 +395,7 @@ while($ob1 = mysql_fetch_assoc($QueryExecute))
         $arrAllInner['STAGE MOVEMENT DATE'] = $arrAll['STAGE MOVEMENT DATE'][$count];
         $arrAllInner['STAGE MOVEMENT DONE BY'] = $arrAll['STAGE MOVEMENT DONE BY'][$count];
         $arrAllInner['UPDATION LABEL'] = $arrAll['UPDATION LABEL'][$count];
+        $arrAllInner['IS SMOOTHED?'] = $arrAll['IS SMOOTHED?'][$count];
          $count++;
         echocsv( $arrAllInner );
        

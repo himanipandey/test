@@ -98,7 +98,7 @@
                                 }
                                 $city_id = implode(",",$group_city_ids);
                         }
-                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.CITY_ID in (" . $city_id . ") ORDER BY A.LABEL ASC";
+                        $sql = "SELECT A.SUBURB_ID, A.CITY_ID, A.LABEL FROM ".SUBURB." AS A WHERE A.STATUS='Active' AND A.CITY_ID in (" . $city_id . ") ORDER BY A.LABEL ASC";
 
                         $data = mysql_query($sql);
 
@@ -122,7 +122,7 @@
                        FROM ".LOCALITY." AS A
                        inner join suburb s on A.suburb_id = s.suburb_id
                        inner join city c on s.city_id = c.city_id
-                       WHERE
+                       WHERE A.STATUS='Active' AND s.STATUS='Active' AND c.STATUS='Active' AND
                         c.CITY_ID = " . $city_id;
                    if ($suburb_id != null) {
                    $sql .= " AND A.SUBURB_ID = " . $suburb_id;

@@ -62,21 +62,21 @@ $dailyEmail = array(
             and ((rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE))
              and (rp.LATITUDE not in($latLongList) or rp.LONGITUDE not in($latLongList));",
         'subject' => 'Lat Long Beyond Limits',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'Latitude_longitude_beyond_limit',
         'sendifnodata' => 0
     ),
     array(
         'sql' => "UPDATE `project_offers` SET STATUS = 'Inactive' WHERE STATUS = 'Active' AND OFFER_END_DATE='" . $past_date . "';",
         'subject' => 'Expired Project Offers',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com'),
         'attachmentname' => 'expired_project_offers',
         'sendifnodata' => 0
     ),
     array(
         'sql' => "SELECT pof.id as OFFER_ID,pof.project_id as PROJECT_ID,pof.OFFER,pof.OFFER_DESC,pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='" . $future_date . "';",
         'subject' => 'Project Offers Reaching Expiry Date',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com', 'ravi.srivastava@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com', 'ravi.srivastava@proptiger.com'),
         'attachmentname' => 'expired_project_offers',
         'message' => "Please extend the offers validity otherwise they will be deactivated.",
         'sendifnodata' => 0
@@ -100,7 +100,7 @@ $dailyEmail = array(
                 LEFT JOIN company c ON cu.company_id = c.id order by Option_id",
         'subject' => 'Duplicate listings',
 //            'recipients'=>array('jitendra.pathak@proptiger.com'), 
-        'recipients' => array('cms-cron@proptiger.com', 'suneel.kumar@proptiger.com', 'prakash.kanyal@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'suneel.kumar@proptiger.com', 'prakash.kanyal@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Duplicate Listings',
         'message' => "Hi, Please find the attached list of duplicate listings inserted yesterday",
         'sendifnodata' => 0
@@ -108,7 +108,7 @@ $dailyEmail = array(
     array(
         'sql' => "select options_id, project_id, option_name, option_type, size from resi_project_options where option_category = 'Actual' and  date(created_at) >='" . $past_date . "';",
         'subject' => 'New Configurations',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'New Configurations',
         'message' => "Configurations which have been created yesterday",
         'sendifnodata' => 0
@@ -122,7 +122,7 @@ $dailyEmail = array(
         group by rpors.options_id
             having (((carpet_area / (rpo.size)) *100) < 60 OR ((carpet_area / (rpo.size)) *100) > 80);",
         'subject' => 'Carpet Area Greater than 80% and Less than 60%',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Carpet Area Greater than 80 and Less than 60',
         'message' => "Carpet Area Greater than 80% and Less than 60% of Size",
         'sendifnodata' => 0
