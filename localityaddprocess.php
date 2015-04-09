@@ -1,5 +1,7 @@
 <?php
 
+    $smarty->assign('errorUrl', FIND_ERRORS_URL);
+
     $accessLocality = '';
     if( $localityAuth == false )
        $accessLocality = "No Access";
@@ -33,9 +35,9 @@
     }
     $smarty->assign("parent_id", $parent_id);
     $smarty->assign("parent_name", $parent_name);
-
+    
     if(isset($_POST['btnExit'])){
-            header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+            header("Location:localityList.php?page=1&sort=all&citydd={$cityId}"); die('exit');
     }
     if (isset($_POST['btnSave'])) {
                 $txtCityName = replaceSpaces(trim($_POST['txtCityName']));
@@ -183,7 +185,7 @@
                                             }
                                          }      
                                              
-                                         header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                         header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");die('localityID is not blank');
                                  }
                             }
                             else{
@@ -213,7 +215,7 @@
                                 $seoData['table_name'] = 'locality';
                                 $seoData['updated_by'] = $_SESSION['adminId'];
                                 SeoData::insetUpdateSeoData($seoData);
-                                 header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
+                                 header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");die;
                             }
                 }
                 else

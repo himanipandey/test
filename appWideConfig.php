@@ -131,6 +131,8 @@ else{
 
 	define("phase_detail","http://www.proptiger.com/data/v1/entity/project/");
 	//https://www.proptiger.com/data/v1/entity/project/640042/phase?fields=phaseId
+        
+        define('FIND_ERRORS_URL', 'https://qa.proptiger-ws.com/seo/data/v1/text-analyser/find-errors');
 
 
 
