@@ -24,7 +24,7 @@ $dailyEmail = array(
                             DATE(rp.created_at) = DATE(subdate(current_date, 1))
                             and rp.version = 'Cms'",
         'subject' => 'Projects inserted yesterday',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects',
         'message' => '',
         'sendifnodata' => 0
@@ -37,7 +37,7 @@ $dailyEmail = array(
                         WHERE
                             DATE(a.MODIFIIED_DATE) = DATE(subdate(current_date, 1))",
         'subject' => 'Redirections inserted yesterday',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'redirections',
         'message' => '',
         'sendifnodata' => 0
@@ -45,7 +45,7 @@ $dailyEmail = array(
     array(
         'sql' => "select cd.CallId, cd.CallStatus, cd.ApiResponse, cd.CallbackJson, cd.CreationTime, pa.USERNAME, GROUP_CONCAT(cp.ProjectId) PROJECTS from CallDetails cd left join CallProject cp on cd.CallId=cp.CallId inner join proptiger_admin pa on cd.AgentId = pa.ADMINID where ApiResponse = 'queued successfully' and (CallbackJson is null or CallbackJson = '') and Date(CreationTime) = Date(DATE_SUB(NOW(), INTERVAL 1 DAY)) group by cd.CallId;",
         'subject' => 'Calls With No Response',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'ravi.srivastava@proptiger.com', 'azitabh.ajit@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'ravi.srivastava@proptiger.com', 'azitabh.ajit@proptiger.com'),
         'attachmentname' => 'missing_data',
         'sendifnodata' => 0
     ),
@@ -62,21 +62,21 @@ $dailyEmail = array(
             and ((rp.LONGITUDE not between l.MIN_LONGITUDE and l.MAX_LONGITUDE) or (rp.LATITUDE not between l.MIN_LATITUDE and l.MAX_LATITUDE))
              and (rp.LATITUDE not in($latLongList) or rp.LONGITUDE not in($latLongList));",
         'subject' => 'Lat Long Beyond Limits',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'Latitude_longitude_beyond_limit',
         'sendifnodata' => 0
     ),
     array(
         'sql' => "UPDATE `project_offers` SET STATUS = 'Inactive' WHERE STATUS = 'Active' AND OFFER_END_DATE='" . $past_date . "';",
         'subject' => 'Expired Project Offers',
-        'recipients' => array('ankur.dhawan@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com'),
         'attachmentname' => 'expired_project_offers',
         'sendifnodata' => 0
     ),
     array(
         'sql' => "SELECT pof.id as OFFER_ID,pof.project_id as PROJECT_ID,pof.OFFER,pof.OFFER_DESC,pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='" . $future_date . "';",
         'subject' => 'Project Offers Reaching Expiry Date',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com', 'ravi.srivastava@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com', 'ravi.srivastava@proptiger.com'),
         'attachmentname' => 'expired_project_offers',
         'message' => "Please extend the offers validity otherwise they will be deactivated.",
         'sendifnodata' => 0
@@ -100,7 +100,7 @@ $dailyEmail = array(
                 LEFT JOIN company c ON cu.company_id = c.id order by Option_id",
         'subject' => 'Duplicate listings',
 //            'recipients'=>array('jitendra.pathak@proptiger.com'), 
-        'recipients' => array('suneel.kumar@proptiger.com', 'prakash.kanyal@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'suneel.kumar@proptiger.com', 'prakash.kanyal@proptiger.com'),
         'attachmentname' => 'Duplicate Listings',
         'message' => "Hi, Please find the attached list of duplicate listings inserted yesterday",
         'sendifnodata' => 0
@@ -108,7 +108,7 @@ $dailyEmail = array(
     array(
         'sql' => "select options_id, project_id, option_name, option_type, size from resi_project_options where option_category = 'Actual' and  date(created_at) >='" . $past_date . "';",
         'subject' => 'New Configurations',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'New Configurations',
         'message' => "Configurations which have been created yesterday",
         'sendifnodata' => 0
@@ -122,7 +122,7 @@ $dailyEmail = array(
         group by rpors.options_id
             having (((carpet_area / (rpo.size)) *100) < 60 OR ((carpet_area / (rpo.size)) *100) > 80);",
         'subject' => 'Carpet Area Greater than 80% and Less than 60%',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'Carpet Area Greater than 80 and Less than 60',
         'message' => "Carpet Area Greater than 80% and Less than 60% of Size",
         'sendifnodata' => 0
@@ -136,7 +136,7 @@ $weeklyEmail = array(
                 rp.version = 'Cms'
                 and rp.status in('Active','ActiveInCms') and project_status_id = 2;",
         'subject' => 'Cancelled projects but not yet marked inactive',
-        'recipients' => array('ankur.dhawan@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com'),
         'attachmentname' => 'Cancelled_projecst_but_not_yet_marked_inactive',
         'sendifnodata' => 0
     ),
@@ -157,7 +157,7 @@ $weeklyEmail = array(
 						IF(rpp.PROJECT_ID IN (SELECT project_id from resi_project_phase where phase_type = 'Actual' AND status = 'Active' AND version = 'Cms'),rpp.PHASE_TYPE = 'Actual',rpp.PHASE_TYPE = 'Logical')
 						ORDER BY rpp.PROJECT_ID ASC;",
         'subject' => 'Projects whose status is Pre Launch,Under construction,Launch projects but Expected completion date is in past',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'ravi.srivastava@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'ravi.srivastava@proptiger.com'),
         'attachmentname' => 'projects_whose_status_is_pre_launch_under_construction_launch_projects_but_expected_completion_date_is_in_past',
         'sendifnodata' => 0
     ),
@@ -172,7 +172,7 @@ $weeklyEmail = array(
              where ( rp.LATITUDE  not in ($latLongList) AND rp.LONGITUDE not in ($latLongList)) and
                 rp.version = 'Cms' and rp.status in('Active','ActiveInCms') and c.city_id in($cityList) having distance >10 ;",
         'subject' => 'PIDs greater than 10km from locality center',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
         'attachmentname' => 'PIDs_greater_than_10km_from_locality_center',
         'sendifnodata' => 0
     ),
@@ -188,7 +188,7 @@ $weeklyEmail = array(
 				    GROUP BY rp.project_id
 				    HAVING ((created_at NOT BETWEEN (CURRENT_DATE  - INTERVAL 90 DAY)  AND 	CURRENT_DATE) AND created_at < CURRENT_DATE);",
         'subject' => 'Protfolio Projects which dont have Construction Updates since last 3 months',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
         'attachmentname' => 'protfolio_projects_which_dont_have_Construction_Updates_since_last_3_months',
         'sendifnodata' => 0
     ),
@@ -207,7 +207,7 @@ $weeklyEmail = array(
 				AND 
 				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'))) AND effective_date < CURRENT_DATE);",
         'subject' => 'Primary Protfolio Projects which have Month of Price is older than 3 months',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
         'attachmentname' => 'Primary_Protfolio_Projects_which_have_Month_of_Price_is_older_than_3_months',
         'sendifnodata' => 0
     ),
@@ -226,7 +226,7 @@ $weeklyEmail = array(
 				AND 
 				( STR_TO_DATE(concat(YEAR(NOW()),',',MONTH(NOW()),',01'),'%Y,%m,%d'))) AND effective_date < CURRENT_DATE);",
         'subject' => 'Resale Protfolio Projects which have Month of Price is older than 3 months',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'karanvir.singh@proptiger.com', 'prashant.pracheta@proptiger.com'),
         'attachmentname' => 'Resale_Protfolio_Projects_which_have_Month_of_Price_is_older_than_3_months',
         'sendifnodata' => 0
     ),
@@ -242,7 +242,7 @@ $weeklyEmail = array(
                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList) OR rp.LATITUDE is null OR rp.LONGITUDE is null)
                 AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
         'subject' => 'Missing Latitude and Longitude List',
-        'recipients' => array('ankur.dhawan@proptiger.com', 'Ravi.srivastava@proptiger.com', 'kapil.chadha@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Ravi.srivastava@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Missing_latitude_longitude_list',
         'sendifnodata' => 0
     ),
@@ -250,7 +250,7 @@ $weeklyEmail = array(
         'sql' => "select project_id, project_name, CHAR_LENGTH(project_description) description_length 
                    from resi_project where CHAR_LENGTH(project_description) < 25 and version = 'Cms' and status != 'Inactive';",
         'subject' => 'Projects having description length less than 25 characters',
-        'recipients' => array('pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects_having_short_description',
         'sendifnodata' => 0
     )
