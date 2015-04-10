@@ -1,5 +1,7 @@
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -8,6 +10,7 @@
         theme : "advanced"
     });
 </script>
+<div class="modal">Please Wait..............</div>
 </TD>
   </TR>
   <TR>
@@ -124,7 +127,7 @@
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
 				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
-				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
+				  <input type="button" name="btnSave" id="btnSave" value="Save" style="cursor:pointer" onclick="find_errors('frmcity','{$errorUrl}');">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
 				  </td>
 				</tr>
@@ -150,7 +153,7 @@
 
 jQuery(document).ready(function(){
 
-	jQuery("#btnSave").click(function(){
+	{*jQuery("#btnSave").click(function(){
 	
 		var cityname = jQuery("#txtCityName").val();
 		var CityUrl = jQuery("#txtCityUrl").val();
@@ -159,7 +162,14 @@ jQuery(document).ready(function(){
 		var MetaKeywords = jQuery("#txtMetaKeywords").val();
 		var MetaDescription = jQuery("#txtMetaDescription").val();
 		var status = jQuery("#status").val();
-		var desc = tinyMCE.get('tinyeditor').getContent();
+		//var desc = tinyMCE.get('tinyeditor').getContent();
+                var temp = new Object;
+                temp.format = 'raw';
+                var desc = tinyMCE.activeEditor.getContent(temp);
+                
+               // console.log(desc);
+                //find_errors('frmcity', '{$errorUrl}')
+                //return false;
 		
 		if(cityname==''){
 		
@@ -169,8 +179,8 @@ jQuery(document).ready(function(){
 		}else{
 			jQuery('#errmsgname').html('');
 		}
-		
-		if(DisplayOrder==''){
+                
+		if(DisplayOrder=='999'){
 		
 			jQuery('#errmsgdispord').html('<font color="red">Please select display order</font>');
 			jQuery("#DisplayOrder").focus();
@@ -205,7 +215,7 @@ jQuery(document).ready(function(){
 		}else{
 			jQuery('#errmsgmetades').html('');
 		}
-		alert(desc+" asdfgh");	
+			
 		if(desc==''){
 		
 			jQuery('#errmsgdes').html('<font color="red">Please enter the description</font>');
@@ -215,7 +225,7 @@ jQuery(document).ready(function(){
 			jQuery('#errmsgdes').html('');
 		}
 
-	});
+	});*}
 
 });
 

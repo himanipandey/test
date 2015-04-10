@@ -610,7 +610,7 @@
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
 				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
-				  <input type="button" name="btnSave" id="btnSave" value="Save"  onclick="find_errors('builderForm', '{$errorUrl}',  $('#txtBuilderDescription').val());">
+				  <input type="button" name="btnSave" id="btnSave" value="Save"  onclick="find_errors('builderForm', '{$errorUrl}');">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
 				</tr>

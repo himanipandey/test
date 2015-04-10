@@ -6,7 +6,7 @@
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 
-<script type="text/javascript" src="js/common.js?version=4"></script>
+<script type="text/javascript" src="js/common.js?version=5"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>

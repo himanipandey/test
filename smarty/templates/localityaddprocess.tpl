@@ -207,7 +207,7 @@
                                 <tr class="save_row">
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
-				  <input type="button" name="btnSave" id="btnSave" value="Save" style="cursor:pointer" onclick="find_errors('frmcity', '{$errorUrl}',  $('#desc').val());">
+				  <input type="button" name="btnSave" id="btnSave" value="Save" style="cursor:pointer" onclick="find_errors('frmcity','{$errorUrl}');">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
 				  </td>
 				</tr>
