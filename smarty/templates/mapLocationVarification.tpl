@@ -196,18 +196,19 @@
                                                                     var iconURLPrefix = 'http://maps.google.com/mapfiles/ms/icons/';
 
                                                                     var icons = [
-                                                                        iconURLPrefix + 'red-dot.png',
-                                                                        iconURLPrefix + 'green-dot.png',
+                                                                        iconURLPrefix + 'yellow-dot.png',
+                                                                        iconURLPrefix + 'purple-dot.png',
+                                                                        /*iconURLPrefix + 'green-dot.png',
                                                                         iconURLPrefix + 'blue-dot.png',
                                                                         iconURLPrefix + 'orange-dot.png',
                                                                         iconURLPrefix + 'purple-dot.png',
                                                                         iconURLPrefix + 'pink-dot.png',
-                                                                        iconURLPrefix + 'yellow-dot.png'
+                                                                        iconURLPrefix + 'yellow-dot.png'*/
                                                                     ]
                                                                     var iconsLength = icons.length;
 
                                                                     var mapOptions = {
-                                                                        zoom: 14,
+                                                                        zoom: 13,
                                                                         center: new google.maps.LatLng("{$localityLatitude}", "{$localityLongitude}"),
                                                                         mapTypeId: google.maps.MapTypeId.TERRAIN
                                                                     };
@@ -218,6 +219,8 @@
                                                                     var infowindow = new google.maps.InfoWindow({
                                                                         maxWidth: 160
                                                                     });
+                                                                    
+                                                                    
 
                                                                     var markers = new Array();
 
@@ -225,6 +228,12 @@
 
                                                                     // Add the markers and infowindows to the map
                                                                     for (var i = 0; i < locations.length; i++) {
+                                                                        // We only have a limited number of possible icon colors, so we may have to restart the counter
+                                                                        if (i >= 1) {
+                                                                            iconCounter = 1;
+                                                                        }else{
+                                                                           iconCounter = 0; 
+                                                                        }
                                                                         var marker = new google.maps.Marker({
                                                                             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
                                                                             map: map,
@@ -241,11 +250,10 @@
                                                                         })(marker, i));
 
                                                                         iconCounter++;
-                                                                        // We only have a limited number of possible icon colors, so we may have to restart the counter
-                                                                        if (iconCounter >= iconsLength) {
-                                                                            iconCounter = iconsLength - 1;
-                                                                        }
+                                                                        
                                                                     }
+                                                                    infowindow.setContent(locations[0][0]);
+                                                                    infowindow.open(map,markers[0]);
 
                                                                     // Define the LatLng coordinates for the polygon's path.
                                                                     var triangleCoords = [
