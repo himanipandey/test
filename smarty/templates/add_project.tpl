@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 
 <script type="text/javascript" src="js/jquery.js"></script>
@@ -5,7 +6,7 @@
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 
-<script type="text/javascript" src="js/common.js?version=4"></script>
+<script type="text/javascript" src="js/common.js?version=5"></script>
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
@@ -161,6 +162,7 @@
     }
 
 </script>
+<div class="modal">Please Wait..............</div>
 <TR>
     <TD class="white-bg paddingright10" vAlign=top align=middle bgColor=#ffffff>
         <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
@@ -193,7 +195,7 @@
                         <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
 
                             <table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
-                                <form method="post" enctype="multipart/form-data" action = ''>
+                                <form method="post" enctype="multipart/form-data" action = '' id="projectAddForm">
                                     <div>
                                         {if $projectId}	
                                             <tr>
@@ -289,6 +291,7 @@
                                                             {/if}
                                                         </td>
                                                         <td width="50%" align="left">
+                                                            <span id="spellCheck" style="display:none"></span>
                                                             <font color="red">{if $ErrorMsg["txtDesc"] != ''} {$ErrorMsg["txtDesc"]} {/if}<span id = "err_project_bhk" style = "display:none;">Please enter Project Description!</span></font>
                                                         </td>
                                                         </tr>
@@ -958,9 +961,9 @@
                                                 <input type="hidden" name="preview" value="{$preview}" />
                                                 <input type = "hidden" name = "project_type_hidden" id = "project_type_hidden" value = "{$projectTypeOld}">
                                                 {if $projectId == ''}
-                                                    <input type="submit" name="btnSave" id="btnSave" value="Next" onclick = "return project_scn1();" />
+                                                    <input type="submit" name="btnSave" id="btnSave" value="Next" onclick = "return project_scn1('{$errorUrl}');" />
                                                 {else}
-                                                    <input type="submit" name="btnSave" id="btnSave" value="Save" onclick = "return project_scn1();" />
+                                                    <input type="submit" name="btnSave" id="btnSave" value="Save" onclick = "return project_scn1('{$errorUrl}');" />
                                                 {/if}
                                                 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
                                             </td>

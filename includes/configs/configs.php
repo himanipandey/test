@@ -754,6 +754,8 @@ $smarty->assign("youtube_upload_url","http://crawling-youtube.proptiger-ws.com:8
 
 $smarty->assign("arrAllType",$arrAllType);
 
+$smarty->assign('errorUrl', FIND_ERRORS_URL);
+
 //gooogle map api key
 $smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
 

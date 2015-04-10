@@ -1,5 +1,4 @@
 <?php
-
     $accessLocality = '';
     if( $localityAuth == false )
        $accessLocality = "No Access";
@@ -33,7 +32,7 @@
     }
     $smarty->assign("parent_id", $parent_id);
     $smarty->assign("parent_name", $parent_name);
-
+    
     if(isset($_POST['btnExit'])){
             header("Location:localityList.php?page=1&sort=all&citydd={$cityId}");
     }

@@ -1,6 +1,8 @@
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 <!--<script type="text/javascript" src="js/photo.js"></script>-->
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -171,7 +173,7 @@
 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-
+<div class="modal">Please Wait..............</div>
 </TD>
   </TR>
   <TR>
@@ -207,7 +209,7 @@
 <!--			<fieldset class="field-border">
 			  <legend><b>Message</b></legend>-->
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
-			    <form method="post" enctype="multipart/form-data">
+			    <form method="post" enctype="multipart/form-data" id="builderForm">
 			      <div>
 			      				<tr>
 					<td  align = "center" colspan = "2">
@@ -608,7 +610,7 @@
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
 				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
-				  <input type="submit" name="btnSave" id="btnSave" value="Save">
+				  <input type="button" name="btnSave" id="btnSave" value="Save"  onclick="find_errors('builderForm', '{$errorUrl}');">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
 				</tr>
