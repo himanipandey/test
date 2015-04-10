@@ -16,12 +16,13 @@ $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
 
+$filterArr = array();
 
 $start = $page * $size;
-if (!isset($cityId) || $cityId == '') {
-    $cityId = 2;
+
+if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
+    $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
 }
-$filterArr = array("and" => array(array("equal" => array("cityId" => $cityId))));
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
     $filterArr["and"][] = array("equal" => array("projectId" => $projectId));
 }
@@ -44,12 +45,14 @@ $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
     $gpidFilter = "gpid=" . $gpid . "&";
 }
-$tbsorterArr = array();
-
+if(!$filterArr){
+    $filterArr = array("and" => array(array("equal" => array("cityId" => 2))));
+}
 $filter = json_encode($filterArr);
 $fields = '"fields":["imageCount","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $fields . '}';
 
+$tbsorterArr = array();
 try {
     $responseLists = \Httpful\Request::get($uriListing)->send();
     if ($responseLists->body->statusCode == "2XX") {
