@@ -208,7 +208,7 @@
                                                                     var iconsLength = icons.length;
 
                                                                     var mapOptions = {
-                                                                        zoom: 13,
+                                                                        zoom: 12,
                                                                         center: new google.maps.LatLng("{$localityLatitude}", "{$localityLongitude}"),
                                                                         mapTypeId: google.maps.MapTypeId.TERRAIN
                                                                     };
