@@ -756,6 +756,8 @@ $smarty->assign("arrAllType",$arrAllType);
 
 $smarty->assign('errorUrl', FIND_ERRORS_URL);
 
+//gooogle map api key
+$smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
 
 /********config for project type of residential/nonresidential******************/
 
