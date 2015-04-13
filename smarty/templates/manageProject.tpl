@@ -10,6 +10,7 @@ font-family:arial,tahoma,verdana;
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script>
 <script language="javascript">
 
 var selectAllFlag = false;

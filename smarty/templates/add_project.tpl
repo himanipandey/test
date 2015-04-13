@@ -63,9 +63,12 @@
                 }
             });
         });
+        
+        getBuilderImage();
 
-        $(".builderId").change(function () {
-            var builderid = $(this).val();
+    });
+    function getBuilderImage() {
+            var builderid = $('.builderId').val();
             $.ajax({
                 type: "POST",
                 url: "getBuilderImage.php",
@@ -77,8 +80,7 @@
                     $("#builderbox").html('<img alt=' + splitArr[0] + ' src=' + splitArr[1] + ' align="left" style="width: 100px; height: 40px; margin-right:10px; border:solid 1px #CCC;">');
                 }
             });
-        });
-    });
+        }
     /**************option type refresh**********/
     $(document).ready(function () {
         $(".residential").change(function () {
@@ -221,13 +223,10 @@
 
                                             <td width="20%" align="right"><font color ="red">*</font><b> Builder Name :</b> </td>
                                             <td width="30%" align="left">
+                                                
+                                                <input type="text" id="builderName" name="builderName" value="{$BuilderDataArr[$builderId]}"/>
+                                                <input type="hidden" name="builderId" class="builderId" value="{$builderId}">
 
-                                                <select name="builderId" class="builderId">
-                                                    <option value="">Select Builder</option>
-                                                    {foreach from=$BuilderDataArr key=k item=v}
-                                                        <option {if $builderId == $k} value ="{$k}" selected="selected" {else} value ='{$k}'{/if} >{$v}</option>
-                                                    {/foreach}
-                                                </select>
                                                 <div id="imgPathRefresh"></div>
                                             </td>
                                             <td width="50%" align="left">
@@ -814,14 +813,9 @@
                                                 </tr>
                                                 <tr>
                                                     <td width="20%" align="right" valign ="top"><b>Township:</b> </td><td width="30%" align="left">
-                                                        <select name = "township">
-                                                            <option value="">Select Options</option>
-                                                            {foreach from = $allTownships item = item}
-                                                                <option value="{$item->id}" {if $item->id == $township}selected{/if}>
-                                                                    {$item->township_name}
-                                                                </option>
-                                                            {/foreach}
-                                                        </select>
+                                                        <input type="text" id="townshipName" name="townshipName" value="{$townshipName}">
+                                                        <input type="hidden" name="township" id="township" value="{$township}">
+                                                        
                                                     </td>
                                                     <td width="50%" align="left">&nbsp;</td>
                                                 </tr>

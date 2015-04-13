@@ -5,7 +5,7 @@ $CityDataArr = City::CityArr();
 
 $BankListArr = BankList::arrBank();
 $projectStatus = ResiProject::projectStatusMaster();
-$allTownships = Townships::getAllTownships();
+//$allTownships = Townships::getAllTownships();
 $allAuthorities = HousingAuthorities::getAllAuthorities();
 $getPowerBackupTypes = PowerBackupTypes::getPowerBackupTypes();
 
@@ -16,7 +16,7 @@ $smarty->assign("CityDataArr", $CityDataArr);
 
 $smarty->assign("BankListArr", $BankListArr);
 $smarty->assign("projectStatus", $projectStatus);
-$smarty->assign("allTownships", $allTownships);
+//$smarty->assign("allTownships", $allTownships);
 $smarty->assign("allAuthorities", $allAuthorities);
 $smarty->assign("getPowerBackupTypes", $getPowerBackupTypes);
 $smarty->assign("display_order", 999);
@@ -43,6 +43,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
     if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save") {
         $txtProjectName = replaceSpaces(trim($_POST['txtProjectName']));
         $builderId = trim($_POST['builderId']);
+        $builderTxt = trim($_POST['builderName']);
         $cityId = trim($_POST['cityId']);
         $suburbId = trim($_POST['suburbId']);
         $localityId = trim($_POST['localityId']);
@@ -88,6 +89,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
 
         $residential = (trim($_POST['residential'])) ? $_POST['residential'] : 'Residential'; //setting up defualt value if empty
         $township = trim($_POST['township']);
+        $townshipName = trim($_POST['townshipName']);
         $authority = trim($_POST['authority']);
         $projName = replaceSpaces(trim($_POST['txtProjectName']));
         $no_of_plot = trim($_POST['no_of_plot']);
@@ -207,6 +209,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         $smarty->assign("eff_date_to_prom", $_POST['eff_date_to_prom']);
         $smarty->assign("residential", $_POST['residential']);
         $smarty->assign("township", $_POST['township']);
+        $smarty->assign("townshipName", $_POST['townshipName']);        
         $smarty->assign("authority", $_POST['authority']);
         $smarty->assign("open_space", $_POST['open_space']);
         $smarty->assign("shouldDisplayPrice", $_POST['shouldDisplayPrice']);
@@ -249,7 +252,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         } elseif (!preg_match('/^[a-zA-Z0-9 ]+$/', $txtProjectName)) {
             $ErrorMsg["txtProjectName"] = "Special characters are not allowed.";
         }
-        if (empty($builderId)) {
+        if (empty($builderId) || empty($builderTxt)) {
             $ErrorMsg["txtBuilder"] = "Builder name must be selected.";
         }
         if (empty($cityId)) {
@@ -515,7 +518,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
         //print_r($ErrorMsg); die();
         //  echo $ErrorMsg['launchDate'];
         //echo $Status ."==". OCCUPIED_ID_3 ." or ". READY_FOR_POSSESSION_ID_4."==>$launchDt";die;
-        if ($township == '')
+        if ($township == '' || $townshipName == '')
             $township = null;
         if ($authority == '')
             $authority = "0";
@@ -928,6 +931,12 @@ elseif ($projectId != '') {
     $smarty->assign("architect", stripslashes($ProjectDetail->architect_name));
     $smarty->assign("residential", stripslashes($ProjectDetail->residential_flag));
     $smarty->assign("township", stripslashes($ProjectDetail->township_id));
+    $townshipName = Townships::getTownShipsById(stripslashes($ProjectDetail->township_id));
+    if($townshipName){
+       $smarty->assign("townshipName", $townshipName[0]->township_name);
+    }else{
+       $smarty->assign("townshipName", '');
+    }    
     //$smarty->assign("authority", stripslashes($ProjectDetail->authority_id ));
     $smarty->assign("pre_launch_date", stripslashes($ProjectDetail->pre_launch_date));
     $smarty->assign("exp_launch_date", stripslashes($ProjectDetail->expected_supply_date));

@@ -15,6 +15,7 @@ ini_set('display_errors','1');
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."add_project.tpl");
+        include("builder_suggest_auto.php");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 
 	
