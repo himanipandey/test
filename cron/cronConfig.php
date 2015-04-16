@@ -231,7 +231,7 @@ $weeklyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "SELECT PROJECT_ID, c.LABEL CITY, l.LABEL Locality, rp.LOCALITY_ID,rp.LATITUDE, rp.LONGITUDE,
+        /*'sql' => "SELECT PROJECT_ID, c.LABEL CITY, l.LABEL Locality, rp.LOCALITY_ID,rp.LATITUDE, rp.LONGITUDE,
                     rp.PROJECT_NAME, rb.BUILDER_NAME FROM
                     resi_project rp
                     join resi_builder rb on rp.builder_id = rb.builder_id
@@ -240,7 +240,25 @@ $weeklyEmail = array(
                     join city c on s.city_id = c.city_id
             where
                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList) OR rp.LATITUDE is null OR rp.LONGITUDE is null)
-                AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",
+                AND rp.status in('Active','ActiveInCms') and rp.version = 'Cms';",*/
+        'sql' => "SELECT rp.project_id,
+                    c.LABEL CITY, l.LABEL Locality, rp.LOCALITY_ID,rp.LATITUDE, rp.LONGITUDE,
+                    rp.PROJECT_NAME, rb.BUILDER_NAME, rp.PRE_LAUNCH_DATE, rp.LAUNCH_DATE, rp.D_AVAILABILITY Availability,
+                    sum(ps.supply) as supply
+                    FROM resi_project rp left join resi_project_phase rpp on (rp.project_id = rpp.project_id and rpp.version = 'Cms' and rp.version = 'Cms' and rpp.status = 'Active' and rp.status != 'Inactive' and rpp.phase_type = IF((SELECT COUNT(*) FROM `resi_project_phase`  WHERE `resi_project_phase`.`version` = 'Cms' 
+                            AND `resi_project_phase`.`PHASE_TYPE` = 'Actual'  
+                            AND `resi_project_phase`.`PROJECT_ID` = rp.project_id 
+                            AND `resi_project_phase`.status = 'Active') > 0, 'Actual', 'Logical'))
+                    LEFT JOIN listings lst on (lst.phase_id = rpp.phase_id  and lst.status = 'Active')
+                    LEFT JOIN project_supplies ps on (ps.listing_id = lst.id and ps.version = 'Cms')
+                    LEFT JOIN resi_builder rb ON rp.builder_id = rb.builder_id
+                    LEFT JOIN locality l ON rp.locality_id = l.locality_id
+                     LEFT JOIN suburb s ON l.suburb_id = s.suburb_id
+                     LEFT JOIN city c ON s.city_id = c.city_id  
+                WHERE 
+                     ( rp.LATITUDE IN ($latLongList) OR rp.LONGITUDE IN ($latLongList) OR rp.LATITUDE is null OR rp.LONGITUDE is null)
+                     AND rp.version = 'Cms' and rp.status !='Inactive' 
+                    GROUP BY rp.project_id;",
         'subject' => 'Missing Latitude and Longitude List',
         'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Ravi.srivastava@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Missing_latitude_longitude_list',
