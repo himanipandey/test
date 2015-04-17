@@ -284,7 +284,7 @@ else {
 //print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
-    //echo($dataJson); die;
+//    echo($dataJson); die;
      //var_dump($dataJson);   
 
 
@@ -344,6 +344,9 @@ else {
                    // echo "2";
                     $returnArr['code'] = "2";
                     $returnArr['msg'] = "update";
+                    if($response->body->error){
+                        $returnArr['error_msg'] = $response->body->error->msg;
+                    }
                     echo json_encode($returnArr);
                 }
                 else{
@@ -366,6 +369,9 @@ else {
 
                     $returnArr['code'] = "1";
                     $returnArr['msg'] = $id;
+                    if($response->body->error){
+                        $returnArr['error_msg'] = $response->body->error->msg;
+                    }
                     echo json_encode($returnArr);
                 }
                 else{

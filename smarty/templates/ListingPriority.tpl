@@ -586,7 +586,7 @@ selProject = $("#selProjId").val();*/
 //alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==9){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==10){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -596,7 +596,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 10){
+                   }else if(indx == 11){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -972,13 +972,18 @@ $("#lmkSave").click(function(){
               if(msg.code==2){
                 
                $("body").removeClass("loading");
+               if(msg.error_msg){
+                   alert(msg.error_msg);
+               }    
                 exitButtonClicked();
                 
 
               }
               else if(msg.code==1){
                 $("body").removeClass("loading");
-                
+                if(msg.error_msg){
+                   alert(msg.error_msg);
+                }
                 location.href = "listing_img_add.php?listing_id="+msg.msg;
                 
               }
@@ -1537,7 +1542,7 @@ function getParameterByName(name) {
 		                      			<TR>
 		                        			<TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>          Properties
 		                        			</TD>
-                                                                <td align="right"><input type = "button" name = "Download" value = "Download" onclick="return downloadClick();"></td>
+                                                                <td align="right"></td>
 		                      			</TR>
 		                    		</TBODY>
 		            </TABLE>
@@ -1601,6 +1606,7 @@ function getParameterByName(name) {
                                                 </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
+                                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
                                                 </td>
                                             </tr>
                                         </table>
@@ -2173,6 +2179,7 @@ function getParameterByName(name) {
                                   <TH align="center">Price</TH>
                                   <TH align="center">Created Date</TH>
                                   <TH align="center">Photo</TH>
+                                  <TH align="center">Verified</TH>
                                   <TH align="center">Save</TH>
                                   <TH align="center">Delete</TH>
                                 </TR>
@@ -2197,6 +2204,7 @@ function getParameterByName(name) {
                                 <th>9</th>
                                 <th>10</th>
                                 <th>11</th>
+                                <th>12</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
