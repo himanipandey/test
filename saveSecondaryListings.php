@@ -153,8 +153,9 @@ else {
         
     $dataArr['otherInfo'] = $otherInfo;
 
-    if(isset($_POST['floor']) && !empty($_POST['floor']))
+    if(isset($_POST['floor']) && $_POST['floor'] !=""){
         $dataArr['floor'] = $_POST['floor'];
+    }
     
     $jsonDump = array();
     $owner_name = $_POST['owner_name'];
@@ -229,6 +230,9 @@ else {
     if($_POST['negotiable'] != null)  {
         $dataArr['negotiable'] = $_POST['negotiable'];    
     }
+    if($_POST['bookingStatusId'] != "")  {
+        $dataArr['bookingStatusId'] = $_POST['bookingStatusId'];    
+    }
     
 
     $masterAmenityIds = array(
@@ -280,7 +284,7 @@ else {
 //print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
-    //print_r($dataArr); die;
+//    echo($dataJson); die;
      //var_dump($dataJson);   
 
 
@@ -326,6 +330,8 @@ else {
             $returnArr = array();
             if($listing_id!=''){
                 $uri = $uri."/".$listing_id;
+//                echo($uri);
+//                die($dataJson);
                 $response = \Httpful\Request::put($uri)           
                 ->sendsJson()                               
                 ->body($dataJson)
@@ -338,6 +344,9 @@ else {
                    // echo "2";
                     $returnArr['code'] = "2";
                     $returnArr['msg'] = "update";
+                    if($response->body->error){
+                        $returnArr['error_msg'] = $response->body->error->msg;
+                    }
                     echo json_encode($returnArr);
                 }
                 else{
@@ -360,6 +369,9 @@ else {
 
                     $returnArr['code'] = "1";
                     $returnArr['msg'] = $id;
+                    if($response->body->error){
+                        $returnArr['error_msg'] = $response->body->error->msg;
+                    }
                     echo json_encode($returnArr);
                 }
                 else{

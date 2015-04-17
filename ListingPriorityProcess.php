@@ -176,6 +176,13 @@ $jsonListing = htmlentities(json_encode($resaleListings));
 $smarty->assign('resaleListings',$resaleListings);
 $smarty->assign('jsonListing',$jsonListing);
 
+$bookingStatus = BookingStatuses::find("all");
+$bStatusList =array();
+foreach($bookingStatus as $bookingStatus){
+    $bStatusList[$bookingStatus->id] = $bookingStatus->display_name;
+}
+$smarty->assign("bStatusList", $bStatusList);
+
 //code pagination --------------------------------------------
 
 
