@@ -468,7 +468,7 @@ $smarty->assign("Project", $Project);
 
 /* * ***************Builder Data*********** */
 $BuilderDataArr = array();
-$qry = "SELECT BUILDER_ID,BUILDER_NAME FROM " . RESI_BUILDER . " ORDER BY BUILDER_NAME ASC";
+$qry = "SELECT BUILDER_ID,BUILDER_NAME FROM " . RESI_BUILDER . " WHERE builder_status=0 ORDER BY BUILDER_NAME ASC";
 $res = mysql_query($qry, $db);
 while ($data = mysql_fetch_array($res)) {
     $BuilderDataArr[] = $data;

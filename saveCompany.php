@@ -761,7 +761,7 @@ if($_POST['task']=='createComp'){
                 $sqlPtManager = "SELECT pa.ADMINEMAIL as pt_manager_email FROM proptiger.PROPTIGER_ADMIN pa WHERE pa.ADMINID={$bef['ptManager']}";
                 $resPtManager = mysql_query($sqlPtManager) or die(mysql_error());
                 $dataPtManager=mysql_fetch_assoc($resPtManager);
-                $options = array('to'=>$email,'agent_id'=>$channel_partner_code, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email']);
+                $options = array('to'=>$email,'agent_id'=>$channel_partner_code, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email'], 'bcc'=>'channel-registration@proptiger.com');
                 send_mail($options);
                 
             }
@@ -859,7 +859,7 @@ function send_mail($options){
             . "</td></tr></table>";
     
     
-    sendMailFromAmazon($options['to'], $options['subject'], $options['message'], $options['sender'], $options['cc'], null, false);
+    sendMailFromAmazon($options['to'], $options['subject'], $options['message'], $options['sender'], $options['cc'], $options['bcc'], false);
 }
 
     
