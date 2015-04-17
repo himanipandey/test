@@ -39,7 +39,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 
     define("AUDIO_SERVICE_URL","https://www.proptiger.com/data/v1/entity/audio");
 
-
+    define('FIND_ERRORS_URL', 'https://www.proptiger.com/seo/data/v1/text-analyser/find-errors');
 
     define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/userservice/data/v1/entity/user");
     define("USER_DETAILS_API_URL", "https://www.proptiger.com/userservice/app/v1/user-details");
