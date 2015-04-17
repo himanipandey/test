@@ -14,12 +14,13 @@ if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != ""))
     $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
 }
 
-if(!$filterArr){
+if (!$filterArr) {
     $filterArr = array("and" => array(array("equal" => array("cityId" => 2))));
 }
+$sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $filter = json_encode($filterArr);
 $fields = '"fields":["imageCount","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
-$uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $fields . '}';
+$uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
 try {
@@ -43,7 +44,7 @@ try {
             if ($row->currentListingPrice->otherCharges != 0) {
                 $price .= "<br>Other Charges - " . $row->currentListingPrice->otherCharges;
             }
-            
+
             $data_rows = array(
                 "Serial" => $start + $index + 1,
                 "City" => $row->property->project->locality->suburb->city->label,
@@ -59,7 +60,7 @@ try {
             );
             array_push($tbsorterArr['rows'], $data_rows);
         }
-        
+
         $pdf_content = "<table cellspacing=1 bgcolor='' cellpadding=0 width='100%' style='font-size:11px;font-family:tahoma,arial,verdana;vertical-align:middle;text-align:center;'>
     <tr bgcolor='#f2f2f2'>
     <td>Serial</td>
@@ -74,16 +75,16 @@ try {
     <td>Photo</td>
     </tr>";
         foreach ($tbsorterArr['rows'] as $row) {
-            $pdf_content .= "<tr  bgcolor='#FFFFFF' valign='top'><td>".$row['Serial']."</td>";
-            $pdf_content .= "<td>".$row['ListingId']."</td>";
-            $pdf_content .= "<td>".$row['ProjectId']."</td>";
-            $pdf_content .= "<td>".$row['Project']."</td>";
-            $pdf_content .= "<td>".$row['City']."</td>";
-            $pdf_content .= "<td>".$row['BrokerName']."</td>";
-            $pdf_content .= "<td>".$row['Listing']."</td>";
-            $pdf_content .= "<td>".$row['Price']."</td>";
-            $pdf_content .= "<td>".$row['CreatedDate']."</td>";
-            $pdf_content .= "<td>".$row['Photo']."</td></tr>";
+            $pdf_content .= "<tr  bgcolor='#FFFFFF' valign='top'><td>" . $row['Serial'] . "</td>";
+            $pdf_content .= "<td>" . $row['ListingId'] . "</td>";
+            $pdf_content .= "<td>" . $row['ProjectId'] . "</td>";
+            $pdf_content .= "<td>" . $row['Project'] . "</td>";
+            $pdf_content .= "<td>" . $row['City'] . "</td>";
+            $pdf_content .= "<td>" . $row['BrokerName'] . "</td>";
+            $pdf_content .= "<td>" . $row['Listing'] . "</td>";
+            $pdf_content .= "<td>" . $row['Price'] . "</td>";
+            $pdf_content .= "<td>" . $row['CreatedDate'] . "</td>";
+            $pdf_content .= "<td>" . $row['Photo'] . "</td></tr>";
         }
         $pdf_content .= "</table>";
 
