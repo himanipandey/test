@@ -18,7 +18,9 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/js/jss.js"></script> 
 
-
+<style>
+    .hide-input{ display: none !important; }
+</style>
 <script language="javascript">
 var pid;
 var bt = [];
@@ -42,13 +44,33 @@ function selectLocality(value){
   	window.location.href="{$dirname}/locality_near_places_priority.php?citydd="+cityid+"&locality="+value;
 }
 function submitButton(){ 
-    var cityid = $('#citydd').val();
-    var projectid = null;
-    if($("#project_search").val().trim()!=''){
-        projectid = $('#selProjId').val();
+    var queryStrUrl = "";
+    if($('#citydd').val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"citydd=" + $('#citydd').val();
     }
-    var projectName = $('#project_search').val().trim();
-    window.location.href="{$dirname}/listing_list.php?citydd="+cityid+"&projectId="+projectid+"&projectName="+projectName;
+   
+    if($('#project_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectName=" + $('#project_search').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectId=" + $('#selProjId').val();
+    }
+    if($('#listingId_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
+    }
+    if(($("#search_term option:selected").val() != "") && ($("#search_value").val().trim()!="" || $("#search_landmark").val().trim()!="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : $("#search_landmark").val().trim());
+    }
+    if($("#search_term option:selected").val() == "gpid"){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"gpid=" + $("#hidden_gpid").val();
+    }
+    
+    if(($("#search_range option:selected").val() != "") && ($("#range_from").val().trim() != "" || $("#range_to").val().trim() !="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_range=" + $("#search_range option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_from=" + $('#range_from').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_to=" + $('#range_to').val().trim();
+    }
+    queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
+    window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
     return false;
 }
 function downloadClick(){
@@ -107,14 +129,14 @@ function cleanFields(){
 
 
 function editListing(str){
-  console.log("inside editListing");
+  //console.log("inside editListing");
   
   //debugger;
-  console.log(str);
+  //console.log(str);
   //str = unescape(str);
   //console.log(str);
   str = JSON.parse(unescape(str));
-  console.log(str);
+  //console.log(str);
     cleanFields();
     //console.log(str.jsonDump.tower);
     $('#search-top').hide('slow');
@@ -136,10 +158,9 @@ function editListing(str){
     $("#towerIdHidden").val(str.towerId);
     $("#phaseIdHidden").val(str.phaseId);
 
-
     if(str.seller!=null){
       var seller_id = str.seller.id;
-      console.log(seller_id);
+      //console.log(seller_id);
       
       $('#bkn2').val(str.seller.brokerId); 
       getSeller();
@@ -150,11 +171,11 @@ function editListing(str){
       var pt_broker_id =  $("#pt_broker_id").val();
       //console.log(broker_id +" "+pt_broker_id);
       if(str.seller.brokerId == pt_broker_id){
-        console.log("ids matched" );  
+        //console.log("ids matched" );  
         $('#name_font').show(1);
         $('#number_font').show(1);  
       } else {
-        console.log("ids not matched"); 
+        //console.log("ids not matched"); 
         $('#name_font').hide(1);
         $('#number_font').hide(1);  
 
@@ -200,6 +221,7 @@ function editListing(str){
 
 
     $("#description3").val(str.description);
+    $("#booking_status").val(str.bookingStatusId);
     $("#review3").val(str.remark);
  
     option.length = 0;
@@ -253,13 +275,13 @@ function editListing(str){
      $("#park2").val(str.noOfCarParks);
     $("#bnk_lst").val(str.homeLoanBankId);
     if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
-      console.log("bank yes");
+      //console.log("bank yes");
       $("#bnk_lst").show();
       /*$('#yes').attr('checked', true);
       $('#no').removeAttr('checked');*/
     }
     else{
-      console.log("bank no");
+      //console.log("bank no");
       /*$("#bank_list2").hide();*/
       $("#bnk_lst").val('');
       /*$('#yes').removeAttr('checked');
@@ -267,13 +289,13 @@ function editListing(str){
     }
     $("#plc5").val(str.plc);
     if(str.plc!='' && str.plc!=null && str.plc>0){
-      console.log("plc yes");
+      //console.log("plc yes");
       $("#plc5").show();
       $('#plcn').removeAttr('checked');
       $('#plcy').attr('checked', true);
     }
     else{
-      console.log("plc no");
+      //console.log("plc no");
       /*$("#plc5").hide();*/
       $('#plc5').val("");
       $('#plcn').attr('checked', true);
@@ -291,7 +313,7 @@ function editListing(str){
       }
     }
     
-    console.log(str);
+    //console.log(str);
     
     $("#cityddEdit").attr('disabled',true);
     $("#project").attr('readonly',true);
@@ -328,7 +350,7 @@ function getSeller(){
 
             success:function(msg){
 
-              console.log(msg);
+              //console.log(msg);
               
               var options = $("#seller3");
               //var i = 0;
@@ -336,7 +358,7 @@ function getSeller(){
 
               msg = $.parseJSON(msg);
               $.each(msg, function(k,v) {
-                console.log(v);
+                //console.log(v);
                   options.append($("<option/>").val(v['user_id']).text(v['name']));    
               });    
             },
@@ -406,6 +428,24 @@ $("#exit_button").click(function(){
 $('#project_search').val(getParameterByName('projectName'));
 $('#selProjId').val(getParameterByName('projectId'));
 $('#citydd').val(getParameterByName('citydd'));
+$('#listingId_search').val(getParameterByName('listingId'));
+$('#search_range').val(getParameterByName('search_range'));
+$('#range_from').val(getParameterByName('range_from'));
+$('#range_to').val(getParameterByName('range_to'));
+$('#search_term').val(getParameterByName('search_term'));
+
+
+if($('#search_term').val()=="gpid"){
+    $('#hidden_gpid').val(getParameterByName('gpid'))
+    $("#search_landmark").val(getParameterByName('search_value'));
+    $('#search_value').addClass("hide-input");
+    $('#search_landmark').removeClass("hide-input");
+    
+}else{
+    $('#search_value').val(getParameterByName('search_value'));
+    $('#search_value').removeClass("hide-input");
+    $('#search_landmark').addClass("hide-input");
+}
 
 // tablesorter ajax pager
  tableSotderUrl='';
@@ -466,9 +506,29 @@ selProject = $("#selProjId").val();*/
       // modify the url after all processing has been applied
       customAjaxUrl: function(table, url) {
           // manipulate the url string as you desire
-           url += '&city=' + $("#citydd :selected").val();  
-           //if($("#project_search").val().trim()!='')
-            url += '&project=' + $("#selProjId").val(); 
+          if($("#citydd :selected").val()){
+             url += '&city=' + $("#citydd :selected").val();
+          }
+          if($("#selProjId").val()){
+             url += '&project=' + $("#selProjId").val();
+          }
+          if($("#listingId_search").val()){
+             url += '&listingId=' + $("#listingId_search").val();
+          }
+          if($("#search_term").val()){
+              if($("#search_value").val()){
+                    url += '&search_term=' + $("#search_term").val();
+                    url += '&search_value=' + $("#search_value").val();
+              }
+              else if($("#search_landmark").val()){
+                  url += '&gpid=' + $("#hidden_gpid").val();
+              }
+          }
+          if($("#search_range").val() && ($("#range_from").val() || $("#range_to").val())){
+             url += '&search_range=' + $("#search_range").val();
+             url += '&range_from=' + $("#range_from").val();
+             url += '&range_to=' + $("#range_to").val();
+          }
           // trigger my custom event
           $(table).trigger('changingUrl', url);
           // send the server the current page
@@ -526,7 +586,7 @@ selProject = $("#selProjId").val();*/
 //alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==8){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==10){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -536,7 +596,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 9){
+                   }else if(indx == 11){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -825,6 +885,7 @@ $("#lmkSave").click(function(){
     } 
 
     var description = $("#description3").val().trim();
+    var bookingStatusId = $("#booking_status").val().trim();
     var review = $("#review3").val().trim();
 
     var task='';
@@ -893,31 +954,36 @@ $("#lmkSave").click(function(){
             url: '/saveSecondaryListings.php',
 
             beforeSend: function(){
-              console.log('in ajax beforeSend');
+              //console.log('in ajax beforeSend');
               $("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task, bookingStatusId:bookingStatusId},
 
 
 
             success:function(msg){
               
-              console.log(msg);
+              //console.log(msg);
               msg = $.parseJSON(msg);//console.log(msg.msg);
               //return;
-              console.log(msg.code);
-              console.log(msg.msg);
+              //console.log(msg.code);
+              //console.log(msg.msg);
               if(msg.code==2){
                 
                $("body").removeClass("loading");
+               if(msg.error_msg){
+                   alert(msg.error_msg);
+               }    
                 exitButtonClicked();
                 
 
               }
               else if(msg.code==1){
                 $("body").removeClass("loading");
-                
+                if(msg.error_msg){
+                   alert(msg.error_msg);
+                }
                 location.href = "listing_img_add.php?listing_id="+msg.msg;
                 
               }
@@ -999,7 +1065,7 @@ $("#lmkSave").click(function(){
         var res = ui.item.id.split("-");
           var projectId = res[2];
           pid = projectId;
-          console.log(projectId);
+          //console.log(projectId);
 
           $("#selProjId").val(projectId); 
           
@@ -1050,14 +1116,14 @@ $("#lmkSave").click(function(){
         var res = ui.item.id.split("-");
           var projectId = res[2];
           pid = projectId;
-          console.log(projectId);
+          //console.log(projectId);
 
           $("#projectId").val(projectId); 
           var data = { projectId:projectId,  task:'get_options'}; 
            
           //find_project_options();
                 
-          console.log("{$url13}"+projectId+"/phase");
+          //console.log("{$url13}"+projectId+"/phase");
           $.ajax({
               //alert("Hello"); 
               url: "{$url13}"+projectId,
@@ -1075,7 +1141,7 @@ $("#lmkSave").click(function(){
                 var v1 = data.data.projectDetails.builder.name;
                 var v2 = data.data.projectDetails.projectName;
                 var v3 = data.data.locality.newsTag;
-                console.log(data);
+                //console.log(data);
                 //alert(data.data);
                 //console.log(v1);
                 //console.log(v2);
@@ -1149,7 +1215,7 @@ $("#lmkSave").click(function(){
 
     $( "#proj" ).catcomplete({
       source: function( request, response ) {
-        console.log("{$url13}"+$("#proj").val());
+        //console.log("{$url13}"+$("#proj").val());
         $.ajax({
               //alert("Hello"); 
               url: "{$url13}"+$("#proj").val(),
@@ -1170,9 +1236,9 @@ $("#lmkSave").click(function(){
                 var v22 = data.data.projectDetails.projectName;
                 var v32 = data.data.locality.newsTag;
                 
-                console.log(v12);
-                console.log(v22);
-                console.log(v32);
+                //console.log(v12);
+                //console.log(v22);
+                //console.log(v32);
 
                 for(i = 0; i < ln2; i++)  {
                   bt[i] = data.data.properties[i].unitName+', '+data.data.properties[i].size+' '+data.data.properties[i].measure;
@@ -1208,7 +1274,7 @@ $("#lmkSave").click(function(){
 
                 var floor_option = $('#total_floor1');
                 var j = 0;
-                console.log('Floor option');
+                //console.log('Floor option');
                 //floor_option.append($("<option/>").val(0).text('Select');
                 $.each(total_floor_array, function() {
                     if (j == 0)  {
@@ -1346,7 +1412,7 @@ function get_towers(project_id){
                         data: { project_id:project_id, task:'get_tower'},
 
                         success:function(msg){  
-                           console.log(msg);
+                           //console.log(msg);
               
                             var options = $("#tower2");
                             //var i = 0;
@@ -1385,7 +1451,7 @@ function get_phases(projectId){
                           var phase_ids1 = [];
                           var phase_ids2 = [];
                           for(i = 0; i < ln2; i++)  {
-                              console.log(data.data[i].phaseId);
+                              //console.log(data.data[i].phaseId);
                               phase_ids1.push(data.data[i].phaseId);
                               phase_ids2.push(data.data[i].phaseName);
                           } 
@@ -1411,7 +1477,7 @@ function populate_total_floor(){
                 var total_floor_array = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101];
                 var floor_option = $('#total_floor1');
                 var j = 0;
-                console.log('Floor option');
+                //console.log('Floor option');
                 //floor_option.append($("<option/>").val(0).text('Select');
                 $.each(total_floor_array, function() {
                     if (j == 0)  {
@@ -1476,6 +1542,7 @@ function getParameterByName(name) {
 		                      			<TR>
 		                        			<TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>          Properties
 		                        			</TD>
+                                                                <td align="right"></td>
 		                      			</TR>
 		                    		</TBODY>
 		            </TABLE>
@@ -1488,11 +1555,11 @@ function getParameterByName(name) {
 		            <td>
                                 <div id="search-top">
                                     <form method = "get">
-                                        <table width="70%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
+                                        <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
 		            	            <tr>
 		                                <td height="25" align="left" valign="top">
                                                     <select id="citydd" name="citydd" >
-                                                       <option value=''>select city</option>
+                                                       <option value=''>Select City</option>
                                                        {foreach from=$cityArray key=k item=v}
                                                            <option value="{$k}" {if $k==$cityId}  {/if}>{$v}</option>
                                                        {/foreach}
@@ -1502,12 +1569,45 @@ function getParameterByName(name) {
                                                     <input type=text name="project_search" id="project_search" placeholder="Project"  style="width:210px;">
                                                   <input type=hidden name="selProjId" id="selProjId" >
                                                 </td>
-		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
-		                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
-		                                </td>
-		                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
-		                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
-		                                </td>
+                                                <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                    <input type=text name="listingId_serach" id="listingId_search" placeholder="Listing ID"  style="width:210px;">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                
+                                                <td>
+                                                    <select name="search_range" id="search_range">
+                                                        <option value="">--Select--</option>
+                                                        <option value="price">Absolute Price</option>
+                                                        <option value="listingPricesPricePerUnitArea">Price Per Unit Area</option>
+                                                    </select>
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type="text" name="range_from" id="range_from" placeholder="From">
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type="text" name="range_to" id="range_to" placeholder="To">
+                                                </td>
+                                                
+                                            </tr>
+                                            <tr>
+                                               
+                                                <td>
+                                                    <select name="search_term" id="search_term">
+                                                        <option value="">--Select--</option>
+                                                        <option value="bedrooms">Search By Bedrooms</option>
+                                                        <option value="gpid">Search By Landmark</option>
+                                                    </select>
+                                                    <input type="hidden" id="hidden_gpid">
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type="text" name="search_value" id="search_value" placeholder="Search Value">
+                                                    <input type="text" name="search_landmark" id="search_landmark" placeholder="Search Landmark" class="hide-input">
+                                                </td>
+                                                <td style="padding-left: 10px;">
+                                                    <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
+                                                    <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
+                                                </td>
                                             </tr>
                                         </table>
                                     </form>
@@ -1972,7 +2072,7 @@ function getParameterByName(name) {
                         <td id = "discription4">
                             Description
                         </td> 
-                        <td id = "discription2" > 
+                        <td id = "discription2" >
                               <textarea type=text name="description3" id="description3" style="width:250px" >
                               </textarea>
                         </td>
@@ -1984,8 +2084,19 @@ function getParameterByName(name) {
                             </textarea>
                         </td>
                       </tr>
+                      <tr id="booking_status_row" style="position: absolute;left: 300px;top: 1580px">
+                          <td>Booking Status</td>
+                          <td>
+                                <select name="booking_status" id="booking_status">
+                                    <option value=""> Select Booking Status </option>
+                                    {foreach from=$bStatusList key=bStatusId item=bstatus}
+                                        <option value="{$bStatusId}"> {$bstatus} </option>
+                                    {/foreach}
+                                </select>
+                          </td>
+                      </tr>
 
-                      <tr >
+                      <tr>
                         <td id = "image_link" colspan="4">
                             
                         </td> 
@@ -2067,6 +2178,8 @@ function getParameterByName(name) {
                                   <TH align="center">Listing</TH>
                                   <TH align="center">Price</TH>
                                   <TH align="center">Created Date</TH>
+                                  <TH align="center">Photo</TH>
+                                  <TH align="center">Verified</TH>
                                   <TH align="center">Save</TH>
                                   <TH align="center">Delete</TH>
                                 </TR>
@@ -2090,6 +2203,8 @@ function getParameterByName(name) {
                                 <th>8</th>
                                 <th>9</th>
                                 <th>10</th>
+                                <th>11</th>
+                                <th>12</th>
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
@@ -2147,6 +2262,64 @@ $(document).ready(function(){
         }
         
     });
+    
+    //***** Filter *************
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+        _renderItem: function( ul, item ) {
+          return $( "<li>" )
+            .append( $( "<a>" ).text( item.label )).appendTo( ul );
+        },
+    });
+    $( "#search_landmark" ).catcomplete({
+        source: function( request, response ) {
+
+          $.ajax({
+            url: "https://proptiger.com/columbus/app/v4/typeahead",
+            dataType: "json",
+            data: {
+              query: $("#search_landmark").val(),
+              enhance: "gp", 
+              city: ($("#citydd").val()) ? $("#citydd :selected").text().trim() : ""
+            }, 
+
+            success: function( data ) { 
+              response( $.map( data.data, function( item ) {              
+                  return {
+                  label: item.displayText,
+                  googlePlaceId: item.googlePlaceId,
+                  id:item.id,
+                  }
+
+              }));
+            }
+          });      
+        },
+
+        select: function( event, ui ) {
+          $("#hidden_gpid").val(ui.item.googlePlaceId);
+        },
+        open: function() {
+          $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+        },
+        close: function() {
+          $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+        },
+
+    });
+    $("#search_term").change(function(){
+        $( "#search_landmark" ).val("");
+        $( "#search_value" ).val("");
+            
+        if($("#search_term").val() == "gpid"){
+            $( "#search_landmark" ).removeClass("hide-input");
+            $( "#search_value" ).addClass("hide-input");
+        }else{
+            $( "#search_landmark" ).addClass("hide-input");
+            $( "#search_value" ).removeClass("hide-input");
+        }
+    });
+    
+    
 });
 
 </script>
