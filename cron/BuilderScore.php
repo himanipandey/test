@@ -92,8 +92,6 @@ foreach($__trend_data_array as $__builder_id => $__status_array){
 		$__params[$__status_map[$__status]."_SOLD"] = log($__sold_count * $__sold_avg_area + 1);
 		$__params[$__status_map[$__status]."_UNSOLD"] = log($__non_sold_area+1); 
 
-		$__total_size_sum += $__sold_count * $__sold_avg_area + $__non_sold_area;
-
 		if (!isset ($__max_val[$__status_map[$__status]."_SOLD"])) {
 			$__max_val[$__status_map[$__status]."_SOLD"] = $__params[$__status_map[$__status]."_SOLD"];
 		}
