@@ -401,7 +401,9 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
         if ($res && ($month_effective_date >= date('m', strtotime($current_element['SUBMITTED_DATE'])) && $year_effective_date >= date('Y', strtotime($current_element['SUBMITTED_DATE'])))) { // updation only with latest month data
             //phase update
             $qryPhaseUpdate = "update resi_project_phase 
-                            set completion_date = '" . $expectedCompletionDate . "',
+                            set 
+                                updated_by = " . $_SESSION['adminId'] . ",
+                                completion_date = '" . $expectedCompletionDate . "',
                                 submitted_date = '" . $effectiveDt . "',
                                 construction_status = '" . $construnction_status . "'
                             where phase_id = $phaseId and project_id = $projectId
@@ -411,6 +413,7 @@ if (isset($_POST['btnSave']) && ($_REQUEST['updateOrInsertRow'] == 1 || $_REQUES
             $costDetailLatest['COMPLETION_DATE'];
             $qry = "UPDATE resi_project 
                              set 
+                                updated_by = " . $_SESSION['adminId'] . ",
                                 PROMISED_COMPLETION_DATE = '" . $costDetailLatest['COMPLETION_DATE'] . "' 
                              where PROJECT_ID = $projectId and version = 'Cms'";
             $success = mysql_query($qry) OR die(mysql_error() . " project update");
