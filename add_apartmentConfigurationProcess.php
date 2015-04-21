@@ -55,7 +55,9 @@ if($_REQUEST['edit'] == 'edit')
         }else if($arrProjectType_P['OPTIONS_ID']){
             $optionsList = $arrProjectType_P['OPTIONS_ID'];
         }
-        $isResaleMapped = getOptionResaleMap($optionsList);
+        if($optionsList){
+            $isResaleMapped = getOptionResaleMap($optionsList);
+        }
 
         /**********************Query for select values according project type for update**********************/
         $smarty->assign("isResaleMapped", $isResaleMapped);
