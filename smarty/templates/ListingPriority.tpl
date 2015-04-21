@@ -1436,6 +1436,7 @@ function get_phases(projectId){
                         type: "POST",
                         url: "{$url_phase_id}"+projectId+"/phase",
                         dataType: "json",
+                        type : "GET",
                         data: {
                         featureClass: "P",
                         style: "full", 
