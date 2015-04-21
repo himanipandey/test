@@ -162,6 +162,49 @@
             $(".skipUpdationCycleBlock").show();
         }
     }
+    
+    
+function download_project_brochure(pid){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_brochure.php",
+        data: "objectId=" + pid,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            $('#projectBrochureBtn').hide();
+            
+            if(dt.trim() == 'Empty'){
+                $('#new_brochure').show();
+            }else{
+                $('#old_brochure').show();
+                $('#old_brochure a').attr('href', dt);
+                
+            }
+            
+        }
+    });
+}
+
+function update_locality(ctid){
+    $(".suburbId").html('');
+    id = ctid;
+    var dataString = 'part=refreshLoc&id=' + id;
+
+    $.ajax({
+        type: "POST",
+        url: "RefreshSuburb.php",
+        data: dataString,
+        cache: false,
+        success: function (html) {
+            $(".localityId").html(html);
+        }
+    });
+}
 
 </script>
 <div class="modal">Please Wait..............</div>
@@ -237,12 +280,9 @@
                                         <tr>
                                             <td width="20%" align="right"><font color ="red">*</font><b>City :</b> </td>
                                             <td width="30%" align="left">
-                                                <select name="cityId" class="cityId" style="width:230px;">
-                                                    <option value="">Select City</option>
-                                                    {foreach from=$CityDataArr key=k item=v}
-                                                        <option  value ='{$k}' {if $cityId == $k} selected="selected" {/if}>{$v}</option>
-                                                    {/foreach}
-                                                </select>
+                                                <input type="text" id="cityName" name="cityName" value="{$CityDataArr[$cityId]}"/>
+                                                <input type="hidden" id="cityId" name="cityId" value="{$cityId}"/>
+                                                
                                             </td>
                                             <td width="50%" align="left">
                                                 <font color="red">{if $ErrorMsg["txtCity"] != ''} {$ErrorMsg["txtCity"]} {/if}<span id = "err_city_id" style = "display:none;">Please select city!</span></font>
@@ -691,15 +731,18 @@
                                                 {if $projectId}                                                               
                                                     <tr>
                                                         <td width="32%" align="right" valign ="top"><b>Upload Project Brochure :</b> </td>
-                                                        <td width="30%" align="left">                                                                  
-                                                            <input type = "file" name = "project_brochure" id="new_brochure" {if $projectBrochure}style="display:none"{/if}/>
-                                                            {if $projectBrochure}
-                                                                <span id="old_brochure">
-                                                                    <a href="{$projectBrochure}">Project Brochure</a>
-                                                                    <input type = "hidden" name = "brochureDel" id="brochureDel" value = "">
-                                                                    &nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick='delete_brochure("{$oldProjectBrochure}")' title="Delete Brouchure"/>
-                                                                </span>
-                                                            {/if}
+                                                        <td width="30%" align="left"> 
+                                                            <span style="border: 1px solid rgb(194, 194, 194); padding: 4px; font-weight: bold; color: rgb(255, 255, 255); background: none repeat scroll 0px 0px rgb(153, 153, 153); cursor: pointer;" id="projectBrochureBtn"  onclick="download_project_brochure('{$projectId}');">
+                                                                Project Brochure
+                                                            </span>
+                                                            <input type = "file" name = "project_brochure" id="new_brochure" style="display:none"/>
+                                                            
+                                                            <span id="old_brochure" style="display:none">
+                                                                <a href="">Project Brochure</a>
+                                                                <input type = "hidden" name = "brochureDel" id="brochureDel" value = "">
+                                                                &nbsp;&nbsp;<img src="/images/delete_icon.gif" style="cursor:pointer" onclick='delete_brochure("{$oldProjectBrochure}")' title="Delete Brouchure"/>
+                                                            </span>
+                                                            
                                                         </td>
                                                         <td width="50%" align="left">
                                                             <font color="red">{if $ErrorMsg["projectBrouchureError"] != ''} {$ErrorMsg["projectBrouchureError"]} {/if}</font>

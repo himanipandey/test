@@ -268,20 +268,15 @@ $(function() {
                                                   {if $errorMsg} {$errorMsg} {/if}
                                           </td>
                                   </tr>
-                                  <tr>
-                                          <td align="right" style = "padding-left:20px;" width='35%'><b>City:</b></td>
-                                          <td align="left" style = "padding-left:20px;" width='65%'>
-                                                  <select name = 'city' id = "city" onchange = "update_locality(this.value);">
-                                                          <option value = "">Select City</option>
-                                                          {foreach from = $citylist key= key item = val}
+                                   <tr>
+                                        <td align="right" style = "padding-left:20px;" width='35%'><b>City:</b></td>
+                                        <td align="left" style = "padding-left:20px;" width='65%'>
 
-                                                                  <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
-                                                          {/foreach}
-                                                          <option value = "othercities" {if $city == "othercities"} selected  {else}{/if}>Other cities</option>
-                                                  </select>
-                                          </td>
-                                         
-                                    </tr>
+                                          <input type="text" id="cityName" name="cityName" value="{if $city == "othercities"}Other Cities{else}{$citylist[$city]}{/if}"/>
+                                          <input type="hidden" id="city" name="city" value="{$city}"/>
+
+                                        </td>
+                                    </tr>                                   
                                     <tr><td>&nbsp;</td></tr>
                                     <tr>
                                           <td align="right" style = "padding-left:20px;"><b>Locality:</b></td>

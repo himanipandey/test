@@ -152,7 +152,7 @@ class ResiProject extends Objects
                         on ta.table_id = resi_project.PROJECT_ID AND ta.table_name='resi_project' AND ta.attribute_name='HOUSING_AUTHORITY_ID' 
                         WHERE ".
 
-    						$conditions." $ands resi_project.version = 'Cms'".$offer_condition;
+    						$conditions." $ands resi_project.version = 'Cms'".$offer_condition." Limit 50";
     					//die($query);	
            $projectSearch = ResiProject::find_by_sql($query);  
          

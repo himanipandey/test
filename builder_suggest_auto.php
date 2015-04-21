@@ -1,6 +1,27 @@
 <!--<script type="text/javascript" src="/js/jquery/jquery-ui-1.8.9.custom.min.js"></script> -->
 <script type="text/javascript">
     jQuery(document).ready(function () {
+        $('#cityName').autocomplete({
+            source: "suggest_auto.php?type=city",
+            minLength : 1,
+            select: function(event, ui){
+                if ($('#city').length) {                    
+                    $("#city").val(ui.item.city_id);
+                    update_locality(ui.item.city_id);
+                }
+                if($("#cityId").length){
+                   $("#cityId").val(ui.item.city_id);
+                   update_locality(ui.item.city_id); 
+                }
+            },
+            response: function(event, ui){
+                if(ui.content.length == 0){                 
+                    $("#city").val(''); 
+                    $("#cityId").val('');
+                }
+            }
+            
+        });
         $('#builderName').autocomplete({
             source: "suggest_auto.php?type=builder",
             minLength: 1,

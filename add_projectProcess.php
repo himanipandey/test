@@ -988,10 +988,6 @@ elseif ($projectId != '') {
     }
     /* END */
 
-    $brochure = getProjectBrochure($projectId);
-    $smarty->assign("projectBrochure", $brochure['projectBrouchure']['service_image_path']);
-    $smarty->assign("oldProjectBrochure", $brochure['projectBrouchure']['service_image_id']);
-
     $smarty->assign("dept", $_SESSION['DEPARTMENT']);
 }
 
