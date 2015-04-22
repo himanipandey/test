@@ -1433,7 +1433,7 @@ function get_towers(project_id){
 
 function get_phases(projectId){
   $.ajax({
-                        type: "POST",
+                        type: "GET",
                         url: "{$url_phase_id}"+projectId+"/phase",
                         dataType: "json",
                         data: {
