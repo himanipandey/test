@@ -1,8 +1,6 @@
-<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 <!--<script type="text/javascript" src="js/photo.js"></script>-->
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -162,13 +160,9 @@
        });
     });
   });
-  function isValidBName(field) {
-        var re = /^[0-9-A-Za-z'-'\s]*$/;
-        if (!re.test(field.value)) {
-            field.value = field.value.replace(/[^0-9-A-Za-z'-'\s]/g,"");
-        }
-        field.value = field.value.replace(/ +(?= )/g,'');
-    }
+  
+ 
+
 </script>
 
 <script type="text/javascript" src="jscal/calendar.js"></script>
@@ -177,7 +171,7 @@
 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-<div class="modal">Please Wait..............</div>
+
 </TD>
   </TR>
   <TR>
@@ -213,7 +207,7 @@
 <!--			<fieldset class="field-border">
 			  <legend><b>Message</b></legend>-->
 			  <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
-			    <form method="post" enctype="multipart/form-data" id="builderForm">
+			    <form method="post" enctype="multipart/form-data">
 			      <div>
 			      				<tr>
 					<td  align = "center" colspan = "2">
@@ -266,13 +260,13 @@
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
                                     <input type=hidden name="oldbuilder" id="oldbuilder" value="{$oldval}" style="width:357px;">
-                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBName value="{$txtBuilderName}" style="width:357px;" onkeyup="isValidBName(this)"></td>
+                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
                                     {if $ErrorMsg["txtBuilderName"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
                                 <tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Legal Entity Name : </td>
-                                    <td width="30%" align="left"><input type=text name="legalEntity" id="legalEntity" value="{$legalEntity}" style="width:357px;" onkeyup="isValidBName(this)"></td>
+                                    <td width="30%" align="left"><input type=text name="legalEntity" id="legalEntity" value="{$legalEntity}" style="width:357px;"></td>
                                     {if $ErrorMsg["legalEntity"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["legalEntity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
@@ -614,7 +608,7 @@
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:152px;" >
 				  <input type="hidden" name="catid" value="<?php echo $catid ?>" />
-				  <input type="button" name="btnSave" id="btnSave" value="Save"  onclick="find_errors('builderForm', '{$errorUrl}');">
+				  <input type="submit" name="btnSave" id="btnSave" value="Save">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit">
 				  </td>
 				</tr>

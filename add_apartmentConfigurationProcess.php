@@ -46,21 +46,8 @@ if($_REQUEST['edit'] == 'edit')
              $optionTxtStr = $arrProjectType_VA['BEDROOMS'][$key]."-".$arrProjectType_VA['BATHROOMS'][$key]."-".$arrProjectType_VA['OPTION_NAME'][$key]."-".$arrProjectType_VA['SIZE'][$key];
              array_push($optionTxtStrArray, $optionTxtStr);
         }
-        $isResaleMapped=array();
-        $optionsList=array();
-        if($arrProjectType['OPTIONS_ID']){
-            $optionsList = $arrProjectType['OPTIONS_ID'];
-        }else if($arrProjectType_VA['OPTIONS_ID']){
-            $optionsList = $arrProjectType_VA['OPTIONS_ID'];
-        }else if($arrProjectType_P['OPTIONS_ID']){
-            $optionsList = $arrProjectType_P['OPTIONS_ID'];
-        }
-        if($optionsList){
-            $isResaleMapped = getOptionResaleMap($optionsList);
-        }
 
         /**********************Query for select values according project type for update**********************/
-        $smarty->assign("isResaleMapped", $isResaleMapped);
         $smarty->assign("edit_project", $projectId);
         $smarty->assign("TYPE_ID", $arrProjectType['OPTIONS_ID']);
         $smarty->assign("txtUnitNameval", $arrProjectType['OPTION_NAME']);
@@ -612,19 +599,6 @@ function getProperty($typeId) {
         }
     }
     return $property;
-}
-
-function getOptionResaleMap($proptyIds){
-    $inOptionIds = implode(",", $proptyIds);
-    $sqlStr = "SELECT count(*) as count, option_id from listings WHERE status='Active' AND listing_category='Resale' AND option_id IN(" . $inOptionIds . ") GROUP BY option_id";
-    $resource = mysql_query($sqlStr) or die(mysql_error()." error in select qry");
-    $data = array();
-    if(mysql_num_rows($resource)>0){
-        while ($row = mysql_fetch_assoc($resource)){
-            $data[$row["option_id"]] = $row["count"];
-        }
-    }
-    return $data;
 }
 
 ?>
