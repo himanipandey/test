@@ -482,26 +482,74 @@ function broker_call_edit(callId, brokerId)
 	});
 });
 function fetchPlanImages(objectType, objectId, contentArea){
-        $.ajax({
-                type: "post",
-                url: "fetch_plan_images.php",
-                data: "objectId=" + objectId + "&objectType=" + objectType,
-                beforeSend: function(){
-                    console.log('in ajax beforeSend');
-                    $("body").addClass("loading");
-                  },
-                success: function (dt) {                    
-                    $('#'+contentArea).html(dt);
-                    $("body").removeClass("loading");    
-                    if(dt.trim() != '<td>Data not found!</td>' && objectType == 'property'){
-                        $('#edit-floor-images').show();
-                    }else if(dt.trim() != '<td>Data not found!</td>' && objectType == 'project'){
-                        $('#edit-plan-images').show();
-                    }
-                    
+    $.ajax({
+        type: "post",
+        url: "fetch_plan_images.php",
+        data: "objectId=" + objectId + "&objectType=" + objectType,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $('#'+contentArea).html(dt);
+            $("body").removeClass("loading");    
+            if(dt.trim() != '<td>Data not found!</td>' && objectType == 'property'){
+                $('#edit-floor-images').show();
+            }else if(dt.trim() != '<td>Data not found!</td>' && objectType == 'project'){
+                $('#edit-plan-images').show();
+            }
+
+        }
+    });
+}
+
+function download_project_brochure(pid){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_brochure.php",
+        data: "objectId=" + pid,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty')
+                alert('Project Brochure not available!');
+            else
+                window.location = dt;
+        }
+    });
+}
+
+function show_calling_links(pid, type){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_calling_links.php",
+        data: "projectId=" + pid + "&projectType=" + type,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project '+ type +' calling links not available!');
+            }else{
+                
+                if(type == 'primary'){
+                    $('#primary-links').html(dt);
+                }else{
+                    $('#update-secodary-price').show();
+                    $('#secondary-links').html(dt);
                 }
-            });
-    }
+            }
+        }
+    });
+}
+    
 </script>
 
 <div class="modal">Please Wait..............</div>
@@ -1332,16 +1380,7 @@ function fetchPlanImages(objectType, objectId, contentArea){
                                                         {/if}
                                                     </td>
 						</tr>
-                                                {if $projectBrochure}
-                                                <tr height="25px;">
-                                                    <td nowrap="nowrap" width="6%" align="left">
-                                                            <b>Project Brochure:</b>
-                                                    </td>
-                                                    <td>
-                                                        <a href="{$projectBrochure}">Project Brochure</a>
-                                                    </td>
-                                                 </tr>
-                                                 {/if}
+                                                
                                                  <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Application Form:</b>
@@ -1482,6 +1521,17 @@ function fetchPlanImages(objectType, objectId, contentArea){
 					</table>
 				</td>
 			</tr>
+                        <tr>
+                            <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+                                    <tr>
+                                        <td>
+                                            <button onclick="download_project_brochure('{$projectId}');">Download Project Brochure</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                         <tr>
                             <td width = "100%" align = "left" colspan = "16" style="padding-left: 30px;">
                                 <button class="clickbutton" onclick="$(this).trigger('event18');">Show All Comments History</button>
@@ -1671,59 +1721,18 @@ function fetchPlanImages(objectType, objectId, contentArea){
                             </td>
                         </tr>
 			{*code start for calling records primry*}
-			{if count($arrCalingPrimary)>0}
-			<tr>
+                        <tr>
                             <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
                                 <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-
-                                    <tr class="headingrowcolor" height="30px;">
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Contact No</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Campaign Name</td>
-                                             <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                    <tr>
+                                        <td>
+                                            <button onclick="show_calling_links('{$projectId}', 'primary');">Show Primary Calling Links</button>
+                                            <div id="primary-links"></div>
+                                        </td>
                                     </tr>
-
-                                    {foreach from = $arrCalingPrimary key = key item = item}
-                                            {if ($key+1)%2 == 0}
-                                                            {$color = "bgcolor='#F7F8E0'"}
-                                            {else}
-                                                    {$color = "bgcolor='#f2f2f2'"}
-                                            {/if}
-                                    <tr {$color} height="25px;">
-                                            <td nowrap="nowrap" width="5%" align="center">
-                                                    {$key+1}
-                                            </td>
-                                            <td width ="10%">
-                                                    {$item['FNAME']}
-                                            </td>
-                                            <td width ="15%">
-                                                    {$item['StartTime']}
-                                            </td>
-                                            <td width ="15%">
-                                                    {$item['EndTime']}
-                                            </td>
-                                            <td width ="10%" nowrap>
-                                                    {$item['ContactNumber']}
-                                            </td>
-                                            <td width ="30%" nowrap>
-                                                    <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
-                                            </td>
-                                            <td width ="90%">
-                                                    {$item['CampaignName']}
-                                            </td>
-                                            <td width ="90%">
-                                                    {$item['Remark']}
-                                            </td>
-                                    </tr>
-                                    {/foreach}
                                 </table>
                             </td>
-			</tr>
-			{/if}
+                        </tr>                         			
 			{*end code start for calling records primary*}
 
 			<tr>
@@ -2198,62 +2207,27 @@ function fetchPlanImages(objectType, objectId, contentArea){
                     {/foreach}
                    {/foreach}
                    {*code start for calling records secondary*}
-                    {if count($arrCalingSecondary)>0}
-                        {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
-                            <tr>
-                                <td width = "100%" align = "Left" colspan = "16" style="padding-left: 30px;">
-                                    <b>Secondary Price Broker Calling Detail&nbsp&nbsp:</b><button class="clickbutton" onclick="$(this).trigger('event14');">Update Project Secondary Price</button>&nbsp;&nbsp;
-                                </td>
-                            </tr>
-                        {/if}
-                    <tr>
+                   <tr>
                         <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
                             <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-
-                                <tr class="headingrowcolor" height="30px;">
-                                         <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
-                                         <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
-                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
-                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Action</td>
-                                </tr>
-
-                                {foreach from = $arrCalingSecondary key = key item = item}
-                                        {if ($key+1)%2 == 0}
-                                                        {$color = "bgcolor='#F7F8E0'"}
-                                        {else}
-                                                {$color = "bgcolor='#f2f2f2'"}
+                                <tr>
+                                    <td>
+                                        <button onclick="show_calling_links('{$projectId}', 'secondary');">Show Secondary Price Broker Calling Detail</button>
+                                        {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                                            <div id="update-secodary-price" style="display:none">
+                                                <br/>
+                                                <b>Secondary Price Broker Calling Detail&nbsp&nbsp:</b><button class="clickbutton" onclick="$(this).trigger('event14');">Update Project Secondary Price</button>&nbsp;&nbsp;
+                                                <br/>
+                                            </div>
+                                            
                                         {/if}
-                                <tr {$color} height="25px;">
-                                        <td nowrap="nowrap" width="10%" align="center">
-                                                {$key+1}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['FNAME']}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['StartTime']}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['EndTime']}
-                                        </td>
-                                        <td width ="30%" nowrap>
-                                                <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
-                                        </td>
-                                        <td width ="90%">
-                                                {$item['Remark']}
-                                        </td>
-                                        <td width ="90%">
-											<a href="javascript:void(0);" name="call_edit" value="Edit" onclick="return broker_call_edit({$item['CallId']},{$item['BROKER_ID']});" >Edit</a>
-                                        </td>
+                                        <div id="secondary-links"></div>                                    
+                                    </td>
                                 </tr>
-                                {/foreach}
                             </table>
                         </td>
-                    </tr>
-                    {/if}
+                    </tr>                     
+                    
                 {*end code start for calling records secondary*}
 
                 <!--code start for all brokers secondary price display-->

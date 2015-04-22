@@ -110,14 +110,14 @@ if ($_REQUEST['type'] == 'suburb') {
 
             if ($_REQUEST['id'] == true) {
                 $data[] = array(
-                    'label' => $row['id'] ." - ". $row['township_name'],
-                    'value' => $row['id'] ." - ". $row['township_name'],
+                    'label' => $row['id'] . " - " . $row['township_name'],
+                    'value' => $row['id'] . " - " . $row['township_name'],
                     'id' => $row['id']
                 );
             } else {
                 $data[] = array(
                     'label' => $row['township_name'],
-                    'value' => $row['township_name']                    
+                    'value' => $row['township_name']
                 );
             }
         }
@@ -140,6 +140,24 @@ if ($_REQUEST['type'] == 'suburb') {
                 'label' => $row['entity'],
                 'value' => $row['entity'],
                 'builder_id' => $row['builder_id']
+            );
+        }
+    }
+} else if ($_REQUEST['type'] == 'city') {
+    if (mysql_real_escape_string($_REQUEST['term']) == 'other') {
+        $data[] = array(
+            'label' => 'Other Cities',
+            'value' => 'Other Cities',
+            'city_id' => 'othercities',
+        );
+    }
+    $rs = mysql_query('select city_id, label FROM city where label like "' . mysql_real_escape_string($_REQUEST['term']) . '%" and status = "Active" order by label ASC limit 0,10');
+    if ($rs && mysql_num_rows($rs)) {
+        while ($row = mysql_fetch_array($rs, MYSQL_ASSOC)) {
+            $data[] = array(
+                'label' => $row['label'],
+                'value' => $row['label'],
+                'city_id' => $row['city_id']
             );
         }
     }

@@ -579,20 +579,3 @@ function prd($data){
     echo "<pre>";
     die;
 }
-/**
- * getProjectBrochure : fetch the project brochure link
- */
-function getProjectBrochure($projectId){
-    
-    $url = ImageServiceUpload::$doc_upload_url."?objectType=project&objectId=".$projectId."&documentType=projectBrouchure";
-    $content = file_get_contents($url);
-    $imgPath = json_decode($content);
-    $data = array();
-    foreach($imgPath->data as $k1=>$v1){
-        if($k1==0){
-            $arr['projectBrouchure']['service_image_path'] = $v1->absoluteUrl;
-            $arr['projectBrouchure']['service_image_id'] = $v1->id;
-        }
-    }    
-    return $arr;
-}

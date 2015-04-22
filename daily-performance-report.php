@@ -74,7 +74,7 @@
 
      /*******code for date drop down*************/
      $dateArr = array();
-     for($i=0;$i<=60;$i++)
+     for($i=0;$i<=10;$i++)
      {
 
         $dtval = date("Y-m-d",mktime(0, 0, 0, date("m"), date("d")-$i, date("Y")));
