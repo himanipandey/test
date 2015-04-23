@@ -82,7 +82,7 @@ if ($_POST['btnSave'] == "Save") {
     $smarty->assign("alt_text", $alt_text);
     $smarty->assign("service_image_id", $service_image_id);
 
-    if (!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)) {
+    if (!preg_match('/^[a-zA-z0-9- ]+$/', $txtBuilderName)) {
         $ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
     }
 
