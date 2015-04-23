@@ -35,7 +35,7 @@
                 if ($('.builerUPdate').length) {
                     $(".builerUPdate").val(ui.item.builder_id);                   
                 }
-                if ($('builder').length) {                    
+                if ($('#builder').length) {                    
                     $("#builder").val(ui.item.builder_id);
                 }
             },
