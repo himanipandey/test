@@ -162,9 +162,13 @@
        });
     });
   });
-  
- 
-
+  function isValidBName(field) {
+        var re = /^[0-9-A-Za-z'-'\s]*$/;
+        if (!re.test(field.value)) {
+            field.value = field.value.replace(/[^0-9-A-Za-z'-'\s]/g,"");
+        }
+        field.value = field.value.replace(/ +(?= )/g,'');
+    }
 </script>
 
 <script type="text/javascript" src="jscal/calendar.js"></script>
@@ -262,13 +266,13 @@
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
                                     <input type=hidden name="oldbuilder" id="oldbuilder" value="{$oldval}" style="width:357px;">
-                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
+                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBName value="{$txtBuilderName}" style="width:357px;" onkeyup="isValidBName(this)"></td>
                                     {if $ErrorMsg["txtBuilderName"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
                                 <tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Legal Entity Name : </td>
-                                    <td width="30%" align="left"><input type=text name="legalEntity" id="legalEntity" value="{$legalEntity}" style="width:357px;"></td>
+                                    <td width="30%" align="left"><input type=text name="legalEntity" id="legalEntity" value="{$legalEntity}" style="width:357px;" onkeyup="isValidBName(this)"></td>
                                     {if $ErrorMsg["legalEntity"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["legalEntity"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
