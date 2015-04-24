@@ -185,8 +185,7 @@
                       {$globalDelete  = 0}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID'] == 0}
                       <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
-
-                      <div>
+                          
                          {foreach from = $ErrorMsg  key=k item = datafirst}
                             <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                     <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
@@ -331,7 +330,9 @@
 
                           </td>
 							-->
-                                <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaPlotArea[] tempName="txtVillaPlotArea"  id=txtVillaPlotArea value="{$txtVillaPlotArea[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                                
+                           <td>
+                               <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaPlotArea[] tempName="txtVillaPlotArea"  id=txtVillaPlotArea value="{$txtVillaPlotArea[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
 
 
                                 <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaFloors[] tempName="txtVillaFloors"  id=txtVillaFloors value="{$txtVillaFloors[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
@@ -340,7 +341,7 @@
 
 
                                 <input onkeypress="return isNumberKey(event)" type="hidden" name=txtVillaGardenArea[] tempName="txtVillaGardenArea"  id=txtVillaGardenArea value="{$txtVillaGardenArea[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
-                           <td>
+                                
                                  <select tempName="apartmentType" name = apartmentType[] style="border:1px solid #c3c3c3;">
                                     <option value = "">Select</option>
                                     <option value = 'studio' {if $apartmentType[$smarty.section.foo.index] == 'studio'}selected{/if}>Studio</option>
@@ -409,27 +410,23 @@
                                     <option {if $poojaroomsval[{$smarty.section.foo.index}] == '9'} value = "9" selected = 'selected' {else} value = "9" {/if}>9</option>
                                     <option {if $poojaroomsval[{$smarty.section.foo.index}] == '10'} value = "10" selected = 'selected' {else} value = "10" {/if}>10</option>
                                 </select>
-                          </td>
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
-
-
-
+                          </td>
+                                
                         </tr>
                         {/section}
 
-                        </div>
-                       <div id='roomForm' ></div>
+                        
+                       
                        </TABLE>
                     {/if}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeV || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV}
                       <TABLE cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
 						  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
-
-                      <div>
                               {foreach from = $ErrorMsg  key=k item = datafirst}
                                 <tr onmouseover="showHideDiv('row_{$k}',1);" onmouseout="showHideDiv('row_{$k}',2);">
                                         <th colspan="15" align = left><font color="red">{if  $k == 0} First row errors {else if $k == 1} Second row errors {else if $k == 2} Third row errors
@@ -577,8 +574,9 @@
                               </td>
                                <td   >
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtPricePerUnitLow[] tempName="txtPricePerUnitLow"  id=txtPricePerUnitLow value="{$txtPricePerUnitLowval_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" readonly="">
--->
+
                               </td>
+                              -->
 
 							  <td>
                                     <input onkeypress="return isNumberKey(event)" type=text name=txtVillaFloors[] tempName="txtVillaFloors"  id=txtVillaFloors value="{$txtVillaFloors_VA[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
@@ -677,17 +675,17 @@
                           <option {if $statusval_VA[$new_index] == 'Available'} selected ="selected" {/if} value = "Available">Available</option>
                           <option {if $statusval_VA[$new_index] == 'Sold Out'} selected ="selected" {/if} value = "Sold Out">Sold Out</option>
                       </select> -->
-                    </td>
-                                <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
+                        <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeLen[] id="txtSizeLen_{($smarty.section.foo.index+1)}" tempName="txtSizeLen" value="{$txtSizeLenval_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtSizeBre[] id="txtSizeBre_{($smarty.section.foo.index+1)}" tempName="txtSizeBre" value="{$txtSizeBreval_P[$new_index]}" style="width:100px;border:1px solid #FF0000"  maxlength = "10">
 
                                 <input onkeypress="return isNumberKey(event)" type=hidden name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$new_index]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
+                    </td>
+                                
                             </tr>
                             {/section}
 
-                        </div>
-                        <div id='roomForm' ></div>
+                        
                     </TABLE>
                     {/if}
 
@@ -808,8 +806,7 @@
                             </tr>
                         {/section}
 
-                        </div>
-                        <div id='roomForm' ></div>
+                        
                     </TABLE>
                     {/if}
 
