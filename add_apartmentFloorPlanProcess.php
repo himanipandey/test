@@ -8,8 +8,9 @@
 	$plot = array();
 	$commercial = array();
 	$uploadedArr = array(); // array of titles ALREADY uploaded in image service 
-	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
-	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "3D Floor Plan", "Panorama");
+//	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "3D Floor Plan", "Panorama");
+	$apartmentArr = array("Floor Plan", "Duplex", "Penthouse", "Triplex", "Panorama");
+	$villaArray = array("Basement Floor", "Stilt Floor", "Ground Floor", "First Floor", "Second Floor", "Third Floor", "Terrace Floor", "Floor Plan", "Panorama");
 	$duplex = array("Lower Level Duplex Plan", "Upper Level Duplex Plan", "Terrace Floor Plan", "Duplex Floor Plan");
 	$penthouse = array("Lower Level Penthouse Plan", "Upper Level Penthouse Plan", "Penthouse Floor Plan", "Terrace Floor Plan");
 	$triplex = array("Lower Level Floor", "Medium Level Floor", "Upper Level Floor", "Terrace Floor Plan");
@@ -111,7 +112,7 @@
 
 if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST['Next'] == "Add More")) {
     /*     * ***********Add new project type if projectid is blank******************************** */
-    //print("<pre>");var_dump($_REQUEST); die();
+//    prd($_REQUEST);
     if ($optionId == '') {
         $flgins = 0;
         foreach ($_REQUEST['floor_name'] AS $key => $val) {
@@ -132,6 +133,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                         else {
                             $floor_name = $_REQUEST['floor_name'][$key];
                             $option_id = $_REQUEST['option_id'][$key];
+                            $imageType = $_REQUEST['image_type'][$key];
                             /*                             * *******************code for floor plan add************************** */
                             if ($_FILES["imgurl"]["type"][$key]) {
                                 $builderNamebuild = explode("/", $builderDetail['BUILDER_IMAGE']);
@@ -196,7 +198,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     /*                                     * **********Working for floor plan********************** */
 
 
-                                    if ($floor_name == "3D Floor Plan")
+                                    if ($floor_name == "3D Floor Plan" || ($imageType=="3D"))
                                         $image_type = "3DFloorPlan";
                                     else if ($floor_name == "Panorama")
                                         $image_type = "Panoramic";
@@ -220,7 +222,8 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     $tmp['description'] = $floor_name;
                                     $tmp['altText'] = $altText;
 
-                                    if(in_array($floor_name, $documentTypeArr) ){
+                                    if(in_array($floor_name, $documentTypeArr) || ($imageType=="3D")){
+                                    	$tmp['json_dump'] = json_encode($_REQUEST['json_dump'][$key]);
                                     	$tmp['documentType'] = $image_type;
                                     	$tmp['file'] = "@" . $img['tmp_name']. ';filename=' . $img['name']. ';type=' . $img['type'];
                                     	unset($tmp['image']);
@@ -247,7 +250,6 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                     }
                 }
         }
-
         $serviceResponse = writeToImageService($postArr);
         //print("<pre>");var_dump($serviceResponse);die();
         //$serviceResponse = json_decode($serviceResponse);
