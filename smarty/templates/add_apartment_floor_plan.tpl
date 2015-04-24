@@ -113,8 +113,9 @@
                 $("#options_" + index).append(options);
             }
             if(obj.value == "3D Floor Plan"){
-                alert($("#options_" + index).closest("tr").find(".json-dump-td").html());
                 $("#options_" + index).closest("tr").find(".json-dump-td").show();
+            }else{
+                $("#options_" + index).closest("tr").find(".json-dump-td").hide();
             }
          }
          $(document).ready(function(){
