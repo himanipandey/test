@@ -105,8 +105,22 @@
 		var id = "add_"+(id+1);
 		document.getElementById(id).style.display = '';
 	 }
+         function imageTypeChanged(index,obj){
+            $("#options_" + index).html('');
+            $('<option>').val("0").text("Select Floor Plan options").appendTo("#options_" + index);
+            if(obj.value != ""){
+                var options = $("#options_temp_" + index).html();
+                $("#options_" + index).append(options);
+            }
+            if(obj.value == "3D Floor Plan"){
+                alert($("#options_" + index).closest("tr").find(".json-dump-td").html());
+                $("#options_" + index).closest("tr").find(".json-dump-td").show();
+            }
+         }
+         $(document).ready(function(){
+             $(".json-dump-td").hide();
+         });
    </SCRIPT>
-
 
 
 </TD>
@@ -162,6 +176,8 @@
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size/Carpet Area</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Image Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class="whiteTxt json-dump-td">JSON Dump</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
@@ -201,14 +217,32 @@
 {$ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA']}
 </td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
+                                  <td>
+                                      <select id="image_type_{($smarty.section.foo.index+1)}" onchange="imageTypeChanged({($smarty.section.foo.index+1)},this)">
+                                          <option value="">Select Image Type</option>
+                                          <option value="3D Floor Plan">3D Floor Plan</option>
+                                          <option value="2D Floor Plan">2D Floor Plan</option>
+                                      </select>
+                                  </td>
+                                  <td class="json-dump-td"><input type="text" name="json_dump_{($smarty.section.foo.index+1)}"></td>
 				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
-				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
-				  	<Option value="0">Select Floor Plan Options</Option>
+				  <td>
+                                      <select id="options_temp_{($smarty.section.foo.index+1)}" style="display: none">
+                                        <Option value="0">Select Floor Plan Options</Option>
 				  	
 					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
 					   		<Option >{$data}</Option>
 					   {/foreach}
-				  </select></td>
+                                        </select>
+                                        
+                                        <select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
+                                        <Option value="0">Select Floor Plan Options</Option>
+				  	
+					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
+					   		<Option >{$data}</Option>
+					   {/foreach}
+                                        </select>
+                                  </td>
 				  
 				  	<td><select name = "floor_name[]" id = "floor_name_{($smarty.section.foo.index+1)}" width="60px">
 				  		<Option value="0">Select Floor Plan Name</Option>
