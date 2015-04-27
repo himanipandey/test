@@ -39,7 +39,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 
     define("AUDIO_SERVICE_URL","https://www.proptiger.com/data/v1/entity/audio");
 
-
+    define('FIND_ERRORS_URL', 'https://www.proptiger.com/seo/data/v1/text-analyser/find-errors');
 
     define("USER_ATTRIBUTES_API_URL", "https://www.proptiger.com/userservice/data/v1/entity/user");
     define("USER_DETAILS_API_URL", "https://www.proptiger.com/userservice/app/v1/user-details");
@@ -49,6 +49,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
     define("TYPEAHEAD_API_URL", "https://www.proptiger.com/columbus/app/v3/typeahead");
     define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");
     define("LISTING_API_URL", "https://proptiger.com/data/v1/entity/user/listing");
+    define("RESALE_LISTING_API_V2_URL", "https://proptiger.com/data/v2/entity/resale-listing");
 	define("ADMIN_USER_LOGIN_API_URL", "https://proptiger.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
 	define("phase_detail","http://www.proptiger.com/data/v1/entity/project/");
 
@@ -115,10 +116,11 @@ else{
 
 //    define("TYPEAHEAD_API_URL", "https://proptiger.com/app/v3/typeahead");
 //    Changed By Jitendra pathak
-    define("TYPEAHEAD_API_URL", "https://proptiger.com/columbus/app/v3/typeahead");
+    define("TYPEAHEAD_API_URL", "https://qa.proptiger-ws.com/columbus/app/v3/typeahead");
 	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
-	define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");  
+	define("project_detail", "https://qa.proptiger-ws.com/app/v1/project-detail?projectId=");  
 	define("LISTING_API_URL", "https://qa.proptiger-ws.com/data/v1/entity/user/listing");
+        define("RESALE_LISTING_API_V2_URL", "https://qa.proptiger-ws.com/data/v2/entity/resale-listing");
 	//define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=manish_goyal140789@yahoo.in&password=1234&rememberme=true");
 
 
@@ -131,6 +133,8 @@ else{
 
 	define("phase_detail","http://www.proptiger.com/data/v1/entity/project/");
 	//https://www.proptiger.com/data/v1/entity/project/640042/phase?fields=phaseId
+        
+        define('FIND_ERRORS_URL', 'https://qa.proptiger-ws.com/seo/data/v1/text-analyser/find-errors');
 
 
 

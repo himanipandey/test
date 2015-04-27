@@ -748,11 +748,16 @@ $bankAccountType = array(
 $smarty->assign("bankAccountType",$bankAccountType);
 
 /********config for crawling automation and youtube upload******************/
-$smarty->assign("lookup_table_update_url","http://54.151.224.235:8000/lookup/");
-$smarty->assign("resale_prices_update_url","http://54.151.224.235:8000/cms/");
-$smarty->assign("youtube_upload_url","http://54.151.224.235:8000/youtube/");
+$smarty->assign("lookup_table_update_url","http://crawling-youtube.proptiger-ws.com:8000/lookup/");
+$smarty->assign("resale_prices_update_url","http://crawling-youtube.proptiger-ws.com:8000/cms/");
+$smarty->assign("youtube_upload_url","http://crawling-youtube.proptiger-ws.com:8000/youtube/");
 
 $smarty->assign("arrAllType",$arrAllType);
+
+$smarty->assign('errorUrl', FIND_ERRORS_URL);
+
+//gooogle map api key
+$smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
 
 /********config for project type of residential/nonresidential******************/
 

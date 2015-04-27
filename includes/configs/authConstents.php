@@ -25,6 +25,9 @@
     $roomTypeAuth = isUserPermitted('room-type', 'manage');
     $smarty->assign("roomTypeAuth", $roomTypeAuth );
     
+    $isSmoothedAuth = isUserPermitted('is-smoothed', 'manage');
+    $smarty->assign("isSmoothedAuth", $isSmoothedAuth );
+    
     $companyOrderAdminAuth = isUserPermitted('comp-orders-mgmt', 'admin');
     $smarty->assign("companyOrderAdminAuth", $companyOrderAdminAuth);
     
@@ -178,5 +181,8 @@
     if($micrositeExec == 1)
         $micrositeFlgExec = 1;
     $smarty->assign("micrositeFlgExec",$micrositeFlgExec);
+    
+    $mapVarifyAuth = isUserPermitted('map-varification', 'manage');
+    $smarty->assign("mapVarifyAuth", $mapVarifyAuth );
     
 ?>

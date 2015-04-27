@@ -5,7 +5,7 @@ function getAssignedProjects($adminId=NULL){
         ASSIGNMENT_DATE, pa.STATUS, pa.EXECUTIVE_REMARK REMARK from project_assignment pa 
         inner join resi_project rp 
         on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null) AND rp.SKIP_B2B !=1)
         inner join resi_builder rb on rp.builder_id = rb.builder_id
         inner join locality l on rp.locality_id = l.locality_id
         inner join suburb s on l.suburb_id = s.suburb_id
@@ -145,6 +145,7 @@ function getProjectListForManagers($cityId, $department = '', $suburbId = '', $l
     if($localityId!=''){
         $sql = $sql . " and l.LOCALITY_ID=$localityId ";
     }
+    $sql = $sql . " and rp.SKIP_B2B !=1 ";
     $sql = $sql . " group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
     return  $res = dbQuery($sql); 
 }
@@ -194,7 +195,7 @@ function getAssignedProjectsFromPIDs($pids, $callingFieldFlag){
          = uc.UPDATION_CYCLE_ID where ((pstg.name = '".NewProject_stage."' and pphs.name = '".DcCallCenter_phase."') or 
             (pstg.name = '".UpdationCycle_stage."' and pphs.name = '".DataCollection_phase."')) and 
          rp.MOVEMENT_HISTORY_ID is not NULL and rp.status in ('ActiveInCms','Active') and rp.version = 'Cms'
-            and rp.PROJECT_ID in (" .  implode(',', $pids) . ")
+            and rp.PROJECT_ID in (" .  implode(',', $pids) . ") AND rp.SKIP_B2B !=1 
                 group by rp.MOVEMENT_HISTORY_ID order by rp.PROJECT_ID;";
         $res = dbQuery($sql);
     }
@@ -411,7 +412,7 @@ function surveyexecutiveList(){
             union select pa.ASSIGNED_TO, 
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
                inner join resi_project rp
-               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and (pa.updation_cycle_id = rp.updation_cycle_id or rp.updation_cycle_id is null))
+               on (pa.MOVEMENT_HISTORY_ID = rp.MOVEMENT_HISTORY_ID and (pa.updation_cycle_id = rp.updation_cycle_id or rp.updation_cycle_id is null) AND rp.SKIP_B2B != 1)
                inner join locality l on rp.locality_id = l.locality_id
                inner join suburb s on l.suburb_id = s.suburb_id
                inner join proptiger_admin_city pac on (s.city_id = pac.city_id and pa.assigned_to = pac.admin_id)
@@ -474,7 +475,7 @@ function getCallCenterExecutive($executives = array()){
                count(rp.MOVEMENT_HISTORY_ID) TOTAL from project_assignment pa 
                inner join resi_project rp 
                on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null) AND rp.SKIP_B2B !=1)
                inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
                where 
@@ -492,7 +493,7 @@ function getCallCenterExecutive($executives = array()){
             from project_assignment pa 
             inner join resi_project rp 
             on (rp.MOVEMENT_HISTORY_ID = pa.MOVEMENT_HISTORY_ID and (rp.updation_cycle_id is null
-            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null))
+            or rp.updation_cycle_id = pa.updation_cycle_id or pa.updation_cycle_id is null) AND rp.SKIP_B2B !=1)
             inner join master_project_phases mpp on rp.project_phase_id = mpp.id
                inner join master_project_stages mpstg on rp.project_stage_id = mpstg.id
             where ((mpstg.name = '".NewProject_stage."' and mpp.name = '".DcCallCenter_phase."') or 
