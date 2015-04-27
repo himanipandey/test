@@ -14,7 +14,6 @@ include ("imageService/image_upload.php");
 include_once ("includes/send_mail_amazon.php");
 
 $host = "http://localhost:8080/userservice/";
-echo "\n" . "############create" . "\n";
 
 AdminAuthentication ();
 
@@ -36,7 +35,6 @@ if ($_POST ['task'] == 'office_locations') {
 }
 
 if ($_POST ['task'] == 'createAgent') {
-	echo "\n" . "############create" . "\n";
 	
 	$agentId = $_POST ['id'];
 	$userId = $_POST ['userId'];
@@ -149,10 +147,8 @@ function createUserInProptiger() {
 	$query = "SELECT USER_ID FROM proptiger.FORUM_USER WHERE EMAIL='{$email}' and STATUS='1'";
 	$res = mysql_query ( $query );
 	$data = mysql_fetch_assoc ( $res );
-	// print_r($data['USER_ID']); die;
 	if (! $data ['USER_ID'] > 0) {
 		$pass = randomPassword ();
-		// $post = '{"userName":"'.$name.'", "email":"'.$email.'","contact":"'.$phone.'","password":"'.$pass.'","confirmPassword":"'.$pass.'","countryId":"+91"}';
 		
 		$contactNumbers = array ();
 		$contact = array (
@@ -170,7 +166,6 @@ function createUserInProptiger() {
 		);
 		
 		$url = USER_API_URL;
-		// echo $post;
 		$response = curl_request ( json_encode ( $post ), 'POST', $url );
 		if ($response ['statusCode'] == "2XX") {
 			$user_id = $response ['id'];
