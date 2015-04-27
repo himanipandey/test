@@ -116,7 +116,7 @@
                                         <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                             <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                     <TR>
-                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Map Location Varification Tool<findOTP/TD>
+                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Map Location Verification Tool<findOTP/TD>
                                                     </TR>
                                                 </TBODY></TABLE>
                                         </TD>

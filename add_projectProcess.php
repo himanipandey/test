@@ -398,7 +398,7 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
             }
         }
 
-        if ($Status == PRE_LAUNCHED_ID_8 && $preLaunchDt == '') {
+        if ($Status == PRE_LAUNCHED_ID_8 && $preLaunchDt == '' && $projectId == '') {
             $ErrorMsg['preLaunchDate'] = "Pre Launch date cant empty";
         }
 
