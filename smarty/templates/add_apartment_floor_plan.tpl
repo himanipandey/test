@@ -113,16 +113,21 @@
             if(obj.value != ""){
                 var options = $("#options_temp_" + index).html();
                 $("#options_" + index).append(options);
+            }else{
+                $('<option>').val("0").text("Select Floor Plan options").appendTo("#options_" + index);
+                $("#options_" + index).closest("tr").find(".json-dump-td").hide();
             }
             if(obj.value == "3D"){
                 $("#options_" + index).closest("tr").find(".json-dump-td").show();
-            }else{
+            }else if(obj.value == "2D"){
                 $("#options_" + index).closest("tr").find(".json-dump-td").hide();
-                $('<option>').val("0").text("Select Floor Plan options").appendTo("#options_" + index);
+                $("#options_" + index + " option[value='Panorama']").remove();
             }
          }
          $(document).ready(function(){
              $(".json-dump-td").hide();
+             $(".floor-options").html('');
+             $('<option>').val("0").text("Select Floor Plan options").appendTo(".floor-options");
          });
    </SCRIPT>
 
@@ -235,11 +240,11 @@
                                         <Option value="0">Select Floor Plan Options</Option>
 				  	
 					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
-					   		<Option >{$data}</Option>
+					   		<Option value="{$data}">{$data}</Option>
 					   {/foreach}
                                         </select>
                                         
-                                        <select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
+                                        <select id="options_{($smarty.section.foo.index+1)}" class="floor-options" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
                                         <Option value="0">Select Floor Plan Options</Option>
 				  	
 					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
