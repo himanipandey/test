@@ -223,7 +223,8 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     $tmp['altText'] = $altText;
 
                                     if(in_array($floor_name, $documentTypeArr) || ($imageType=="3D")){
-                                    	$tmp['stringMediaExtraAttributes'] = json_encode(array("svg"=>$_REQUEST['json_dump'][$key]));
+                                        list($imgwidth, $imgheight) = getimagesize($img['tmp_name']);
+                                    	$tmp['stringMediaExtraAttributes'] = json_encode(array("svg"=>$_REQUEST['json_dump'][$key],"width"=>$imgwidth,"height"=>$imgheight));
                                     	$tmp['documentType'] = $image_type;
                                     	$tmp['file'] = "@" . $img['tmp_name']. ';filename=' . $img['name']. ';type=' . $img['type'];
                                     	unset($tmp['image']);
