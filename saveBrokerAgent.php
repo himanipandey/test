@@ -13,8 +13,6 @@ include ("common/function.php");
 include ("imageService/image_upload.php");
 include_once ("includes/send_mail_amazon.php");
 
-$host = "http://localhost:8080/userservice/";
-
 AdminAuthentication ();
 
 // /echo "here"; die;
@@ -78,21 +76,36 @@ if ($_POST ['task'] == 'createAgent') {
 					"name" => $name,
 					"email" => $email,
 					"address" => $address,
-					"city" => $city,
+					"cityId" => $city,
 					"pinCode" => $pin,
 					"countryId" => "+91",
 					"sellerType" => $role,
 					"academicQualificationId" => $qualification,
 					"activeSince" => $active_since,
+					"checkAddress" => "on",
+					"parentId" => 0,	
 					"status" => $status,
 					"companyId" => $brokerId,
 					"updatedBy" => $_SESSION ['adminId'],
 					"user" => $user 
 			);
-			
-			$companyUserPutApi = $host . "data/v1/entity/company/company-users/companyUserId/$agentId";
-			$response = curl_request ( json_encode ( $post ), 'PUT', $companyUserPutApi );
-			echo "1";
+			$companyUserPutApi = COMPANY_USER_POST_API_URL . "/" . $agentId;
+			$postJson = json_encode ( $post );
+			$cookie = getJsessionId ();
+			$opts = array (
+					'http' => array (
+							'method' => 'PUT',
+							'header' => "Content-type: application/json\r\n" . "Cookie: $cookie",
+							'content' => $postJson 
+					) 
+			);
+			$tokenResponse = file_get_contents ( $companyUserPutApi, false, stream_context_create ( $opts ) );
+			$reponseData = json_decode ( $tokenResponse, true );
+			if ($reponseData ['statusCode'] == "2XX") {
+				echo "1";
+			} else {
+				echo "3";
+			}
 		} else if (! mysql_error ())
 			echo "2";
 		else
@@ -121,7 +134,7 @@ if ($_POST ['task'] == 'createAgent') {
 				"name" => $name,
 				"email" => $email,
 				"address" => $address,
-				"city" => $city,
+				"cityId" => $city,
 				"pinCode" => $pin,
 				"countryId" => "+91",
 				"sellerType" => $role,
@@ -130,58 +143,45 @@ if ($_POST ['task'] == 'createAgent') {
 				"status" => $status,
 				"companyId" => $brokerId,
 				"checkAddress" => "on",
+				"parentId" => 0,
 				"updatedBy" => $_SESSION ['adminId'],
 				"user" => $user 
 		);
-		$companyUserPostApi = $host . "data/v1/entity/company/company-users";
-		
-		$response = curl_request ( json_encode ( $post ), 'POST', $companyUserPostApi );
-		if ($response ['statusCode'] == "2XX") {
+		$companyUserPostApi = COMPANY_USER_POST_API_URL;
+		$postJson = json_encode ( $post );
+		$cookie = getJsessionId ();
+		$opts = array (
+				'http' => array (
+						'method' => 'POST',
+						'header' => "Content-type: application/json\r\n" . "Cookie: $cookie",
+						'content' => $postJson 
+				) 
+		);
+		$tokenResponse = file_get_contents ( $companyUserPostApi, false, stream_context_create ( $opts ) );
+		$reponseData = json_decode ( $tokenResponse, true );
+		if ($reponseData ['statusCode'] == "2XX") {
 			echo "1";
 		} else {
 			echo "3";
 		}
 	}
 }
-function createUserInProptiger() {
-	$query = "SELECT USER_ID FROM proptiger.FORUM_USER WHERE EMAIL='{$email}' and STATUS='1'";
-	$res = mysql_query ( $query );
-	$data = mysql_fetch_assoc ( $res );
-	if (! $data ['USER_ID'] > 0) {
-		$pass = randomPassword ();
-		
-		$contactNumbers = array ();
-		$contact = array (
-				"contactNumber" => $phone 
-		);
-		array_push ( $contactNumbers, $contact );
-		
-		$post = array (
-				"fullName" => $name,
-				"email" => $email,
-				"contactNumbers" => $contactNumbers,
-				"password" => $pass,
-				"confirmPassword" => $pass,
-				"countryId" => "+91" 
-		);
-		
-		$url = USER_API_URL;
-		$response = curl_request ( json_encode ( $post ), 'POST', $url );
-		if ($response ['statusCode'] == "2XX") {
-			$user_id = $response ['id'];
-			$to = 'mohit.dargan@proptiger.com';
-			$subject = "New Broker User Account created!";
-			$email_message = "Hi,<br/><br/> New account has been created at Proptiger.com.<br/>
-              User = " . $email . "<br/>" . "Password = " . $pass . "<br/><br/>Regards,<br/>Proptiger.com";
-			
-			$sender = "no-reply@proptiger.com";
-			$cc = "karanvir.singh@proptiger.com";
-			sendMailFromAmazon ( $to, $subject, $email_message, $sender, $cc, null, false );
-		} 
-
-		else
-			die ( "error in user mapping : " . $response ['error'] );
-	} else
-		$user_id = $data ['USER_ID'];
+function getJsessionId() {
+	$uriLogin = ADMIN_USER_LOGIN_API_URL;
+	$ch = curl_init ();
+	curl_setopt ( $ch, CURLOPT_URL, $uriLogin );
+	curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+	curl_setopt ( $ch, CURLOPT_VERBOSE, 1 );
+	curl_setopt ( $ch, CURLOPT_HEADER, 1 );
+	curl_setopt ( $ch, CURLOPT_HTTPHEADER, array (
+			'Content-Type: application/json' 
+	) );
+	curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+	curl_setopt ( $ch, CURLOPT_POSTFIELDS, "" );
+	$response = curl_exec ( $ch );
+	curl_close ( $ch );
+	preg_match ( '/Set-Cookie: JSESSIONID=(.*?);/', $response, $matches );
+	$cookie = "JSESSIONID=$matches[1]";
+	return $cookie;
 }
 ?>
