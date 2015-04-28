@@ -125,6 +125,15 @@
             return false;
         }
       };
+      $(document).ready(function(){
+          $("#btnSave").click(function (){
+              $("#action").val("save");
+          });
+          $("#btnExit").click(function (){
+              $("#action").val("exit");
+          });
+      });
+      
 </SCRIPT>
 
 
@@ -822,7 +831,7 @@
                  {if $edit_project == ''}
                   <input type="submit" name="Skip" id="Skip" value="Skip" />
                  {/if}
-                 
+                 <input type="hidden" name="action" id="action" value="">
 
                  <input type="submit" name="btnSave" id="btnSave" {if $edit_project == ''} value="Next" {else} value="Save" {/if} onclick = "return chkConfirm();" />
 								 &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" />
