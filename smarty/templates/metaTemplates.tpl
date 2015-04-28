@@ -42,13 +42,10 @@
                                         <tbody>
                                             <tr class = "headingrowcolor" height="25">
                                                 <td class=whiteTxt width=5% align="center">S NO</td>
-                                                <td class=whiteTxt width=15% align="center">Builder Display Name</td>
-                                                <td class=whiteTxt width=15% align="center">Legal Entity Name</td>
-                                                <td class=whiteTxt width=15% align="center">Builder URL</td>
-                                                <td class=whiteTxt width=25% align="center">Meta Title</td>
-                                                <td class=whiteTxt width=25% align="center">Meta Keywords</td>
-                                                <td class=whiteTxt width=15% align = 'center'>Display Order</td>
-                                                <td class=whiteTxt width=12% align="center">Action</td>
+                                                <td class=whiteTxt width=15% align="center">Template Name</td>
+                                                <td class=whiteTxt width=30% align="center">Title</td>
+                                                <td class=whiteTxt width=30% align="center">Description</td>
+                                                <td class=whiteTxt width=10% align="center">Others</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -60,8 +57,7 @@
                                                 <table width="100%" border="0" cellpadding="0" cellspacing="0">
                                                     <tr>
                                                         <td width="77%" height="25" align="center">
-                                                            {$Pagginnation}
-
+                                                            {$Pagginnation}\
                                                         </td>
                                                         <td align="right">&nbsp;</td>
                                                     </tr>
