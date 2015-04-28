@@ -2343,7 +2343,7 @@ function updateD_Availablitiy($projectId){
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
 								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId 
+								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  
 								group by option_type,bedrooms");
