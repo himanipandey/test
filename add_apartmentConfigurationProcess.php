@@ -49,16 +49,17 @@ if($_REQUEST['edit'] == 'edit')
         $isResaleMapped=array();
         $optionsList=array();
         if($arrProjectType['OPTIONS_ID']){
-            $optionsList = $arrProjectType['OPTIONS_ID'];
-        }else if($arrProjectType_VA['OPTIONS_ID']){
-            $optionsList = $arrProjectType_VA['OPTIONS_ID'];
-        }else if($arrProjectType_P['OPTIONS_ID']){
-            $optionsList = $arrProjectType_P['OPTIONS_ID'];
+            $optionsList = array_merge($optionsList,$arrProjectType['OPTIONS_ID']);
+        }
+        if($arrProjectType_VA['OPTIONS_ID']){
+            $optionsList = array_merge($optionsList,$arrProjectType_VA['OPTIONS_ID']);
+        }
+        if($arrProjectType_P['OPTIONS_ID']){
+            $optionsList = array_merge($optionsList,$arrProjectType_P['OPTIONS_ID']);
         }
         if($optionsList){
             $isResaleMapped = getOptionResaleMap($optionsList);
         }
-
         /**********************Query for select values according project type for update**********************/
         $smarty->assign("isResaleMapped", $isResaleMapped);
         $smarty->assign("edit_project", $projectId);
