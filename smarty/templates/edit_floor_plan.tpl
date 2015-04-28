@@ -189,6 +189,7 @@ $(".pt_reqflrplan").fancybox();
 									
 												{$cnt = 0}
 												{section name=data loop=$ImageDataListingArr}
+                                                                                                    {$imgType=($ImageDataListingArr[data].DOCUMENT_TYPE == 'yes')?"(3D)":"(2D)"}
 						
 												<td class = "tdcls_{$cnt}" >
 													
@@ -224,7 +225,7 @@ $(".pt_reqflrplan").fancybox();
 
 														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
 														
-														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
+														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}{$imgType}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
 														
 														<b>Delete:</b><input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>
 														
