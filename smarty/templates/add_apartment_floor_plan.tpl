@@ -186,7 +186,7 @@
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size/Carpet Area</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Image Type</td>
-				  <td nowrap="nowrap" width="6%" align="left" class="whiteTxt json-dump-th">JSON Dump</td>
+				  <td nowrap="nowrap" width="6%" align="left" class="whiteTxt json-dump-th">SVG</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
