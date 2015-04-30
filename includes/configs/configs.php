@@ -190,6 +190,10 @@ DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
 DEFINE("PROJECT_BANKS","project_banks");
 DEFINE("VIDEO_LINKS","video_links");
+DEFINE("CONTENT_LOTS","content_lots");
+DEFINE("CONTENT_LOT_DETAILS","content_lot_details");
+DEFINE("CONTENT_LOT_COMMENTS","content_lot_comments");
+DEFINE("CMS_ASSIGNMENTS","cms_assignments");
 
 
 /**************This always put at the end of define tables*******************/
@@ -760,6 +764,25 @@ $smarty->assign('errorUrl', FIND_ERRORS_URL);
 //gooogle map api key
 $smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
 
+$arrLotTypes = array(
+    "project" => "Project",
+    "locality" => "Locality",
+    "builder" => "Builder",
+    "city" => "City"
+);
+$smarty->assign('arrLotTypes', $arrLotTypes);
+
+$arrLotStatus = array(
+    'unassigned'=>'Unassigned',
+    'assigned'=>'Assigned',
+    'completedByVendor'=>'Completed By Vendor',
+    'waitingApproval'=>'Waiting Approval',
+    'approved'=>'Approved',
+    'reverted'=>'Reverted',
+    'canceled'=>'Canceled'
+);
+
+$smarty->assign('arrLotStatus', $arrLotStatus);
 /********config for project type of residential/nonresidential******************/
 
 
