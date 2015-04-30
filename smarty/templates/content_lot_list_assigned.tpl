@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
@@ -15,6 +15,7 @@
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
 
+<div class="modal">Please Wait..............</div>
 </TD>
 </TR>
 <TR>
@@ -111,13 +112,13 @@
                                                                     <td>
                                                                         {$val['articles']} / {$val['words']}
                                                                     </td>
-                                                                    <td>{if ($val['lot_city'])}{$CityDataArr[$val['lot_city']]}{else} - {/if}</td>
+                                                                    <td>{$val['lot_completed_articles']} / {$val['lot_completed_words']}</td>
                                                                     <td>
 
                                                                         {if $val['articles'] == $val['lot_completed_articles']}
-                                                                            <form method="post">
-                                                                                <input type='submit' name='lotCompleted' id='lotCompleted' value='Submit' {$enabled} />
-                                                                            </form>
+                                                                            
+                                                                                <input type='submit' name='lotCompleted' id='lotCompleted' onclick="complete_lot_action('{$val["lot_id"]}')" value='Submit' {$enabled} />
+                                                                            
                                                                         {/if}
 
                                                                     </td>
@@ -173,6 +174,23 @@
         }
         
         return true;
+    }
+    function complete_lot_action(lot_id){
+        $.ajax({
+            url: "ajax/lot_actions.php",
+            type: "POST",
+            data: "lot_id=" + lot_id + "&lotAction=" + "complete&currentUserRole="+"{$currentUserRole}" + "&currentUser=" + "{$currentUser}",
+            beforeSend: function () {
+                $("body").addClass("loading");
+            },
+            success: function (dt) {
+                $("body").removeClass("loading");
+                alert(dt);
+                if (dt.trim() != 'Action Failed!') {
+                    window.location = 'content_lot_list_assigned.php';
+                }
+            }
+        });
     }
 
 </script>

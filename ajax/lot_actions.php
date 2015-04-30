@@ -10,9 +10,13 @@ $vendorID = $_POST['vendorID'];
 $lotAction = $_POST['lotAction'];
 $lot_id = $_POST['lot_id'];
 $assigned_by = $_POST['assigned_by'];
+$role = $_POST['currentUserRole'];
+$currentUser = $_POST['currentUser'];
 $reAssign = (isset($_POST['reAssign'])) ? 1 : 0;
 
-if ($lotAction == 'approve') {
+if ($lotAction == 'complete') {
+    $status = 'completed';
+}elseif ($lotAction == 'approve') {
     $status = 'approved';
 } elseif ($lotAction == 'revert') {
     $status = 'reverted';
@@ -20,7 +24,48 @@ if ($lotAction == 'approve') {
     $status = 'assigned';
 }
 
-if ($status == 'approved') {
+if ($status == 'completed') {
+    if ($role == 'contentVendor') {
+        $statuses = 'completedByVendor';
+    } elseif ($role == 'contentEditor') {
+        $statuses = 'waitingApproval';
+    }
+    ContentLot::transaction(function() {
+
+        global $statuses, $lot_id, $role, $currentUser;
+
+        try {
+            //updating data into cms assignments table
+            $cmsAssign = CmsAssignment::find('all', array(
+                        'select' => 'id',
+                        'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)));
+            $cmsAssign = CmsAssignment::find($cmsAssign[0]->id);
+            $cmsAssign->status = $statuses;            
+            if ($role == 'contentVendor') {
+                $cmsAssign->completed_by =  $currentUser;
+                $cmsAssign->assigned_to = null;
+            } elseif ($role == 'contentEditor') {
+                $cmsAssign->checked_by =  $currentUser;
+            }
+            
+            $cmsAssign->save();
+
+
+            //updating data into content lots table
+            $contentLot = ContentLot::find('all', array(
+                        'select' => 'id',
+                        'conditions' => array('id' => $lot_id)
+            ));
+            $contentLot = ContentLot::find($contentLot[0]->id);
+            $contentLot->lot_status = $statuses;
+            $contentLot->save();
+            
+        } catch (Exception $e) {
+            print "Action Failed!";
+        }
+    });
+    
+}elseif ($status == 'approved') {
 
 
     ContentLot::transaction(function() {

@@ -46,10 +46,17 @@
                                                     <table width="100%">
                                                         <tr style='height: 50px;'>
                                                             <td><b>Lot Type: </b>{$lot_details['lot_type']|ucwords}</td>
-                                                            <td><b>Assignment Date: </b>{$lot_details['assignment_date']}</td>
                                                             <td>
-                                                                {if $lot_details['lot_status'] == 'completedByVendor' && $currentRole == 'contentEditor'}
-                                                                    <input type='button' value='Approve'>
+                                                                {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
+                                                                    <b>Status: </b> Completed By Vendor
+                                                                {else}
+                                                                    <b>Assignment Date: </b>{$lot_details['assignment_date']}
+                                                                {/if}
+                                                            </td>
+                                                            <td>
+                                                                {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
+                                                                    <input type='button' value='Approve' class="page-button"/>
+                                                                    <input type='button' value='Revert' class="page-button"/>
                                                                 {else}
                                                                     &nbsp;
                                                                 {/if}
@@ -64,9 +71,11 @@
                                                                 {else}
                                                                     {$enabled = "disabled"}
                                                                 {/if}
-                                                                <form method="post">
-                                                                    <input type='submit' name='lotCompleted' id='lotCompleted' value='Submit' {$enabled} />
-                                                                </form>
+                                                                {if $currentRole != 'contentEditor' && !$lot_details['completed_by']}
+                                                                    <form method="post">
+                                                                        <input type='submit' name='lotCompleted' id='lotCompleted' value='Submit' {$enabled} />
+                                                                    </form>
+                                                                {/if}
                                                             </td>
                                                         </tr>
                                                         <tr style='height: 50px;'>

@@ -95,8 +95,8 @@ function fetch_lot_details($lot_id) {
     $content_lot_details = array();
     $lot_details_sql = "SELECT cl.lot_type, loc.label as locality, city.label as lot_city, ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.entity_name, cld.content, cld.updated_content, "
             . " cld.status as content_status, length(cld.content) as content_words_count, "
-            . " length(cld.updated_content) as updated_content_words_count, "
-            . "DATE_FORMAT(ca.created_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
+            . " length(cld.updated_content) as updated_content_words_count, ca.completed_by, "
+            . " DATE_FORMAT(ca.created_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
@@ -117,6 +117,7 @@ function fetch_lot_details($lot_id) {
             $content_lot_details['lot_id'] = $lot_id;
             $content_lot_details['assignment_date'] = $row->assignment_date;
             $content_lot_details['assigned_to'] = $row->assigned_to;
+            $content_lot_details['completed_by'] = $row->completed_by;
             $content_lot_details['lot_type'] = $row->lot_type;
             $content_lot_details['lot_city'] = $row->lot_city;
             $content_lot_details['lot_status'] = ($row->lot_status) ? $row->lot_status : "unassigned";
@@ -202,6 +203,7 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
     }
     $content_lots = mysql_query("SELECT cld.lot_id as id, count(cld.entity_id) articles, "
             . " SUM(cld.status = 'complete') lot_completed_articles, "
+            . " SUM(IF(cld.status = 'complete',length(cld.updated_content),0)) lot_completed_words, "
             . " sum(length(cld.content)) words,"
             . " cl.lot_type, cl.lot_status"
             . " FROM " . CONTENT_LOTS . " cl "
@@ -219,6 +221,7 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
         $lotData[$count]['lot_status'] = $row->lot_status;
         $lotData[$count]['articles'] = $row->articles;
         $lotData[$count]['lot_completed_articles'] = $row->lot_completed_articles;
+        $lotData[$count]['lot_completed_words'] = $row->lot_completed_words;
         $lotData[$count]['words'] = $row->words;
 
         $count++;
