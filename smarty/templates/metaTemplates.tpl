@@ -37,49 +37,53 @@
                         </tr>
                         <tr>
                             <td vAlign=top align=middle class="backgorund-rt" height=450><br>
-                                <form name="form1" method="post" action="">
-                                    <table cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
-                                        <tbody>
-                                            <tr class="headingrowcolor" height="25">
-                                                <td class=whiteTxt width=10% align="center">S NO</td>
-                                                <td class=whiteTxt width=15% align="center">Template Name</td>
-                                                <td class=whiteTxt width=25% align="center">Title</td>
-                                                <td class=whiteTxt width=30% align="center">Description</td>
-                                                <td class=whiteTxt width=10% align="center">Edit</td>
-                                            </tr>
-                                            {foreach from=$result key="index" item="row"}
-                                                {$color = "bgcolor = '#F7F7F7'"}
-                                                {if $index%2 == 0}
-                                                    {$color = "bgcolor = '#FCFCFC'"}
-                                                {/if}	
-                                                <tr {$color}>
-                                                    <td class="td-border" align="center">{(($pageNum-1)*$rowsPerPage)+($index+1)}</td>
-                                                    <td class="td-border" lign="center">{$row["template_name"]}</td>
-                                                    <td class="td-border" align="center">{$row["title"]}</td>
-                                                    <td class="td-border" align="center">{$row["description"]}</td>
-                                                    <td class="td-border" align="center">
-                                                        <a href="meta_templates.php?operation=edit&name={$row["template_name"]}" title=""><img src="../images/edit_icon.gif" /></a>
-                                                    </td>
+                                {if $seoMetaAccess == ""}
+                                    <form name="form1" method="post" action="">
+                                        <table cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
+                                            <tbody>
+                                                <tr class="headingrowcolor" height="25">
+                                                    <td class=whiteTxt width=10% align="center">S NO</td>
+                                                    <td class=whiteTxt width=15% align="center">Template Name</td>
+                                                    <td class=whiteTxt width=25% align="center">Title</td>
+                                                    <td class=whiteTxt width=30% align="center">Description</td>
+                                                    <td class=whiteTxt width=10% align="center">Edit</td>
                                                 </tr>
-                                            {/foreach}
-                                        </tbody>
-                                    </table>
-                                </form>
-                                {if $numRows>30}
-                                    <table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
-                                        <tr>
-                                            <td>
-                                                <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                                                    <tr style="background-color: #aaa" height="35" >
-                                                        <td width="77%" align="center">
-                                                            {$pagginnation}
+                                                {foreach from=$result key="index" item="row"}
+                                                    {$color = "bgcolor = '#F7F7F7'"}
+                                                    {if $index%2 == 0}
+                                                        {$color = "bgcolor = '#FCFCFC'"}
+                                                    {/if}	
+                                                    <tr {$color}>
+                                                        <td class="td-border" align="center">{(($pageNum-1)*$rowsPerPage)+($index+1)}</td>
+                                                        <td class="td-border" lign="center">{$row["template_name"]}</td>
+                                                        <td class="td-border" align="center">{$row["title"]}</td>
+                                                        <td class="td-border" align="center">{$row["description"]}</td>
+                                                        <td class="td-border" align="center">
+                                                            <a href="meta_templates.php?operation=edit&name={$row["template_name"]}" title=""><img src="../images/edit_icon.gif" /></a>
                                                         </td>
-                                                        <td align="right">&nbsp;</td>
                                                     </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                    </table>
+                                                {/foreach}
+                                            </tbody>
+                                        </table>
+                                    </form>
+                                    {if $numRows>30}
+                                        <table width="97%" border="0" align="center" cellpadding="0" cellspacing="0">
+                                            <tr>
+                                                <td>
+                                                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                                                        <tr style="background-color: #aaa" height="35" >
+                                                            <td width="77%" align="center">
+                                                                {$pagginnation}
+                                                            </td>
+                                                            <td align="right">&nbsp;</td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    {/if}
+                                {else}
+                                    <div  style="color: red">{$seoMetaAccess}</div>
                                 {/if}
                             </td>
                         </tr>

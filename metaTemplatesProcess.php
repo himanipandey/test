@@ -1,5 +1,9 @@
 <?php
-
+$seoMetaAccess = "";
+if(!$seoMetaAuth){
+    $seoMetaAccess = "No Access";
+}
+$smarty->assign("seoMetaAccess",$seoMetaAccess);
 if ($_REQUEST["operation"] == "edit") {
     // Update case
     if ($_POST) {
