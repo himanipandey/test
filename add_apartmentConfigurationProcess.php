@@ -117,7 +117,8 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("statusval_VA",$arrProjectType_VA['STATUS']);
         /***************query for project name display if edit********************/
  }
-if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
+//if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
+if ($_POST['action'] == "save")
 {
     //echo "<pre>";print_r($_REQUEST);die;
 /*************Add new project type if projectid is blank*********************************/
@@ -582,7 +583,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 	}
 
 }
-else if($_POST['btnExit'] == "Exit")
+//else if($_POST['btnExit'] == "Exit")
+else if($_POST['action'] == "exit")
 {
       if($preview == 'true')
         header("Location:show_project_details.php?projectId=".$projectId);
