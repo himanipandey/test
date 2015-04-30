@@ -157,6 +157,8 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
     if($lotStatus != null){
         if($lotStatus == 'created'){
             $dateCondition = " AND (DATE(cl.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
+        }else if($lotStatus == 'assigned'){
+            $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
         }else{
             if($lotStatus == 'completed'){
                 $lotStatus = "'completedByVendor','waitingApproval'";
