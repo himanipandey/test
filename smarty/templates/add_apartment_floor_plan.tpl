@@ -58,19 +58,14 @@
         else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan" || value == "Panorama"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
-
+        var uploaded3d = $("#uploaded3D_"+c).val().split("-");
+        var uploaded2d = $("#uploaded_"+c).val().split("-");
       	$("#floor_name_"+c+" option").each(function() {
-      		var str = $("#uploaded_"+c).val();
-      		var str1 = $("#uploaded3D_"+c).val();
-
-      		//console.log("str="+str);
-		//console.log("str1="+str1);
-                //alert(str + " -in- " + $(this).text() + " AND image type : "+$("#image_type_"+c).val());
-
-      		if (str.indexOf($(this).text()) >= 0 && $("#image_type_" + c).val()=="2D"){
+      		
+      		if (uploaded2d.indexOf($(this).text()) >= 0 && $("#image_type_" + c).val()=="2D"){
 		    	$(this).attr("disabled", true);
                     }
-		    else if (str1.indexOf($(this).text()) >= 0   && $("#image_type_1").val()=="3D"){
+		    else if (uploaded3d.indexOf($(this).text()) >= 0   && $("#image_type_1").val()=="3D"){
 		    	$(this).attr("disabled", true);
                     }
 		});
