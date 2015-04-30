@@ -444,4 +444,22 @@ if (isset($_SESSION['mapVarifyAuth'])) {
     $_SESSION['mapVarifyAuth'] = $mapVarifyAuth;
 }
 $smarty->assign("mapVarifyAuth", $mapVarifyAuth);
+
+if (isset($_SESSION['contentDeliveryManage'])) {
+    $contentDeliveryManage = $_SESSION['contentDeliveryManage'];
+} else {
+    $contentDeliveryManage = isUserPermitted('content-delivery-system', 'manage');    
+    $_SESSION['contentDeliveryManage'] = $contentDeliveryManage;
+}
+$smarty->assign("contentDeliveryManage", $contentDeliveryManage);
+
+if (isset($_SESSION['contentDeliveryAccess'])) {
+    $contentDeliveryAccess = $_SESSION['contentDeliveryAccess'];
+} else {
+    $contentDeliveryAccess = isUserPermitted('content-delivery-system', 'access');    
+    $_SESSION['contentDeliveryAccess'] = $contentDeliveryAccess;
+}
+$smarty->assign("contentDeliveryAccess", $contentDeliveryAccess);
+
+
 ?>
