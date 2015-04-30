@@ -31,6 +31,11 @@
                             </td>
                         </tr>
                         <tr>
+                            <td align="center">
+                                <div id="success_msg" style="font-size: 16px; color: red;background-color: #CCC">{$success_msg}</div>
+                            </td>
+                        </tr>
+                        <tr>
                             <td vAlign=top align=middle class="backgorund-rt" height=450><br>
                                 <form name="form1" method="post" action="">
                                     <table cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
@@ -84,3 +89,10 @@
         </tr>
 </table>
 </tr>
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function() {
+            $('#success_msg').fadeOut('slow');
+        }, 3000);
+    });
+</script>

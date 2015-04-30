@@ -2,6 +2,17 @@
 
 if ($_REQUEST["operation"] == "edit") {
     // Update case
+    if ($_POST) {
+        if (saveData($_POST, true)) {
+            $_SESSION["success_msg"] = "Data saved successfully";
+            header("Location:meta_templates.php");
+        } else {
+            $smarty->assign("ErrorMsg", "Data could not saved, please try again");
+        }
+    }
+    $template_name = $_REQUEST["name"];
+    $result = getTemplateByName($template_name);
+    $smarty->assign("result", $result);
 } else {
     // listing case
     $rowsPerPage = '30';
@@ -13,6 +24,10 @@ if ($_REQUEST["operation"] == "edit") {
     pagination();
     $smarty->assign("result", $templateList);
     $smarty->assign("rowsPerPage", $rowsPerPage);
+    if ($_SESSION["success_msg"]) {
+        $smarty->assign("success_msg", $_SESSION["success_msg"]);
+        unset($_SESSION["success_msg"]);
+    }
 }
 
 // function for listing and pagination
@@ -57,4 +72,28 @@ function getTemplateList() {
         array_push($tempaltes, $data);
     }
     return $tempaltes;
+}
+
+function getTemplateByName($name) {
+    $sqlStr = "SELECT * FROM proptiger.seo_meta_content_templates WHERE template_name='{$name}'";
+    $sqlResouce = mysql_query($sqlStr) or die(mysql_error());
+    $tempaltes = array();
+    if (mysql_num_rows($sqlResouce)) {
+        $tempaltes = mysql_fetch_assoc($sqlResouce);
+    }
+    return $tempaltes;
+}
+
+// Save Data
+function saveData($data, $update = false) {
+    try {
+        $returnVal = true;
+        if ($update) {
+            $sqlStr = "UPDATE proptiger.seo_meta_content_templates SET title='{$data["title"]}', description='{$data["description"]}', keywords='{$data["keywords"]}', h1='{$data["h1"]}', h2='{$data["h2"]}', h3='{$data["h3"]}', h4='{$data["h4"]}', others='{$data["others"]}' where template_name='{$data["template_name"]}'";
+        }
+        $sqlResouce = mysql_query($sqlStr) or ($returnVal = false);
+        return $returnVal;
+    } catch (Exception $ex) {
+        return false;
+    }
 }
