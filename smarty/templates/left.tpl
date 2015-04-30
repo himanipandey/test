@@ -543,6 +543,12 @@
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
     {/if}
     
+    {if $seoMetaAuth == true}
+    <tr>
+        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+        <td align="left" height="22"><a class="leftnav" href="meta_templates.php"><font color = "#f15a22">SEO Meta Template</font></a></td>
+    </tr>
+    {/if}
     
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
