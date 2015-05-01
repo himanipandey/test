@@ -132,6 +132,20 @@
           $("#btnExit").click(function (){
               $("#action").val("exit");
           });
+          var countApart = "{count($bedval)}";
+          $("#btn_add_apart").click(function(){
+              countApart = parseInt(countApart) +1;
+              var trClone = $("#row_aprat_1").clone();
+              trClone.find(".aprt-sno").html(countApart);
+              trClone.find("#add_1").attr("rel",countApart);
+              trClone.find("#add_1").attr("id","add_"+countApart);
+              
+              trClone.find("#bed_1").attr("id","bed_"+countApart);
+              trClone.find("#bed_1_old").attr("name","bed_"+countApart+"_old");
+              trClone.find("#bed_1_old").attr("id","bed_"+countApart+"_old");
+              
+              $("#tbl_apartment").append(trClone);
+          });
       });
       
 </SCRIPT>
@@ -193,7 +207,7 @@
 			  <div style="overflow:auto;">
                       {$globalDelete  = 0}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID'] == 0}
-                      <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
+                      <TABLE id="tbl_apartment" cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
 
                       <div>
                          {foreach from = $ErrorMsg  key=k item = datafirst}
@@ -209,7 +223,12 @@
 
                           {/foreach}
 
-                        <tr><td colspan="18"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
+                        <tr>
+                            <td colspan="18">
+                                <b><span style='font-size:15px;'>APARTMENTS</span></b>
+                                <input type="button" id="btn_add_apart" value="Add More">
+                            </td>
+                        </tr>
                         <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
                         {foreach from = $ErrorMsg2  key=k1 item = v1}
                             <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
@@ -242,7 +261,8 @@
 
                         {$var = 0}
 
-                        {$looprange	=	35}
+{*                        {$looprange	=	35}*}
+                        {$looprange	=	(count($bedval))? count($bedval):1}
                         {$flg = 0}
                         {section name=foo start= 0 loop={$looprange} step=1}
                           
@@ -257,10 +277,10 @@
                             {* if $txtUnitNameval[$smarty.section.foo.index] != '' *}
                                 {$flg = $flg+1}
                             {* /if *}
-                        <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                        <tr {$color} id="row_aprat_{($smarty.section.foo.index+1)}">
                           <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
                            {$globalDelete = $globalDelete+1}
-                          <td align="center">
+                          <td class="aprt-sno" align="center">
                                  {($smarty.section.foo.index+1)}
                           </td>
                            <td align="center">
@@ -435,7 +455,7 @@
                        </TABLE>
                     {/if}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeV || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV}
-                      <TABLE cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
+                      <TABLE id="tbl_villa" cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
 						  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
 
                       <div>
@@ -485,7 +505,8 @@
                              <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
-                            {section name=foo start= {$looprange} loop={$looprange+35} step=1}
+                            {$looprange = count($bedval_VA)}
+                            {section name=foo start= 0 loop={$looprange} step=1}
 
                                 {$var	=$var+1}
 
@@ -497,7 +518,7 @@
 
 
 
-                            <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                            <tr {$color} id="row_villa_{($smarty.section.foo.index+1)}">
                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
                               {$globalDelete = $globalDelete+1}
                               <td align="center">
@@ -505,7 +526,7 @@
                               </td>
                               <td align="center">
                                {if $flg != 0}
-                                    {$new_index = $smarty.section.foo.index-35}
+                                    {$new_index = $smarty.section.foo.index}
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
