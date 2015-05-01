@@ -453,6 +453,17 @@
 				  <td width="30%" align="left" ><input type=text name="website" id="website" value="{$website}" style="width:360px;"></td>
 				  {if $ErrorMsg["website"] != ''} <td nowrap width="50%" align="left" ><font color = "red">{$ErrorMsg["website"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
+                                
+				<tr>
+				  <td width="20%" align="right" >Listed : </td>
+				  <td width="30%" align="left" >
+                                      <select name="listed">
+                                          <option value ="No" {($listed=="No")? "selected=selected" : ""}>No</option>
+                                          <option value ="Yes" {($listed=="Yes")? "selected=selected" : ""}>Yes</option>
+                                      </select>
+                                  </td>
+				  <td width="50%" align="left" ></td>
+				</tr>
 
 				<tr>
 				  <td width="20%" align="right" > Revenue : </td>
