@@ -844,7 +844,7 @@ function send_mail($options){
             . "<td width='281' style='width:168.75pt;padding:0in 0in 0in 0in'><p style='line-height:105%'>"
             . "<img width='218' height='35' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_url.jpg'></p></td></tr>"
             . "</table></td></tr><tr><td style='border:none;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
-            . "Dear {$agent_name}, <br>"
+            . "To {$agent_name}, <br>"
             . "<p>We would like to thank you for choosing PropTiger.com. "
             . "We have received your signed channel partner signup form and "
             . "we are delighted to inform that you have been successfully empanelled with us. </p>"
