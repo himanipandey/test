@@ -11,6 +11,7 @@ $smarty->assign('is_allowed', is_allowed($lot_details['lot_status'], $lot_detail
 
 //current user role
 $smarty->assign('currentRole', $_SESSION['ROLE']);
+$smarty->assign('currentUser', $_SESSION['adminId']);
 
 if (isset($_POST['lotCompleted'])) {
 
@@ -61,9 +62,9 @@ if (isset($_POST['lotCompleted'])) {
 }
 
 function is_allowed($lot_status, $assignedTo){
-  $role = $_SESSION['ROLE'];
+  $role = $_SESSION['ROLE'];  
   
-  if(($role == 'contentVendor' && ($lot_status == 'assigned' || $lot_status == 'reverted') && $assignedTo == $_SESSION['adminId']) || ($role == 'contentEditor'  && ($lot_status == 'assigned')) || ($role == 'contentTeamLead')){
+  if(($role == 'contentVendor' && ($lot_status == 'assigned' || $lot_status == 'revertedToVendor') && $assignedTo == $_SESSION['adminId']) || ($role == 'contentEditor'  && ($lot_status == 'assigned' || $lot_status == 'reverted')) || ($role == 'contentTeamLead')){
       return true;
   }else{
       return false;

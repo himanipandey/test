@@ -75,7 +75,7 @@ function fetch_assignTo_users() {
 
     $assignTo = ProptigerAdmin::find('all', array('select' => 'adminid, fname',
                 'conditions' => array('department' => 'content',
-                    'Role' => array('contentEditor', 'contentVendor'),
+                    'Role' => array('contentVendor'),
                     'status' => 'Y',
                     'manager_id' => $_SESSION['adminId'])));
     
@@ -171,7 +171,7 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
         }
     }    
     
-    $content_lots = mysql_query("SELECT cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
+    $content_lots = mysql_query("SELECT admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
@@ -185,6 +185,7 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
         $lotData[$count]['lot_status'] = $row->lot_status;
         $lotData[$count]['lot_city'] = $row->lot_city;
         $lotData[$count]['assignedTo'] = $row->assignedTo;
+        $lotData[$count]['role'] = $row->role;
 
         $count++;
     }
@@ -210,7 +211,7 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
             . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
-            . " WHERE (ca.assigned_to = '" . $_SESSION['adminId'] . "' AND ca.status in ('assigned', 'reverted')) "
+            . " WHERE (ca.assigned_to = '" . $_SESSION['adminId'] . "' AND ca.status in ('assigned', 'revertedToVendor')) "
             . $dateCondition
             . " GROUP BY cld.lot_id"
             . " ORDER BY cl.id DESC");

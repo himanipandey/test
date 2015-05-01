@@ -14,9 +14,11 @@ $role = $_POST['currentUserRole'];
 $currentUser = $_POST['currentUser'];
 $reAssign = (isset($_POST['reAssign'])) ? 1 : 0;
 
-if ($lotAction == 'complete') {
+if ($lotAction == 'editorApproval') {
+    $status = 'waitingApproval';
+} elseif ($lotAction == 'complete') {
     $status = 'completed';
-}elseif ($lotAction == 'approve') {
+} elseif ($lotAction == 'approve') {
     $status = 'approved';
 } elseif ($lotAction == 'revert') {
     $status = 'reverted';
@@ -24,7 +26,58 @@ if ($lotAction == 'complete') {
     $status = 'assigned';
 }
 
-if ($status == 'completed') {
+if ($status == 'reverted') {
+
+    ContentLot::transaction(function() {
+
+        global $status, $lot_id, $assigned_by;
+
+        try {
+
+            CmsAssignment::update_all(array(
+                'set' => 'status = "' . $status . '", assigned_by = "' . $assigned_by . '"',
+                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
+                    )
+            );
+
+            //updating data into content lots table
+            ContentLot::update_all(array(
+                'set' => 'lot_status = "' . $status . '"',
+                'conditions' => array('id' => $lot_id)
+                    )
+            );
+        } catch (Exception $e) {
+            print "Action Failed!";
+            // print $e;
+            exit;
+        }
+    });
+} elseif ($status == 'waitingApproval') {
+    ContentLot::transaction(function() {
+
+        global $status, $lot_id, $currentUser;
+
+        try {
+
+            CmsAssignment::update_all(array(
+                'set' => 'status = "' . $status . '", checked_by = "' . $currentUser . '"',
+                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
+                    )
+            );
+
+            //updating data into content lots table
+            ContentLot::update_all(array(
+                'set' => 'lot_status = "' . $status . '"',
+                'conditions' => array('id' => $lot_id)
+                    )
+            );
+        } catch (Exception $e) {
+            print "Action Failed!";
+            // print $e;
+            exit;
+        }
+    });
+} elseif ($status == 'completed') {
     if ($role == 'contentVendor') {
         $statuses = 'completedByVendor';
     } elseif ($role == 'contentEditor') {
@@ -40,14 +93,14 @@ if ($status == 'completed') {
                         'select' => 'id',
                         'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)));
             $cmsAssign = CmsAssignment::find($cmsAssign[0]->id);
-            $cmsAssign->status = $statuses;            
+            $cmsAssign->status = $statuses;
             if ($role == 'contentVendor') {
-                $cmsAssign->completed_by =  $currentUser;
+                $cmsAssign->completed_by = $currentUser;
                 $cmsAssign->assigned_to = null;
             } elseif ($role == 'contentEditor') {
-                $cmsAssign->checked_by =  $currentUser;
+                $cmsAssign->checked_by = $currentUser;
             }
-            
+
             $cmsAssign->save();
 
 
@@ -59,13 +112,11 @@ if ($status == 'completed') {
             $contentLot = ContentLot::find($contentLot[0]->id);
             $contentLot->lot_status = $statuses;
             $contentLot->save();
-            
         } catch (Exception $e) {
             print "Action Failed!";
         }
     });
-    
-}elseif ($status == 'approved') {
+} elseif ($status == 'approved') {
 
 
     ContentLot::transaction(function() {
@@ -76,7 +127,7 @@ if ($status == 'completed') {
 
             CmsAssignment::update_all(array(
                 'set' => 'status = "' . $status . '"',
-                'conditions' => array('entity_id' => $lot_id)
+                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
                     )
             );
 

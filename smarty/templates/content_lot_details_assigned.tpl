@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="tablesorter/css/pager-ajax.css">
@@ -8,7 +8,7 @@
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
 
-
+<div class="modal">Please Wait..............</div>
 </TD>
 </TR>
 <TR>
@@ -55,8 +55,9 @@
                                                             </td>
                                                             <td>
                                                                 {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
-                                                                    <input type='button' value='Approve' class="page-button"/>
-                                                                    <input type='button' value='Revert' class="page-button"/>
+                                                                    <input type='button' value='Approve' class="page-button" onclick="lot_action_approve()"/>
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                    <input type='button' value='Revert' class="page-button" onclick="lot_action_revert()" style="background:#db0306"/>
                                                                 {else}
                                                                     &nbsp;
                                                                 {/if}
@@ -94,7 +95,14 @@
                                                                 <th class=whiteTxt width=25% align="center">Current Description</th>
                                                                 <th class=whiteTxt width=25% align="center">Updated Description</th>
                                                                 <th class=whiteTxt width=12% align="center">
-                                                                    Actions
+                                                                    {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
+                                                                        Revert
+                                                                        <br/>
+                                                                        <input type="checkbox" name="revertAll" value="revertAll" id="revertAll">
+                                                                    {else}
+                                                                        Actions
+                                                                    {/if}
+
                                                                 </th>
                                                             </tr>
                                                         </thead>
@@ -126,11 +134,19 @@
                                                                         {/if}
                                                                     </td>
                                                                     <td align=center class=td-border>
-                                                                        {if $row['updated_content']}
-                                                                            <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Edit</a>
-                                                                        {else} 
-                                                                            <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Add</a>
-                                                                        {/if} 
+                                                                        {if $currentRole == 'contentEditor' && $lot_details['completed_by']}                                                                            
+                                                                            <input type="checkbox" class="revert" name="revert-{$row['content_id']}" value="{$row['content_id']}" id="revert-{$row['content_id']}">
+                                                                            {if $row['revert_comments']}
+                                                                                <a href="javascript:void(0)">Edit Comments</a>
+                                                                            {/if}
+                                                                        {else}
+                                                                            {if $row['updated_content']}
+                                                                                <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Edit</a>
+                                                                            {else} 
+                                                                                <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Add</a>
+                                                                            {/if}
+                                                                        {/if}
+
                                                                     </td>
                                                                 </tr>
                                                             {/foreach}
@@ -151,5 +167,62 @@
     </TD>
 </TR>
 <script type="text/javascript">
+    function lot_action_approve() {
+        $.ajax({
+            url: "ajax/lot_actions.php",
+            type: "POST",
+            data: "lot_id=" + "{$lot_id}" + "&lotAction=" + "editorApproval" + "&currentUser=" + "{$currentUser}",
+            beforeSend: function () {
+                $("body").addClass("loading");
+            },
+            success: function (dt) {
+                $("body").removeClass("loading");
+                alert(dt);
+                if (dt.trim() != 'Action Failed!') {
+                    window.location = 'content_lot_list_assigned.php';
+                }
+            }
+        });
+    }
+    function lot_action_revert() {
+        var revertArr = [];
+        $('.revert').each(function () {
+            if ($(this).is(':checked'))
+                revertArr.push($(this).val());
+        });
+        if (revertArr.length) {
+            $.ajax({
+                type: "POST",
+                url: 'ajax/lot_action_revert_comment.php',
+                data: { lot_id: "{$lot_id}", revertIds: revertArr.join(','), currentUser: "{$currentUser}", action:"addComment", completedBy:"{$lot_details['completed_by']}" },
+                success: function (msg) {
+                    if (msg) {
+                        $.fancybox({
+                            'content': msg,
+                            'onCleanup': function () {
+                                //
+                            }
 
+                        });
+                    }
+                }
+            });
+        } else {
+            alert('Please select Article(s)!');
+        }
+    }
+    
+    $(document).ready(function () {
+        $('#revertAll').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('.revert').each(function () {
+                    $(this).prop('checked', true);
+                });
+            } else {
+                $('.revert').each(function () {
+                    $(this).prop('checked', false);
+                });
+            }
+        });
+    });
 </script>

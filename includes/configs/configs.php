@@ -779,10 +779,18 @@ $arrLotStatus = array(
     'waitingApproval'=>'Waiting Approval',
     'approved'=>'Approved',
     'reverted'=>'Reverted',
+    'revertedToVendor'=>'Reverted to Vendor',
     'canceled'=>'Canceled'
 );
-
 $smarty->assign('arrLotStatus', $arrLotStatus);
+
+$arrRoles = array(
+    'contentVendor' => 'Vendor',
+    'cotentEditor' => 'Editor',
+    'contentTeamLead' => 'Team Lead'
+);
+$smarty->assign('arrRoles', $arrRoles);
+
 /********config for project type of residential/nonresidential******************/
 
 

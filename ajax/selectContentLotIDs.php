@@ -48,7 +48,7 @@ if ($lotType == '') {
                             left join content_lots cl on cl.id = cld.lot_id
                              WHERE city.city_id in ($city)  
                                     and resi_project.status in ('Active','ActiveInCms')
-                                    and  resi_project.version = 'Cms'";
+                                    and  resi_project.version = 'Cms' ORDER BY resi_project.project_id DESC";
         $allProjects = mysql_query($allProjectSql) or die(mysql_error());
         if (mysql_num_rows($allProjects)) {
             print ' <table id="myTable" class="tablesorter"> 
