@@ -38,9 +38,21 @@
                         <tr>
                             <td vAlign=top align=middle class="backgorund-rt" height=450><br>
                                 {if $seoMetaAccess == ""}
-                                    <form name="form1" method="post" action="">
+                                    <form name="form1" method="post" action="meta_templates.php">
                                         <table cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                                             <tbody>
+                                                <tr>
+                                                    <td colspan="5" align="center">
+                                                        <fieldset>
+                                                            <div>
+                                                                <b>Serach By Template Name :</b> 
+                                                                <input type="text" name="search_name" value="{$search_name}" placeholder="Template Name" />
+                                                                <input type="submit" id="btn_search" value="Search" />
+                                                            </div>
+                                                        </fieldset>
+                                                    </td>
+                                                </tr>
+                                                <tr><td>&nbsp;</td></tr>
                                                 <tr class="headingrowcolor" height="25">
                                                     <td class=whiteTxt width=10% align="center">S NO</td>
                                                     <td class=whiteTxt width=15% align="center">Template Name</td>

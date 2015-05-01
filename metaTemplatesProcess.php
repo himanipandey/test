@@ -1,9 +1,10 @@
 <?php
+
 $seoMetaAccess = "";
-if(!$seoMetaAuth){
+if (!$seoMetaAuth) {
     $seoMetaAccess = "No Access";
 }
-$smarty->assign("seoMetaAccess",$seoMetaAccess);
+$smarty->assign("seoMetaAccess", $seoMetaAccess);
 if ($_REQUEST["operation"] == "edit") {
     // Update case
     if ($_POST) {
@@ -24,8 +25,12 @@ if ($_REQUEST["operation"] == "edit") {
     if (isset($_GET['page'])) {
         $pageNum = $_GET['page'];
     }
-    $templateList = getTemplateList();
-    pagination();
+    if (trim($_REQUEST["search_name"])) {
+        $search_name = trim($_REQUEST["search_name"]);
+        $smarty->assign("search_name", $search_name);
+    }
+    $templateList = getTemplateList($search_name);
+    pagination($search_name);
     $smarty->assign("result", $templateList);
     $smarty->assign("rowsPerPage", $rowsPerPage);
     if ($_SESSION["success_msg"]) {
@@ -35,27 +40,35 @@ if ($_REQUEST["operation"] == "edit") {
 }
 
 // function for listing and pagination
-function pagination() {
+function pagination($template_name = '') {
     global $rowsPerPage, $pageNum, $smarty;
-    $sqlStr = "SELECT count(1) as count FROM proptiger.seo_meta_content_templates";
+    $whereStr = "";
+     if ($template_name) {
+        $whereStr = " WHERE template_name like '%{$template_name}%'";
+    }
+    $sqlStr = "SELECT count(1) as count FROM proptiger.seo_meta_content_templates".$whereStr;
     $sqlResource = mysql_query($sqlStr) or die(mysql_error());
     $countResult = mysql_fetch_assoc($sqlResource);
     $numRows = $countResult["count"];
     $maxPage = (ceil($numRows / $rowsPerPage)) ? ceil($numRows / $rowsPerPage) : '1';
 
-
+    $urlSubStr = "";
+    if ($template_name) {
+        $urlSubStr = "&search_name={$template_name}";
+    }
+    $Self = "meta_templates.php";
     if ($pageNum > 1) {
         $page = $pageNum - 1;
-        $prev = " <a href=\"$Self?page=$page\">[Prev]</a> ";
-        $first = " <a href=\"$Self?page=1\">[First Page]</a> ";
+        $prev = " <a href=\"$Self?page=$page{$urlSubStr}\">[Prev]</a> ";
+        $first = " <a href=\"$Self?page=1{$urlSubStr}\">[First Page]</a> ";
     } else {
         $prev = ' [Prev] ';
         $first = ' [First Page] ';
     }
     if ($pageNum < $maxPage) {
         $page = $pageNum + 1;
-        $next = " <a href=\"$Self?page=$page\">[Next]</a> ";
-        $last = " <a href=\"$Self?page=$maxPage\">[Last Page]</a> ";
+        $next = " <a href=\"$Self?page=$page{$urlSubStr}\">[Next]</a> ";
+        $last = " <a href=\"$Self?page=$maxPage{$urlSubStr}\">[Last Page]</a> ";
     } else {
         $next = ' [Next] ';
         $last = ' [Last Page] ';
@@ -66,10 +79,14 @@ function pagination() {
     $smarty->assign("pageNum", $pageNum);
 }
 
-function getTemplateList() {
+function getTemplateList($template_name = '') {
     global $rowsPerPage, $pageNum, $smarty;
     $Offset = ($pageNum - 1) * $rowsPerPage;
-    $sqlStr = "SELECT * FROM proptiger.seo_meta_content_templates LIMIT $Offset, $rowsPerPage";
+    $whereStr = "";
+    if ($template_name) {
+        $whereStr = " WHERE template_name like '%{$template_name}%'";
+    }
+    $sqlStr = "SELECT * FROM proptiger.seo_meta_content_templates {$whereStr} LIMIT $Offset, $rowsPerPage";
     $sqlResouce = mysql_query($sqlStr) or die(mysql_error());
     $tempaltes = array();
     while ($data = mysql_fetch_array($sqlResouce)) {
