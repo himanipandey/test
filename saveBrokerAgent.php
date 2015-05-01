@@ -81,7 +81,7 @@ if ($_POST ['task'] == 'createAgent') {
 					"countryId" => "+91",
 					"sellerType" => $role,
 					"academicQualificationId" => $qualification,
-					"activeSince" => $active_since,
+					"activeSince" => substr ( $active_since, 0, 10 ),
 					"checkAddress" => "on",
 					"parentId" => 0,	
 					"status" => $status,
@@ -99,7 +99,9 @@ if ($_POST ['task'] == 'createAgent') {
 							'content' => $postJson 
 					) 
 			);
+			
 			$tokenResponse = file_get_contents ( $companyUserPutApi, false, stream_context_create ( $opts ) );
+			
 			$reponseData = json_decode ( $tokenResponse, true );
 			if ($reponseData ['statusCode'] == "2XX") {
 				echo "1";
@@ -150,16 +152,27 @@ if ($_POST ['task'] == 'createAgent') {
 		$companyUserPostApi = COMPANY_USER_POST_API_URL;
 		$postJson = json_encode ( $post );
 		$cookie = getJsessionId ();
-		$opts = array (
-				'http' => array (
-						'method' => 'POST',
-						'header' => "Content-type: application/json\r\n" . "Cookie: $cookie",
-						'content' => $postJson 
-				) 
-		);
-		$tokenResponse = file_get_contents ( $companyUserPostApi, false, stream_context_create ( $opts ) );
-		$reponseData = json_decode ( $tokenResponse, true );
-		if ($reponseData ['statusCode'] == "2XX") {
+		$ch = curl_init ();
+		curl_setopt ( $ch, CURLOPT_URL, $companyUserPostApi );
+		curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+		curl_setopt ( $ch, CURLOPT_VERBOSE, 1 );
+		curl_setopt ( $ch, CURLOPT_HEADER, 1 );
+		curl_setopt ( $ch, CURLOPT_HTTPHEADER, array (
+				"Content-Type: application/json",
+				"Cookie: $cookie" 
+		) );
+		curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, "POST" );
+		curl_setopt ( $ch, CURLOPT_POSTFIELDS, $postJson );
+		$response = curl_exec ( $ch );
+		$header_size = curl_getinfo ( $ch, CURLINFO_HEADER_SIZE );
+		$body = substr ( $response, $header_size );
+		curl_close ( $ch );
+		$reponseData = json_decode ( $body, true );
+		
+		if ($reponseData ['error'] ['msg'] == "Broker Company cannot have more than one Active Users") {
+			die ( "Broker Company Can not have more than one Users." );
+		}
+		else if ($reponseData ['statusCode'] == "2XX") {
 			echo "1";
 		} else {
 			echo "3";
