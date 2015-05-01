@@ -12,9 +12,13 @@ $lot_id = $_POST['lot_id'];
 $assigned_by = $_POST['assigned_by'];
 $role = $_POST['currentUserRole'];
 $currentUser = $_POST['currentUser'];
+$completedBy = $_POST['completedBy'];
+$revertIds = $_POST['revertIds'];
 $reAssign = (isset($_POST['reAssign'])) ? 1 : 0;
 
-if ($lotAction == 'editorApproval') {
+if ($lotAction == 'revertVendor') {
+    $status = 'revertedToVendor';
+} elseif ($lotAction == 'editorApproval') {
     $status = 'waitingApproval';
 } elseif ($lotAction == 'complete') {
     $status = 'completed';
@@ -26,7 +30,42 @@ if ($lotAction == 'editorApproval') {
     $status = 'assigned';
 }
 
-if ($status == 'reverted') {
+if ($status == 'revertedToVendor'){
+    ContentLot::transaction(function() {
+
+        global $status, $lot_id, $currentUser, $revertIds, $completedBy;
+
+        try {
+
+            CmsAssignment::update_all(array(
+                'set' => 'status = "' . $status . '", assigned_to = "' . $completedBy . '", checked_by = "'.$currentUser.'"',
+                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
+                    )
+            );
+
+            //updating data into content lots table
+            ContentLot::update_all(array(
+                'set' => 'lot_status = "' . $status . '"',
+                'conditions' => array('id' => $lot_id)
+                    )
+            );
+            
+            //updating data into content lots details table
+            ContentLotDetail::update_all(array(
+                'set' => 'status = "revert"',
+                'conditions' => array('lot_id' => $lot_id)
+                    )
+            );
+            
+               
+        } catch (Exception $e) {
+            print "Action Failed!";
+            // print $e;
+            exit;
+        }
+    });
+    
+}elseif ($status == 'reverted') {//to editor
 
     ContentLot::transaction(function() {
 
@@ -112,6 +151,24 @@ if ($status == 'reverted') {
             $contentLot = ContentLot::find($contentLot[0]->id);
             $contentLot->lot_status = $statuses;
             $contentLot->save();
+            
+            //fetch the all content lot details ids
+            $contentLotDetails = ContentLotDetail::find('all', array(
+                        'select' => 'id',
+                        'conditions' => array('lot_id' => $lot_id)
+            ));
+            
+            $allDetailsIds = array();
+            foreach($contentLotDetails as $detail){
+                $allDetailsIds[] = $detail->id;
+            }
+            
+            ContentLotComments::update_all(array(
+                'set' => 'status = "inactive"',
+                'conditions' => array('content_lot_id' => $allDetailsIds)
+                    )
+            ); 
+            
         } catch (Exception $e) {
             print "Action Failed!";
         }
@@ -137,6 +194,19 @@ if ($status == 'reverted') {
                 'conditions' => array('id' => $lot_id)
                     )
             );
+            
+            //fetch the all content lot details ids
+            $contentLotDetails = ContentLotDetail::find('all', array(
+                        'select' => 'entity_id',
+                        'conditions' => array('lot_id' => $lot_id)
+            ));            
+            $allDetailsIds = array();
+            foreach($contentLotDetails as $detail){
+                $approvedProjects = new ContentLotApprovedProjects();             
+                $approvedProjects->project_id = $detail->entity_id;
+                $approvedProjects->save();
+            }
+            
         } catch (Exception $e) {
             print "Action Failed!";
             // print $e;

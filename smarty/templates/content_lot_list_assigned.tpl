@@ -14,6 +14,7 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="js/content_delivery.js"></script>
 
 <div class="modal">Please Wait..............</div>
 </TD>
@@ -104,18 +105,31 @@
                                                     <tbody>
                                                         {if count($assignedLots)}
                                                             {foreach from = $assignedLots key= key item = val}
-                                                                <tr>
+                                                                {$color = ""}
+                                                                {if $val['date_old'] >= 5}
+                                                                    {$color = "background:#f75d59"}                                                            
+                                                                {/if}
+                                                                {if $val['articles'] == $val['lot_completed_articles']}
+                                                                    {$color = "background:#bbb"}
+                                                                {/if}
+                                                                
+                                                                <tr style="{$color}">
                                                                     <td>
                                                                         <a href="content_lot_details_assigned.php?l={$val['lot_id']}">LT{$val['lot_id']}</a>
                                                                     </td>
-                                                                    <td>{$val['lot_type']|ucWords}</td>
+                                                                    <td>
+                                                                        {$val['lot_type']|ucWords}
+                                                                        {if $val['lot_status'] == 'revertedToVendor'}
+                                                                            <a href="javascript:void(0)" onclick="show_revert_comments('{$val["lot_id"]}', '', '{$currentUserRole}')">-Reverted</a>
+                                                                        {/if}
+                                                                    </td>
                                                                     <td>
                                                                         {$val['articles']} / {$val['words']}
                                                                     </td>
                                                                     <td>{$val['lot_completed_articles']} / {$val['lot_completed_words']}</td>
                                                                     <td>
 
-                                                                        {if $val['articles'] == $val['lot_completed_articles']}
+                                                                        {if $val['articles'] == $val['lot_completed_articles'] || $val['revert_comments']}
                                                                             
                                                                                 <input type='submit' name='lotCompleted' id='lotCompleted' onclick="complete_lot_action('{$val["lot_id"]}')" value='Submit' {$enabled} />
                                                                             

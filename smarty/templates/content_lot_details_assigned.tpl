@@ -7,6 +7,7 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="js/content_delivery.js"></script>
 
 <div class="modal">Please Wait..............</div>
 </TD>
@@ -33,7 +34,11 @@
                                         <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                             <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                     <TR>
-                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Lot Details for #{$lot_id}</TD>
+                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Lot Details for #{$lot_id}
+                                                            {if $lot_details['lot_status'] == 'revertedToVendor'}
+                                                                (Reverted)
+                                                            {/if}
+                                                        </TD>
                                                     </TR>
                                                 </TBODY></TABLE>
                                         </TD>
@@ -57,22 +62,32 @@
                                                                 {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
                                                                     <input type='button' value='Approve' class="page-button" onclick="lot_action_approve()"/>
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                    <input type='button' value='Revert' class="page-button" onclick="lot_action_revert()" style="background:#db0306"/>
+                                                                    <input type='button' onclick='lot_action_revert()' value='Revert' class="page-button" style="background:#db0306"/>
                                                                 {else}
                                                                     &nbsp;
                                                                 {/if}
                                                             </td>
                                                         </tr>
                                                         <tr style='height: 50px;'>
-                                                            <td><b>#Articles(original/updated): </b>{$lot_details['lot_articles']} / {$lot_details['lot_completed_articles']}</td>
-                                                            <td>&nbsp;</td>
+                                                            <td>
+                                                                {if $currentRole == 'contentVendor'}
+                                                                    <b>#Articles(original/updated): </b>{$lot_details['lot_articles']} / {$lot_details['lot_completed_articles']}</td>
+                                                                {else}
+                                                                     <b>#Articles: </b>{$lot_details['lot_articles']}
+                                                                {/if}
+                                                            <td>
+                                                                {if $lot_details['lot_status'] == 'revertedToVendor'}
+                                                                    <b>Reverted Articles:</b> {$lot_details['reverted_articles']}&nbsp;&nbsp;<a href="javascript:void(0)" onclick="show_revert_comments('{$lot_details["lot_id"]}', '', '{$currentRole}')">Comments</a>
+                                                                {/if}
+                                                                
+                                                            </td>
                                                             <td>
                                                                 {if $lot_details['lot_articles'] == $lot_details['lot_completed_articles']}
                                                                     {$enabled = ""}
                                                                 {else}
                                                                     {$enabled = "disabled"}
                                                                 {/if}
-                                                                {if $currentRole != 'contentEditor' && !$lot_details['completed_by']}
+                                                                {if $currentRole == 'contentVendor'}
                                                                     <form method="post">
                                                                         <input type='submit' name='lotCompleted' id='lotCompleted' value='Submit' {$enabled} />
                                                                     </form>
@@ -80,7 +95,12 @@
                                                             </td>
                                                         </tr>
                                                         <tr style='height: 50px;'>
-                                                            <td><b>#Words(original/updated): </b>{$lot_details['lot_words_count']} / {$lot_details['lot_updated_words_count']}</td>
+                                                            <td>
+                                                                {if $currentRole == 'contentVendor'}
+                                                                    <b>#Words(original/updated): </b>{$lot_details['lot_words_count']} / {$lot_details['lot_updated_words_count']}</td>
+                                                                {else}
+                                                                    <b>#Words: </b>{$lot_details['lot_words_count']}
+                                                                {/if}
                                                             <td>&nbsp;</td>
                                                             <td>&nbsp;</td>
                                                         </tr>                                                    
@@ -99,6 +119,10 @@
                                                                         Revert
                                                                         <br/>
                                                                         <input type="checkbox" name="revertAll" value="revertAll" id="revertAll">
+                                                                        <br/>
+                                                                        {if $lot_details['total_revert_comment'] == 0}
+                                                                            <a href='javascript:void(0)' id='add-all-comment' onclick='add_revert_comment_action()' style='display:none;color:#fff'>Add Comments</a>
+                                                                        {/if}
                                                                     {else}
                                                                         Actions
                                                                     {/if}
@@ -136,15 +160,23 @@
                                                                     <td align=center class=td-border>
                                                                         {if $currentRole == 'contentEditor' && $lot_details['completed_by']}                                                                            
                                                                             <input type="checkbox" class="revert" name="revert-{$row['content_id']}" value="{$row['content_id']}" id="revert-{$row['content_id']}">
-                                                                            {if $row['revert_comments']}
-                                                                                <a href="javascript:void(0)">Edit Comments</a>
+                                                                            <span id="revert-{$row['content_id']}-add-edit-comments" style="display:none">
+                                                                                {if $row['revert_comments']}
+                                                                                    <br/><a href="javascript:void(0)" alt='' onclick='add_revert_comment_action("{$row['content_id']}", "edit")'>Edit Comments</a>
+                                                                                {else}                                                                                
+                                                                                    <br/><a href="javascript:void(0)" alt='' onclick='add_revert_comment_action("{$row['content_id']}", "add")'>Add Comments</a>
+                                                                                {/if}
+                                                                            </span>
+                                                                        {else}                                                                            
+                                                                            {if ($row['content_status'] == 'revert' || $row['content_status'] == 'revertComplete') && $row['revert_comments']}
+                                                                                <br/><a href='javascript:void(0)' onclick='show_revert_comments("{$lot_details['lot_id']}", "{$row['content_id']}", "{$currentRole}")'>Revert Comments</a>
                                                                             {/if}
-                                                                        {else}
-                                                                            {if $row['updated_content']}
-                                                                                <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Edit</a>
-                                                                            {else} 
-                                                                                <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Add</a>
-                                                                            {/if}
+                                                                        {/if}   
+                                                                        
+                                                                        {if $row['updated_content']}
+                                                                            <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Edit</a>
+                                                                        {else} 
+                                                                            <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Add</a>
                                                                         {/if}
 
                                                                     </td>
@@ -184,17 +216,22 @@
             }
         });
     }
-    function lot_action_revert() {
+    function add_revert_comment_action(content_id, action) {
         var revertArr = [];
+        if(!action)
+            action = 'add';
         $('.revert').each(function () {
             if ($(this).is(':checked'))
                 revertArr.push($(this).val());
         });
+        if (!revertArr.length) {
+            revertArr.push(content_id);
+        }
         if (revertArr.length) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/lot_action_revert_comment.php',
-                data: { lot_id: "{$lot_id}", revertIds: revertArr.join(','), currentUser: "{$currentUser}", action:"addComment", completedBy:"{$lot_details['completed_by']}" },
+                data: { action:action, lot_id: "{$lot_id}", revertIds: revertArr.join(','), currentUser: "{$currentUser}", completedBy:"{$lot_details['completed_by']}" },
                 success: function (msg) {
                     if (msg) {
                         $.fancybox({
@@ -211,6 +248,28 @@
             alert('Please select Article(s)!');
         }
     }
+    function lot_action_revert(){
+        var revertArr = [];
+        
+        $('.revert').each(function () {
+           revertArr.push($(this).val());
+        });
+        $.ajax({
+            url: "ajax/lot_actions.php",
+            type: "POST",
+            data: "completedBy="+"{$lot_details['completed_by']}"+"&revertIds="+revertArr.join(',')+"&lot_id=" + "{$lot_id}" + "&lotAction=" + "revertVendor" + "&currentUser=" + "{$currentUser}",
+            beforeSend: function () {
+                $("body").addClass("loading");
+            },
+            success: function (dt) {
+                $("body").removeClass("loading");
+                alert(dt);
+                if (dt.trim() != 'Action Failed!') {
+                    window.location = 'content_lot_list_assigned.php';
+                }
+            }
+        });
+    }
     
     $(document).ready(function () {
         $('#revertAll').on('change', function () {
@@ -218,10 +277,20 @@
                 $('.revert').each(function () {
                     $(this).prop('checked', true);
                 });
+                $('#add-all-comment').show();
             } else {
                 $('.revert').each(function () {
                     $(this).prop('checked', false);
+                    $('#'+$(this).attr('id')+'-add-edit-comments').hide();
                 });
+                $('#add-all-comment').hide();
+            }
+        });
+        $('.revert').on('click', function(){
+            if($(this).is(':checked')){
+                $('#'+$(this).attr('id')+'-add-edit-comments').show();
+            }else{
+                $('#'+$(this).attr('id')+'-add-edit-comments').hide();
             }
         });
     });

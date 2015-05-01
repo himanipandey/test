@@ -15,7 +15,7 @@
     }
     
     $sqlLotContent = mysql_query("SELECT id FROM content_lot_details"
-            . " WHERE (updated_content = '".$lot_updated_data."' $condition) AND id = '".$lot_content_id."'") or die(mysql_error());
+            . " WHERE (updated_content = '".addslashes($lot_updated_data)."' $condition) AND id = '".$lot_content_id."'") or die(mysql_error());
     
     if(mysql_num_rows($sqlLotContent) > 0){
         print 1;

@@ -194,6 +194,7 @@ DEFINE("CONTENT_LOTS","content_lots");
 DEFINE("CONTENT_LOT_DETAILS","content_lot_details");
 DEFINE("CONTENT_LOT_COMMENTS","content_lot_comments");
 DEFINE("CMS_ASSIGNMENTS","cms_assignments");
+DEFINE("CONTENT_LOT_APPROVED_PROJECTS","content_lot_approved_projects");
 
 
 /**************This always put at the end of define tables*******************/
@@ -786,7 +787,7 @@ $smarty->assign('arrLotStatus', $arrLotStatus);
 
 $arrRoles = array(
     'contentVendor' => 'Vendor',
-    'cotentEditor' => 'Editor',
+    'contentEditor' => 'Editor',
     'contentTeamLead' => 'Team Lead'
 );
 $smarty->assign('arrRoles', $arrRoles);

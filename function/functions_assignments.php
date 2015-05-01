@@ -93,12 +93,13 @@ function fetch_assignTo_users() {
 
 function fetch_lot_details($lot_id) {
     $content_lot_details = array();
-    $lot_details_sql = "SELECT cl.lot_type, loc.label as locality, city.label as lot_city, ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.entity_name, cld.content, cld.updated_content, "
-            . " cld.status as content_status, length(cld.content) as content_words_count, "
-            . " length(cld.updated_content) as updated_content_words_count, ca.completed_by, "
-            . " DATE_FORMAT(ca.created_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
+    $lot_details_sql = "SELECT SUM(clc.status = 'active') revert_comments, cl.lot_type, loc.label as locality, city.label as lot_city, ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.entity_name, cld.content, cld.updated_content, "
+            . " cld.status as content_status, SUM( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) as content_words_count, "
+            . " SUM( LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1) as updated_content_words_count, ca.completed_by, "
+            . " DATE_FORMAT(ca.updated_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
+            . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
             . " LEFT JOIN " . CITY . " city on city.city_id = cl.lot_city"
             . " LEFT JOIN resi_project rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
@@ -113,6 +114,8 @@ function fetch_lot_details($lot_id) {
         $lot_words_count = 0;
         $lot_updated_words_count = 0;
         $lots_updated_content_count = 0;
+        $total_revert_comment = 0;
+        $reverted_articles = array();
         while ($row = mysql_fetch_object($lot_details)) {
             $content_lot_details['lot_id'] = $lot_id;
             $content_lot_details['assignment_date'] = $row->assignment_date;
@@ -131,18 +134,28 @@ function fetch_lot_details($lot_id) {
             $content_lot_details['lot_contents'][$cnt]['updated_content'] = substr($row->updated_content, 0, 50);
             $content_lot_details['lot_contents'][$cnt]['content_status'] = $row->content_status;
             $content_lot_details['lot_contents'][$cnt]['content_words_count'] = $row->content_words_count;
+            $content_lot_details['lot_contents'][$cnt]['revert_comments'] = $row->revert_comments;
+                        
+            $total_revert_comment = $total_revert_comment + $row->revert_comments;
+            
+            if(($row->content_status == 'revertComplete' || $row->content_status == 'revert') && $row->revert_comments)
+                $reverted_articles[] = $cnt+1;
 
             $lot_words_count = $lot_words_count + $row->content_words_count;
             $lot_updated_words_count = $lot_updated_words_count + $row->updated_content_words_count;
-            $lot_completed_articles = $lot_completed_articles + (($row->content_status == 'complete') ? 1 : 0);
+            $lot_completed_articles = $lot_completed_articles + (($row->content_status == 'complete' || $row->content_status == 'revertComplete') ? 1 : 0);
 
             $cnt++;
         }
+        $content_lot_details['reverted_articles'] = implode(", ", $reverted_articles);
         $content_lot_details['lot_articles'] = $cnt;
         $content_lot_details['lot_completed_articles'] = $lot_completed_articles;
         $content_lot_details['lot_words_count'] = $lot_words_count;
         $content_lot_details['lot_updated_words_count'] = $lot_updated_words_count;
+        $content_lot_details['total_revert_comment'] = $total_revert_comment;
     }
+    
+    //print "<pre>".print_r($content_lot_details,1)."</pre>";
 
     return $content_lot_details;
 }
@@ -171,12 +184,15 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
         }
     }    
     
-    $content_lots = mysql_query("SELECT admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
+    $content_lots = mysql_query("SELECT count(clc.id) revert_comments, admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
+            . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
+            . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
             . " WHERE (cl.created_by = '" . $_SESSION['adminId'] . "' OR ca.assigned_to = '" . $_SESSION['adminId'] . "')"
             . $dateCondition            
+            . " GROUP BY cl.id"
             . " ORDER BY cl.id DESC");
     $count = 0;
     while ($row = mysql_fetch_object($content_lots)) {
@@ -186,7 +202,7 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
         $lotData[$count]['lot_city'] = $row->lot_city;
         $lotData[$count]['assignedTo'] = $row->assignedTo;
         $lotData[$count]['role'] = $row->role;
-
+        $lotData[$count]['revert_comments'] = $row->revert_comments;
         $count++;
     }
     return $lotData;
@@ -202,14 +218,15 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
     if($lotStatus != null){        
         $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";        
     }
-    $content_lots = mysql_query("SELECT cld.lot_id as id, count(cld.entity_id) articles, "
-            . " SUM(cld.status = 'complete') lot_completed_articles, "
-            . " SUM(IF(cld.status = 'complete',length(cld.updated_content),0)) lot_completed_words, "
-            . " sum(length(cld.content)) words,"
-            . " cl.lot_type, cl.lot_status"
+    $content_lots = mysql_query("SELECT SUM(cld.status = 'revert') revert_comments, cld.lot_id as id, count(cld.entity_id) articles, "
+            . " SUM(IF(cld.status = 'complete' OR cld.status = 'revertComplete',1,0)) lot_completed_articles, "
+            . " SUM( IF(cld.status = 'complete'  OR cld.status = 'revertComplete', LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1, 0)) lot_completed_words, "
+            . " SUM( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) words,"
+            . " cl.lot_type, ca.status, DATE_FORMAT(ca.updated_at, '%Y/%m/%d') updated_at"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
+            . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
             . " WHERE (ca.assigned_to = '" . $_SESSION['adminId'] . "' AND ca.status in ('assigned', 'revertedToVendor')) "
             . $dateCondition
@@ -219,15 +236,17 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
     while ($row = mysql_fetch_object($content_lots)) {
         $lotData[$count]['lot_id'] = $row->id;
         $lotData[$count]['lot_type'] = $row->lot_type;
-        $lotData[$count]['lot_status'] = $row->lot_status;
+        $lotData[$count]['lot_status'] = $row->status;
         $lotData[$count]['articles'] = $row->articles;
         $lotData[$count]['lot_completed_articles'] = $row->lot_completed_articles;
         $lotData[$count]['lot_completed_words'] = $row->lot_completed_words;
         $lotData[$count]['words'] = $row->words;
+        $lotData[$count]['revert_comments'] = $row->revert_comments;
+        $lotData[$count]['date_old'] = floor((time() - strtotime($row->updated_at))/86400);        
 
         $count++;
     }
-    
+  
     return $lotData;
 }
 

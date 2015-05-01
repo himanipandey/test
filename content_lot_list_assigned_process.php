@@ -1,10 +1,5 @@
 <?php
 
-
-
-//print "<pre>".print_r($assignedLots,1)."</pre>";
-
-
 //date filters
 $date_filters = array(    
     'assignmentDate' => 'Assignment Date',    

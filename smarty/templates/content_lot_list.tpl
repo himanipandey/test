@@ -14,6 +14,7 @@
 <script type="text/javascript" src="jscal/calendar.js"></script>
 <script type="text/javascript" src="jscal/lang/calendar-en.js"></script>
 <script type="text/javascript" src="jscal/calendar-setup.js"></script>
+<script type="text/javascript" src="js/content_delivery.js"></script>
 
 <div class="modal">Please Wait..............</div>
 </TD>
@@ -118,6 +119,9 @@
                                                                         {else}
                                                                             {$arrLotStatus[$val['lot_status']]}
                                                                         {/if}
+                                                                        {if $val['revert_comments']}
+                                                                            <br/><a href="javascript:void(0)" onclick="show_revert_comments('{$val["lot_id"]}')">Revert Comments</a>
+                                                                        {/if}
                                                                         
                                                                     </td>
                                                                     <td>
@@ -147,7 +151,7 @@
                                                                         {/if}
                                                                         {if $val['lot_status'] == 'waitingApproval'}
                                                                             <input type='button' name='approve' id='approve' value='Approve' onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "approve")' class="page-button">                                                                        
-                                                                            {*<input type="button" name="revert" value="Revert" onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "revert")' class='page-button'>*}
+                                                                            <input type="button" name="revert" value="Revert" onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "revert")' class='page-button'>
                                                                         {/if}
                                                                         {if $val['lot_status'] != 'approved'}
                                                                             &nbsp;&nbsp;<a href='javascript:void(0)' id='cancel-reassign' onclick='lot_action_cancel_reassign("{$val['lot_id']}")'><img src='images/close.jpg' /></a>                                                                         
@@ -246,7 +250,8 @@
                 }
             }
         });
-    }
+    }    
+    
 
     function validateFilter() {
         

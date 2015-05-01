@@ -53,6 +53,23 @@ if (isset($_POST['lotCompleted'])) {
             $contentLot->lot_status = $status;
             $contentLot->save();
             
+            //fetch the all content lot details ids
+            $contentLotDetails = ContentLotDetail::find('all', array(
+                        'select' => 'id',
+                        'conditions' => array('lot_id' => $lot_id)
+            ));
+            
+            $allDetailsIds = array();
+            foreach($contentLotDetails as $detail){
+                $allDetailsIds[] = $detail->id;
+            }
+            
+            ContentLotComments::update_all(array(
+                'set' => 'status = "inactive"',
+                'conditions' => array('content_lot_id' => $allDetailsIds)
+                    )
+            ); 
+            
             header("Location:content_lot_list_assigned.php");
             
         } catch (Exception $e) {

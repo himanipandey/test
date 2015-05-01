@@ -13,38 +13,42 @@ $currentUser = $_POST['currentUser'];
 $revertComment = $_POST['revertComment'];
 $status = 'revertedToVendor';
 $completedBy = $_POST['completedBy'];
+$cid = $_POST['cid'];
 
-if ($action == "addRevertComment") {
-    
+
     ContentLot::transaction(function() {
 
-        global $status, $lot_id, $currentUser, $revertComment, $revertIds, $completedBy;
+        global $cid, $action, $status, $lot_id, $currentUser, $revertComment, $revertIds, $completedBy;
 
         try {
 
-            CmsAssignment::update_all(array(
-                'set' => 'status = "' . $status . '", assigned_to = "' . $completedBy . '", checked_by = "'.$currentUser.'"',
-                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
-                    )
-            );
-
-            //updating data into content lots table
-            ContentLot::update_all(array(
-                'set' => 'lot_status = "' . $status . '"',
-                'conditions' => array('id' => $lot_id)
-                    )
-            );
-            
-            //updating data into content lots details table
-            ContentLotDetail::update_all(array(
-                'set' => 'status = "revert"',
-                'conditions' => array('lot_id' => $lot_id)
-                    )
-            );
+//            CmsAssignment::update_all(array(
+//                'set' => 'status = "' . $status . '", assigned_to = "' . $completedBy . '", checked_by = "'.$currentUser.'"',
+//                'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
+//                    )
+//            );
+//
+//            //updating data into content lots table
+//            ContentLot::update_all(array(
+//                'set' => 'lot_status = "' . $status . '"',
+//                'conditions' => array('id' => $lot_id)
+//                    )
+//            );
+//            
+//            //updating data into content lots details table
+//            ContentLotDetail::update_all(array(
+//                'set' => 'status = "revert"',
+//                'conditions' => array('lot_id' => $lot_id, 'id' => $revertIds)
+//                    )
+//            );
             
             //insert into content lot comments
             foreach ($revertIds as $k => $revertId) {
-                $contentLotComment = new ContentLotComments();
+                if ($action == "add") {
+                    $contentLotComment = new ContentLotComments();
+                }else{
+                    $contentLotComment = ContentLotComments::find($cid);
+                }                
                 $contentLotComment->content_lot_id = $revertId;
                 $contentLotComment->comment = $revertComment;
                 $contentLotComment->created_by = $currentUser;
@@ -58,6 +62,6 @@ if ($action == "addRevertComment") {
             exit;
         }
     });
-}
+
 print "1";
 ?>
