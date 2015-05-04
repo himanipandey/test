@@ -129,7 +129,6 @@ if ($_POST ['task'] == 'createAgent') {
 		}
 		$user = array (
 				"contactNumbers" => $contactNumbers,
-				"password" => $pass,
 				"countryId" => "+91" 
 		);
 		$post = array (
@@ -147,7 +146,8 @@ if ($_POST ['task'] == 'createAgent') {
 				"checkAddress" => "on",
 				"parentId" => 0,
 				"updatedBy" => $_SESSION ['adminId'],
-				"user" => $user 
+				"user" => $user,
+				"password" => $pass
 		);
 		$companyUserPostApi = COMPANY_USER_POST_API_URL;
 		$postJson = json_encode ( $post );
