@@ -133,9 +133,22 @@
           $("#btnExit").click(function (){
               $("#action").val("exit");
           });
+          var projectTypeId = {$ProjectDetail[0]['PROJECT_TYPE_ID']};
           var apartment = "{(count($bedval)) ? count($bedval) : 0}";
           var villas = "{(count($bedval_VA)) ? count($bedval_VA) : 0}";
           countApart = parseInt(apartment) + parseInt(villas);
+          
+          if(countApart==0 && (projectTypeId=={$typeVA})){
+               var rowClone = (parseInt(apartment)+2);
+           }else{
+                var rowClone = (parseInt(apartment)+1);
+           }
+          if(countApart==0 && (projectTypeId=={$typeVA})){
+              countApart = countApart +2;
+          }else{
+              countApart = countApart +1;
+          }
+          
           $("#btn_add_apart").click(function(){
               countApart = countApart +1;
               var trClone = $("#row_aprat_1").clone();
@@ -158,7 +171,6 @@
           
           $("#btn_add_villa").click(function(){
               countApart = countApart +1;
-              var rowClone = (parseInt(apartment)+1);
               var trClone = $("#row_villa_" + rowClone).clone();
               
               var re = new RegExp("_" + rowClone,"g");
@@ -180,6 +192,7 @@
               $("#tbl_villa").append(trClone);
           });
           var rowCount = parseInt("{count($txtUnitName_P)}");
+          rowCount = rowCount ? rowCount :1;
           $("#btn_add_other").click(function(){
               rowCount = rowCount + 1;
               var trClone = $("#row_1").clone();
@@ -254,6 +267,7 @@
 
 			  <div style="overflow:auto;">
                       {$globalDelete  = 0}
+                      
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID'] == 0}
                       <TABLE id="tbl_apartment" cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
 
