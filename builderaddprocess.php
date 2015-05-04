@@ -164,7 +164,7 @@ if ($_POST['btnSave'] == "Save") {
         $foldername = str_replace(' ', '-', strtolower($txtBuilderName));
         $createFolder = $newImagePath . $foldername;
         //mkdir($createFolder, 0777);
-        $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr);
+        $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $listed);
         if ($builder_id) {
             $seoData['meta_title'] = $txtMetaTitle;
             $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -185,7 +185,7 @@ if ($_POST['btnSave'] == "Save") {
             }
 
             $txtBuilderUrl = createBuilderURL($txtBuilderName, $builder_id);
-            $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '",listed="'.$listed.'" WHERE BUILDER_ID=' . $builder_id;
+            $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builder_id;
             mysql_query($updateQuery) or die(mysql_error());
 
             header("Location:BuilderList.php");
@@ -266,7 +266,7 @@ if ($_POST['btnSave'] == "Save") {
 
 
 
-                    $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $ImgDbFinalPath, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id);
+                    $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $ImgDbFinalPath, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id, $listed);
                     if ($rt) {
                         $seoData['meta_title'] = $txtMetaTitle;
                         $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -276,7 +276,7 @@ if ($_POST['btnSave'] == "Save") {
                         $seoData['updated_by'] = $_SESSION['adminId'];
                         SeoData::insetUpdateSeoData($seoData);
                         $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
-                        $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '",listed="'.$listed.'" WHERE BUILDER_ID=' . $builderid;
+                        $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builderid;
                         mysql_query($updateQuery) or die(mysql_error());
 
                         //update all project url if builder name update
@@ -337,7 +337,7 @@ if ($_POST['btnSave'] == "Save") {
                 }
             }
         } else {
-            $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgedit, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder);
+            $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgedit, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, 'NULL',$listed);
             if ($return) {
                 $seoData['meta_title'] = $txtMetaTitle;
                 $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -368,7 +368,7 @@ if ($_POST['btnSave'] == "Save") {
                 }
 
                 $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
-                $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '",listed="'.$listed.'" WHERE BUILDER_ID=' . $builderid;
+                $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builderid;
                 mysql_query($updateQuery) or die(mysql_error());
 
                 //update all project url if builder name update
