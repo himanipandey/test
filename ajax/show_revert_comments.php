@@ -27,7 +27,8 @@ $sqlRevertComments = mysql_query("SELECT clc.*,cld.entity_id,rp.project_name, rb
                    LEFT JOIN locality loc on loc.locality_id = rp.locality_id 
                     LEFT JOIN proptiger_admin admin on admin.adminid = clc.created_by
                     
-                    WHERE cld.lot_id = '$lot_id'" . $condition . " ORDER BY clc.id desc") or die(mysql_error());
+                    WHERE cld.lot_id = '$lot_id'" . $condition . ""
+        . " GROUP BY clc.id ORDER BY clc.id desc") or die(mysql_error());
 
 
 if (mysql_num_rows($sqlRevertComments) > 0) {

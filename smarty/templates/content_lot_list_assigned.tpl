@@ -108,10 +108,10 @@
                                                         {if count($assignedLots)}
                                                             {foreach from = $assignedLots key= key item = val}
                                                                 {$color = ""}
-                                                                {if $val['date_old'] >= 5}
+                                                                {if $val['date_old'] >= 5 && $currentUserRole == 'contentVendor'}
                                                                     {$color = "background:#f75d59"}                                                            
                                                                 {/if}
-                                                                {if $val['articles'] == $val['lot_completed_articles']}
+                                                                {if $val['articles'] == $val['lot_completed_articles']  && $currentUserRole == 'contentVendor'}
                                                                     {$color = "background:#bbb"}
                                                                 {/if}
 
