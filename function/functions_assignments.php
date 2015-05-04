@@ -95,7 +95,9 @@ function fetch_lot_details($lot_id) {
     $content_lot_details = array();
 
 
-    $lot_details_sql = "SELECT admin.role, SUM(clc.status = 'active') revert_comments, rp.project_name, rb.builder_name, cl.lot_type, loc.label as locality, city.label as lot_city,"
+    $lot_details_sql = "SELECT admin.role, SUM(clc.status = 'active') revert_comments, rp.project_name, "
+            . " IF(rb.builder_name IS NOT NULL, rb.builder_name, rb2.builder_name) builder_name, cl.lot_type,"
+            . " IF(loc.label IS NOT NULL, loc.label, loc2.label) locality, city.label as lot_city,"
             . " ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.content, cld.updated_content, "
             . " cld.status as content_status, ( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) as content_words_count, "
             . " ( LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1) as updated_content_words_count, ca.completed_by, "
@@ -108,6 +110,8 @@ function fetch_lot_details($lot_id) {
             . " LEFT JOIN " . RESI_PROJECT . " rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
             . " LEFT JOIN " . RESI_BUILDER . " rb on rp.builder_id = rb.builder_id and (cl.lot_type = 'project' OR cl.lot_type = 'builder')"
             . " LEFT JOIN " . LOCALITY . " loc on loc.locality_id = rp.locality_id"
+            . " LEFT JOIN " . LOCALITY . " loc2 on loc2.locality_id = cld.entity_id and cl.lot_type = 'locality'"
+            . " LEFT JOIN " . RESI_BUILDER . " rb2 on rb2.builder_id = cld.entity_id and cl.lot_type = 'builder'"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
             . " WHERE cl.id = '$lot_id'"
             . " GROUP BY cld.entity_id "
@@ -276,14 +280,16 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
  */
 
 function fetch_lot_content_details($lot_content_id) {
-    $lotContentDataSql = mysql_query("SELECT cld.id, cld.entity_id, cld.lot_id, cl.lot_type, loc.label as locality, city.label as lot_city,"
-            . " cld.content, cld.updated_content, rb.builder_name, rp.project_name  "
+    $lotContentDataSql = mysql_query("SELECT cld.id, cld.entity_id, cld.lot_id, cl.lot_type, IF(loc.label IS NOT NULL, loc.label, loc2.label) locality, city.label as lot_city,"
+            . " cld.content, cld.updated_content, IF(rb.builder_name IS NOT NULL, rb.builder_name, rb2.builder_name) builder_name, rp.project_name  "
             . " FROM " . CONTENT_LOT_DETAILS . " cld"
             . " INNER JOIN " . CONTENT_LOTS . " cl on cld.lot_id = cl.id"
             . " LEFT JOIN " . CITY . " city on city.city_id = cl.lot_city"
             . " LEFT JOIN " . RESI_PROJECT . " rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
             . " LEFT JOIN " . RESI_BUILDER . " rb on rp.builder_id = rb.builder_id and (cl.lot_type = 'project' OR cl.lot_type = 'builder')"
             . " LEFT JOIN " . LOCALITY . " loc on loc.locality_id = rp.locality_id"
+            . " LEFT JOIN " . LOCALITY . " loc2 on loc2.locality_id = cld.entity_id and cl.lot_type = 'locality'"
+            . " LEFT JOIN " . RESI_BUILDER . " rb2 on rb2.builder_id = cld.entity_id and cl.lot_type = 'builder'"            
             . " WHERE cld.id = '" . $lot_content_id . "'"
             . " GROUP BY cld.entity_id") or die(mysql_error());
 
