@@ -18,10 +18,11 @@ $arrLotStatus = array(
     'waitingApproval' => 'Active',
     'approved' => 'Approved',
     'reverted' => 'Active',
-    'canceled' => 'Canceled'
+    'canceled' => 'Canceled',
+    'revertedToVendor' => 'Active'
 );
 
-$activeLotArr = array('unassigned', 'assigned', 'completedByVendor', 'waitingApproval', 'reverted');
+$activeLotArr = array('unassigned', 'assigned', 'completedByVendor', 'waitingApproval', 'reverted', 'revertedToVendor', 'approved');
 
 //project locality builder city
 
@@ -46,9 +47,10 @@ if ($lotType == '') {
                                on suburb.city_id = city.city_id  
                             left join content_lot_details cld on cld.entity_id = resi_project.project_id
                             left join content_lots cl on cl.id = cld.lot_id
+                            inner join content_lot_approved_projects clap on clap.project_id != resi_project.project_id
                              WHERE city.city_id in ($city)  
                                     and resi_project.status in ('Active','ActiveInCms')
-                                    and  resi_project.version = 'Cms'";
+                                    and  resi_project.version = 'Cms' ORDER BY resi_project.project_id DESC";
         $allProjects = mysql_query($allProjectSql) or die(mysql_error());
         if (mysql_num_rows($allProjects)) {
             print ' <table id="myTable" class="tablesorter"> 
@@ -84,7 +86,7 @@ if ($lotType == '') {
             print '<tbody>';
             while ($row = mysql_fetch_object($allProjects)) {
                 if (in_array($row->lot_status, $activeLotArr)) {
-                    $select_status = 'readonly = "true"';
+                    $select_status = 'disabled = "true"';
                 } else {
                     $select_status = '';
                 }
@@ -156,7 +158,7 @@ if ($lotType == '') {
             print '<tbody>';
             while ($row = mysql_fetch_object($allLocs)) {
                 if (in_array($row->lot_status, $activeLotArr)) {
-                    $select_status = 'readonly = "true"';
+                    $select_status = 'disabled = "true"';
                 } else {
                     $select_status = '';
                 }
@@ -227,7 +229,7 @@ if ($lotType == '') {
             print '<tbody>';
             while ($row = mysql_fetch_object($allBuilders)) {
                 if (in_array($row->lot_status, $activeLotArr)) {
-                    $select_status = 'readonly = "true"';
+                    $select_status = 'disabled = "true"';
                 } else {
                     $select_status = '';
                 }
@@ -291,7 +293,7 @@ if ($lotType == '') {
             print '<tbody>';
             while ($row = mysql_fetch_object($allCities)) {
                 if (in_array($row->lot_status, $activeLotArr)) {
-                    $select_status = 'readonly = "true"';
+                    $select_status = 'disabled = "true"';
                 } else {
                     $select_status = '';
                 }

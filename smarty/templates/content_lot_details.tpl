@@ -81,12 +81,8 @@
                                                                 <th class=whiteTxt width=15% align="center">{$lot_details['lot_type']|ucwords} Name</th>
                                                                 <th class=whiteTxt width=25% align="center">Current Description</th>
                                                                 <th class=whiteTxt width=25% align="center">Updated Description</th>
-                                                                    {if $lot_details['lot_status'] == 'completedByVendor'}
-                                                                    <th class=whiteTxt width=12% align="center">
-                                                                        Revert
-                                                                        <input type="checkbox" name="revertAll" id="revertAll">
-                                                                    </th>
-                                                                {/if}
+                                                                <th class=whiteTxt width=12% align="center">Actions</th>
+                                                                
 
                                                             </tr>
                                                         </thead>
@@ -114,11 +110,9 @@
                                                                             ...
                                                                         {/if}
                                                                     </td>
-                                                                    {if $lot_details['lot_status'] == 'completedByVendor'}
-                                                                        <td align=center class=td-border>
-                                                                            <input type="checkbox" name="revertAll" id="revertAll">
-                                                                        </td>
-                                                                    {/if}                                                                   
+                                                                    <td>
+                                                                        <a href='content_lot_update.php?l={$lot_id}&cid={$row["content_id"]}'>Edit</a>
+                                                                    </td>
                                                                 </tr>
                                                             {/foreach}
                                                         </tbody>

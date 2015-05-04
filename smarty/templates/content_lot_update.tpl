@@ -109,6 +109,11 @@
 <script type="text/javascript">
     function check_back_to_lot(lot_id, lot_content_id) {
         var lot_updated_data = $('#updatedCotent').val();
+        var currentRole = "{$currentRole}";
+        var redirectUrl = 'content_lot_details_assigned.php';
+        if(currentRole == 'contentTeamLead'){
+            redirectUrl = 'content_lot_details.php';
+        }
         if (lot_id && lot_content_id) {
             $.ajax({
                 url: 'ajax/check_updated_lot_content.php',
@@ -117,10 +122,10 @@
                 success: function (dt) {
                     if (dt.trim() == '0') {
                         if (confirm('There are unsaved changes. Are you sure you want to move away.')) {
-                            window.location = 'content_lot_details_assigned.php?l=' + lot_id;
+                            window.location = redirectUrl+'?l=' + lot_id;
                         }
                     } else {
-                        window.location = 'content_lot_details_assigned.php?l=' + lot_id;
+                        window.location = redirectUrl+'?l=' + lot_id;
                     }
                 }
             });

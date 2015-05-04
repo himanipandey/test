@@ -1,16 +1,14 @@
 <?php
 
-
-
-//print "<pre>".print_r($assignedLots,1)."</pre>";
-
-
 //date filters
 $date_filters = array(    
     'assignmentDate' => 'Assignment Date',    
        
 );
 $smarty->assign('date_filters', $date_filters);
+
+$smarty->assign('currentUserRole', $_SESSION['ROLE']);
+$smarty->assign('currentUser', $_SESSION['adminId']);
 
 
 if(isset($_POST['searchLot'])){
