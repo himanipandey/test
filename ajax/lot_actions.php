@@ -195,7 +195,7 @@ if ($status == 'revertedToVendor') {
 
                 //fetch the all content lot details ids
                 $contentLotDetails = ContentLotDetail::find('all', array(
-                            'select' => 'entity_id',
+                            'select' => 'entity_id, updated_content',
                             'conditions' => array('lot_id' => $lot_id)
                 ));
                 $allDetailsIds = array();
@@ -203,11 +203,18 @@ if ($status == 'revertedToVendor') {
                     $approvedProjects = new ContentLotApprovedProjects();
                     $approvedProjects->project_id = $detail->entity_id;
                     $approvedProjects->save();
+                    
+                    //update project description                  
+                    $arrInsertUpdateProject = array();
+                    $arrInsertUpdateProject['project_id'] = $detail->entity_id;                    
+                    $arrInsertUpdateProject['project_description'] = $detail->updated_content;
+                    $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
+                    
                 }
             }
         } catch (Exception $e) {
-            print "Action Failed!";
-            // print $e;
+            //print "Action Failed!";
+             print $e;
             exit;
         }
     });

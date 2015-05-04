@@ -97,8 +97,8 @@ function fetch_lot_details($lot_id) {
 
     $lot_details_sql = "SELECT admin.role, SUM(clc.status = 'active') revert_comments, rp.project_name, rb.builder_name, cl.lot_type, loc.label as locality, city.label as lot_city,"
             . " ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.content, cld.updated_content, "
-            . " cld.status as content_status, SUM( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) as content_words_count, "
-            . " SUM( LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1) as updated_content_words_count, ca.completed_by, "
+            . " cld.status as content_status, ( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) as content_words_count, "
+            . " ( LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1) as updated_content_words_count, ca.completed_by, "
             . " DATE_FORMAT(ca.updated_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CONTENT_LOT_DETAILS . " cld on cld.lot_id = cl.id"
