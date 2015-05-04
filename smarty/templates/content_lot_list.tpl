@@ -150,7 +150,7 @@
                                                                             <input type='button' name='assign' id='assign' value='Assign' onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "assign")' class="page-button">                                                                         
                                                                         {/if}
                                                                         {if $val['lot_status'] == 'waitingApproval'}
-                                                                            <input type='button' name='approve' id='approve' value='Approve' onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "approve")' class="page-button">                                                                        
+                                                                            <input type='button' name='approve' id='approve' value='Approve' onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "approve", "{$val['lot_type']}")' class="page-button">                                                                        
                                                                             <input type="button" name="revert" value="Revert" onclick='content_lot_action("{$val['lot_id']}", "LT{$val['lot_id']}-assignTo", "revert")' class='page-button'>
                                                                         {/if}
                                                                         {if $val['lot_status'] != 'approved'}
@@ -202,7 +202,7 @@
 
     });
 
-    function content_lot_action(lotID, vendorID, lotAction) {
+    function content_lot_action(lotID, vendorID, lotAction, lot_type) {
 
         var vendorValue = $('#' + vendorID).val();
 
@@ -212,7 +212,7 @@
             $.ajax({
                 url: "ajax/lot_actions.php",
                 type: "POST",
-                data: "lot_id=" + lotID + "&vendorID=" + vendorValue + "&lotAction=" + lotAction + "&assigned_by=" + "{$currentUser}",
+                data: "lot_type="+lot_type+"&lot_id=" + lotID + "&vendorID=" + vendorValue + "&lotAction=" + lotAction + "&assigned_by=" + "{$currentUser}",
                 beforeSend: function () {
                     $("body").addClass("loading");
                 },
