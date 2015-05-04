@@ -38,6 +38,7 @@
                                                             {if $lot_details['lot_status'] == 'revertedToVendor'}
                                                                 (Reverted)
                                                             {/if}
+                                                            <a href="content_lot_list_assigned.php"><img width="28" style="float:right" src="images/back.jpeg"></a>
                                                         </TD>
                                                     </TR>
                                                 </TBODY></TABLE>

@@ -38,7 +38,8 @@ if ($lotType == '') {
     //project
     if ($lotType == 'project') {
         //fetch all the project which are not inactive and version is cms
-        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.project_id, concat(resi_builder.entity, ' - ', resi_project.project_name) project_name, length(resi_project.project_description) words FROM `resi_project`                     
+        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.project_id, concat(resi_builder.builder_name, ' ', resi_project.project_name) project_name, 
+                            ( LENGTH(resi_project.project_description) - LENGTH(REPLACE(resi_project.project_description, ' ', ''))+1) words FROM `resi_project`                     
                             left join locality
                                on resi_project.locality_id = locality.locality_id
                             left join suburb 
@@ -48,10 +49,11 @@ if ($lotType == '') {
                             left join content_lot_details cld on cld.entity_id = resi_project.project_id
                             left join content_lots cl on cl.id = cld.lot_id
                             LEFT JOIN resi_builder  on resi_project.builder_id = resi_builder.builder_id and resi_builder.builder_status = 0 
+                            left join content_lot_approved_projects clap on resi_project.project_id = clap.project_id
                              WHERE city.city_id in ($city)  
                                     and resi_project.status in ('Active','ActiveInCms')
-                                    and  resi_project.version = 'Cms' 
-                                    and resi_project.project_id not in (select project_id from content_lot_approved_projects )
+                                    and clap.project_id is null
+                                    and  resi_project.version = 'Cms'                                     
                                     ORDER BY resi_project.project_id DESC";
         $allProjects = mysql_query($allProjectSql) or die(mysql_error());
         if (mysql_num_rows($allProjects)) {
@@ -112,7 +114,8 @@ if ($lotType == '') {
         }
     } else if ($lotType == 'locality') { //locality
         //fetch all the project which are not inactive and version is cms
-        $allLocSql = "SELECT cld.lot_id, cl.lot_status, locality.locality_id,locality.label, length(locality.description) words, count(project_id) under_projects
+        $allLocSql = "SELECT cld.lot_id, cl.lot_status, locality.locality_id,locality.label, 
+                        ( LENGTH(locality.description) - LENGTH(REPLACE(locality.description, ' ', ''))+1) words, count(project_id) under_projects
                         FROM `locality` INNER JOIN suburb a ON(locality.suburb_id = a.suburb_id)
                         INNER JOIN city c ON(a.city_id = c.city_id) 
                         LEFT JOIN resi_project rp on rp.locality_id = locality.locality_id 
@@ -184,7 +187,8 @@ if ($lotType == '') {
         }
     } else if ($lotType == 'builder') { //builder        
         //fetch all the project which are not inactive and version is cms
-        $allBuilderSql = "select cld.lot_id, cl.lot_status, resi_builder.builder_id, resi_builder.entity, length(resi_builder.description) words, count(project_id) under_projects
+        $allBuilderSql = "select cld.lot_id, cl.lot_status, resi_builder.builder_id, resi_builder.entity, 
+                        ( LENGTH(resi_builder.description) - LENGTH(REPLACE(resi_builder.description, ' ', ''))+1) words, count(project_id) under_projects
                         FROM resi_builder 
                         LEFT JOIN resi_project rp on rp.builder_id = resi_builder.builder_id 
                                         and rp.status in ('Active','ActiveInCms')
@@ -255,7 +259,7 @@ if ($lotType == '') {
         }
     } else if ($lotType == 'city') { //city
         //fetch all the project which are not inactive and version is cms
-        $allCitySql = "SELECT cld.lot_id, cl.lot_status, city_id, label, length(description) words from "
+        $allCitySql = "SELECT cld.lot_id, cl.lot_status, city_id, label, ( LENGTH(description) - LENGTH(REPLACE(description, ' ', ''))+1) words from "
                 . " city "
                 . " left join content_lot_details cld on cld.entity_id = city.city_id
                         left join content_lots cl on cl.id = cld.lot_id"
