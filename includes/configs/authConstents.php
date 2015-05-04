@@ -1,6 +1,9 @@
 <?php
 
     /*******Auth code******/
+    $seoMetaAuth = isUserPermitted('seo-meta-template', 'templateAccess');
+    $smarty->assign("seoMetaAuth", $seoMetaAuth);
+    
     $builderAuth = isUserPermitted('builder', 'manage');
     $smarty->assign("builderAuth", $builderAuth);
 

@@ -965,7 +965,7 @@ function costructionDetail($projectId,$phaseId='',$include=true) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $listed) {
   $Sql = "INSERT INTO " . RESI_BUILDER . " SET
         BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
         ENTITY  	   	     = '" . d_($legalEntity) . "',
@@ -983,6 +983,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
         REVENUE			     ='" . $revenue . "',
         DEBT			     ='" . $debt . "',
         ESTABLISHED_DATE	     = '" . $date . "',
+        listed	     = '" . $listed . "',
         updated_by                   = ".$_SESSION['adminId'].",
         created_at                   = now()";
 
@@ -1048,7 +1049,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL', $listed='No')
  {
 	$Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
@@ -1067,6 +1068,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
+				listed			     ='" . $listed . "',
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
