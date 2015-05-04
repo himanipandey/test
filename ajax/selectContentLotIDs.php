@@ -38,7 +38,7 @@ if ($lotType == '') {
     //project
     if ($lotType == 'project') {
         //fetch all the project which are not inactive and version is cms
-        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.project_id, resi_project.project_name, length(resi_project.project_description) words FROM `resi_project`                     
+        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.project_id, concat(resi_builder.entity, ' - ', resi_project.project_name) project_name, length(resi_project.project_description) words FROM `resi_project`                     
                             left join locality
                                on resi_project.locality_id = locality.locality_id
                             left join suburb 
@@ -47,10 +47,12 @@ if ($lotType == '') {
                                on suburb.city_id = city.city_id  
                             left join content_lot_details cld on cld.entity_id = resi_project.project_id
                             left join content_lots cl on cl.id = cld.lot_id
-                            inner join content_lot_approved_projects clap on clap.project_id != resi_project.project_id
+                            LEFT JOIN resi_builder  on resi_project.builder_id = resi_builder.builder_id and resi_builder.builder_status = 0 
                              WHERE city.city_id in ($city)  
                                     and resi_project.status in ('Active','ActiveInCms')
-                                    and  resi_project.version = 'Cms' ORDER BY resi_project.project_id DESC";
+                                    and  resi_project.version = 'Cms' 
+                                    and resi_project.project_id not in (select project_id from content_lot_approved_projects )
+                                    ORDER BY resi_project.project_id DESC";
         $allProjects = mysql_query($allProjectSql) or die(mysql_error());
         if (mysql_num_rows($allProjects)) {
             print ' <table id="myTable" class="tablesorter"> 

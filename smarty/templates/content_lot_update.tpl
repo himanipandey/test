@@ -7,6 +7,12 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="nicEdit/nicEdit.js"></script>
+<script type="text/javascript">
+	bkLib.onDomLoaded(function() {
+	new nicEditor().panelInstance('updatedCotent');	
+});
+</script>
 
 
 </TD>
@@ -65,7 +71,7 @@
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <b>Current Description:</b><br/>
-                                                                    <textarea readonly="true" name="currentCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details->content}</textarea>
+                                                                    <textarea id="currentCotent" readonly="true" name="currentCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details->content}</textarea>
                                                                 </td>
                                                             </tr>
                                                             <tr>
