@@ -9,8 +9,8 @@ function get_lot_entity_content($type, $entity_ids) {
     $entityContent = array();
 
     if ($type == 'project') {
-        $allProjectSql = "SELECT resi_project.project_id, resi_project.project_name, resi_project.project_description FROM " . RESI_PROJECT . "                     
-                            
+        $allProjectSql = "SELECT resi_project.project_id, concat(resi_builder.entity, ' - ', resi_project.project_name) project_name, resi_project.project_description FROM " . RESI_PROJECT . "                     
+                            LEFT JOIN resi_builder  on resi_project.builder_id = resi_builder.builder_id and resi_builder.builder_status = 0
                              WHERE resi_project.project_id in ($entity_ids)  
                                     and resi_project.status in ('Active','ActiveInCms')
                                     and  resi_project.version = 'Cms'";
