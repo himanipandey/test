@@ -37,8 +37,7 @@ if (isset($_POST['createLot'])) {
                 $contentLotDetail = new ContentLotDetail();
                 $contentLotDetail->lot_id = $contentLot->id;
                 $contentLotDetail->entity_id = $entityID;
-                $contentLotDetail->content = $content['content'];
-                $contentLotDetail->entity_name = $content['entity_name'];
+                $contentLotDetail->content = $content['content'];                
                 $contentLotDetail->updated_by = $_SESSION['adminId'];
                 $contentLotDetail->save();
             }

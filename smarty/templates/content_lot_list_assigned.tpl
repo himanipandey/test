@@ -53,7 +53,7 @@
                                                 <table width="100%">
                                                     {if count($errorMsg)>0}
                                                         <tr><td colspan="2" align = "left">{$errorMsg['dateDiff']}</td></tr>
-                                                    {/if}
+                                                        {/if}
                                                     <tr>
                                                         <td>
                                                             <form method="POST" >
@@ -80,7 +80,9 @@
                                                             <th style="font-size: 12px" nowrap>Lot Type</th>
                                                             <th class="filter-false" style="font-size: 12px" nowrap>Articles / Words</th>
                                                             <th class="filter-false" style="font-size: 12px" nowrap>Work Done</th>
-                                                            <th class="filter-false" style="font-size: 12px" nowrap>Actions</th>
+                                                                {if $currentUserRole == 'contentVendor'}
+                                                                    <th class="filter-false" style="font-size: 12px" nowrap>Actions</th>
+                                                                {/if}
                                                         </tr>
                                                     </thead>
                                                     <tfoot>
@@ -112,7 +114,7 @@
                                                                 {if $val['articles'] == $val['lot_completed_articles']}
                                                                     {$color = "background:#bbb"}
                                                                 {/if}
-                                                                
+
                                                                 <tr style="{$color}">
                                                                     <td>
                                                                         <a href="content_lot_details_assigned.php?l={$val['lot_id']}">LT{$val['lot_id']}</a>
@@ -127,15 +129,17 @@
                                                                         {$val['articles']} / {$val['words']}
                                                                     </td>
                                                                     <td>{$val['lot_completed_articles']} / {$val['lot_completed_words']}</td>
-                                                                    <td>
+                                                                    {if $currentUserRole == 'contentVendor'}
+                                                                        <td>
 
-                                                                        {if $val['articles'] == $val['lot_completed_articles'] || $val['revert_comments']}
-                                                                            
+                                                                            {if $val['articles'] == $val['lot_completed_articles'] || $val['revert_comments']}
+
                                                                                 <input type='submit' name='lotCompleted' id='lotCompleted' onclick="complete_lot_action('{$val["lot_id"]}')" value='Submit' {$enabled} />
-                                                                            
-                                                                        {/if}
 
-                                                                    </td>
+                                                                            {/if}
+
+                                                                        </td>
+                                                                    {/if} 
                                                                 </tr>
                                                             {/foreach} 
                                                         {/if}
@@ -181,19 +185,19 @@
 
     });
     function validateFilter() {
-        
-        if($('#from_date_filter').val().trim() == '' || $('#to_date_filter').val().trim() == ''){
+
+        if ($('#from_date_filter').val().trim() == '' || $('#to_date_filter').val().trim() == '') {
             alert("Please select the Date Range!");
             return  false;
         }
-        
+
         return true;
     }
-    function complete_lot_action(lot_id){
+    function complete_lot_action(lot_id) {
         $.ajax({
             url: "ajax/lot_actions.php",
             type: "POST",
-            data: "lot_id=" + lot_id + "&lotAction=" + "complete&currentUserRole="+"{$currentUserRole}" + "&currentUser=" + "{$currentUser}",
+            data: "lot_id=" + lot_id + "&lotAction=" + "complete&currentUserRole=" + "{$currentUserRole}" + "&currentUser=" + "{$currentUser}",
             beforeSend: function () {
                 $("body").addClass("loading");
             },

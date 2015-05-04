@@ -10,7 +10,10 @@
 <script type="text/javascript" src="nicEdit/nicEdit.js"></script>
 <script type="text/javascript">
 	bkLib.onDomLoaded(function() {
+            
+        new nicEditor().panelInstance('currentCotent');
 	new nicEditor().panelInstance('updatedCotent');	
+        nicEditors.findEditor("currentCotent").disable(); 
 });
 </script>
 
@@ -40,7 +43,7 @@
                                             <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                                 <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                         <TR>
-                                                            <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Edit {$lot_content_details->lot_type|ucWords} Description (Lot#{$lot_content_details->lot_id})</TD>
+                                                            <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Edit {$lot_content_details['lot_type']|ucWords} Description (Lot#{$lot_content_details['lot_id']})</TD>
                                                         </TR>
                                                     </TBODY></TABLE>
                                             </TD>
@@ -53,10 +56,10 @@
                                                         <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                                                             <tr style='height: 50px;'>
                                                                 <td width="10%">
-                                                                    <b>{$lot_content_details->lot_type|ucWords}: </b>                                                                
+                                                                    <b>{$lot_content_details['lot_type']|ucWords}: </b>                                                                
                                                                 </td>
                                                                 <td>
-                                                                    {$lot_content_details->entity_name}
+                                                                    {$lot_content_details['entity_name']}
                                                                 </td>                                                            
                                                             </tr>
                                                             <tr style='height: 50px;'>
@@ -64,25 +67,25 @@
                                                                     <b>Locality: </b>                                                                
                                                                 </td>
                                                                 <td>
-                                                                    {if $lot_content_details->locality}{$lot_content_details->locality}, {/if}
-                                                                    {$lot_content_details->lot_city}
+                                                                    {if $lot_content_details['locality']}{$lot_content_details['locality']}, {/if}
+                                                                    {$lot_content_details['lot_city']}
                                                                 </td>                                                            
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2">
                                                                     <b>Current Description:</b><br/>
-                                                                    <textarea id="currentCotent" readonly="true" name="currentCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details->content}</textarea>
+                                                                    <textarea id="currentCotent" readonly="true" name="currentCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details['content']}</textarea>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2">
-                                                                    <b>updated Description:</b><br/>
-                                                                    <textarea id="updatedCotent" name="updatedCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details->updated_content}</textarea>
+                                                                    <b>Updated Description:</b><br/>
+                                                                    <textarea id="updatedCotent" name="updatedCotent" style="margin: 0px 0px 10px; width: 903px; height: 210px;">{$lot_content_details['updated_content']}</textarea>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td height="25" align="center" colspan= "2"  style = "padding-right:40px;">
-                                                                    <input type = "button" onclick="check_back_to_lot({$lot_id}, {$lot_content_details->id})" value = "Back to Lot" id="backToLot" name = "backToLot" class="page-button">
+                                                                    <input type = "button" onclick="check_back_to_lot({$lot_id}, {$lot_content_details['id']})" value = "Back to Lot" id="backToLot" name = "backToLot" class="page-button">
                                                                     &nbsp;&nbsp;&nbsp;&nbsp;
                                                                     <input type = "submit" value = "Save" id="updateLot" name = "updateLot" class="page-button">  
                                                                     <span style="float:right;padding-right:100px">

@@ -9,7 +9,7 @@ function get_lot_entity_content($type, $entity_ids) {
     $entityContent = array();
 
     if ($type == 'project') {
-        $allProjectSql = "SELECT resi_project.project_id, concat(resi_builder.entity, ' - ', resi_project.project_name) project_name, resi_project.project_description FROM " . RESI_PROJECT . "                     
+        $allProjectSql = "SELECT resi_project.project_id, concat(resi_builder.builder_name, ' ', resi_project.project_name) project_name, resi_project.project_description FROM " . RESI_PROJECT . "                     
                             LEFT JOIN resi_builder  on resi_project.builder_id = resi_builder.builder_id and resi_builder.builder_status = 0
                              WHERE resi_project.project_id in ($entity_ids)  
                                     and resi_project.status in ('Active','ActiveInCms')
@@ -78,7 +78,7 @@ function fetch_assignTo_users() {
                     'Role' => array('contentVendor'),
                     'status' => 'Y',
                     'manager_id' => $_SESSION['adminId'])));
-    
+
     $assignToUsersArr = array();
     foreach ($assignTo as $obj) {
         $assignToUsersArr[$obj->adminid] = $obj->fname;
@@ -93,7 +93,10 @@ function fetch_assignTo_users() {
 
 function fetch_lot_details($lot_id) {
     $content_lot_details = array();
-    $lot_details_sql = "SELECT SUM(clc.status = 'active') revert_comments, cl.lot_type, loc.label as locality, city.label as lot_city, ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.entity_name, cld.content, cld.updated_content, "
+
+
+    $lot_details_sql = "SELECT admin.role, SUM(clc.status = 'active') revert_comments, rp.project_name, rb.builder_name, cl.lot_type, loc.label as locality, city.label as lot_city,"
+            . " ca.status as lot_status, cld.id as content_id, cld.entity_id, cld.content, cld.updated_content, "
             . " cld.status as content_status, SUM( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) as content_words_count, "
             . " SUM( LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1) as updated_content_words_count, ca.completed_by, "
             . " DATE_FORMAT(ca.updated_at, '%d/%m/%Y') assignment_date, ca.assigned_to"
@@ -102,11 +105,16 @@ function fetch_lot_details($lot_id) {
             . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
             . " LEFT JOIN " . CITY . " city on city.city_id = cl.lot_city"
-            . " LEFT JOIN resi_project rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
-            . " LEFT JOIN locality loc on loc.locality_id = rp.locality_id and cl.lot_type = 'project'"
+            . " LEFT JOIN " . RESI_PROJECT . " rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
+            . " LEFT JOIN " . RESI_BUILDER . " rb on rp.builder_id = rb.builder_id and (cl.lot_type = 'project' OR cl.lot_type = 'builder')"
+            . " LEFT JOIN " . LOCALITY . " loc on loc.locality_id = rp.locality_id"
+            . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
             . " WHERE cl.id = '$lot_id'"
             . " GROUP BY cld.entity_id "
             . " ORDER BY cld.id";
+
+
+
     $lot_details = mysql_query($lot_details_sql) or die(mysql_error());
 
     if (mysql_num_rows($lot_details) > 0) {
@@ -123,23 +131,36 @@ function fetch_lot_details($lot_id) {
             $content_lot_details['completed_by'] = $row->completed_by;
             $content_lot_details['lot_type'] = $row->lot_type;
             $content_lot_details['lot_city'] = $row->lot_city;
+            $content_lot_details['role'] = $row->role;
             $content_lot_details['lot_status'] = ($row->lot_status) ? $row->lot_status : "unassigned";
 
             $content_lot_details['lot_contents'][$cnt]['content_id'] = $row->content_id;
             $content_lot_details['lot_contents'][$cnt]['locality'] = $row->locality;
             $content_lot_details['lot_contents'][$cnt]['entity_id'] = $row->entity_id;
-            $content_lot_details['lot_contents'][$cnt]['entity_name'] = $row->entity_name;
+
+            if ($row->lot_type == 'project')
+                $entity_name = $row->builder_name . " " . $row->project_name;
+            elseif ($row->lot_type == 'locality')
+                $entity_name = $row->locality;
+            elseif ($row->lot_type == 'builder')
+                $entity_name = $row->builder_name;
+            elseif ($row->lot_type == 'city')
+                $entity_name = $row->lot_city;
+
+            $content_lot_details['lot_contents'][$cnt]['entity_name'] = $entity_name;
+
+
             $content_lot_details['lot_contents'][$cnt]['content_id'] = $row->content_id;
             $content_lot_details['lot_contents'][$cnt]['content'] = substr($row->content, 0, 50);
             $content_lot_details['lot_contents'][$cnt]['updated_content'] = substr($row->updated_content, 0, 50);
             $content_lot_details['lot_contents'][$cnt]['content_status'] = $row->content_status;
             $content_lot_details['lot_contents'][$cnt]['content_words_count'] = $row->content_words_count;
             $content_lot_details['lot_contents'][$cnt]['revert_comments'] = $row->revert_comments;
-                        
+
             $total_revert_comment = $total_revert_comment + $row->revert_comments;
-            
-            if(($row->content_status == 'revertComplete' || $row->content_status == 'revert') && $row->revert_comments)
-                $reverted_articles[] = $cnt+1;
+
+            if (($row->content_status == 'revertComplete' || $row->content_status == 'revert') && $row->revert_comments)
+                $reverted_articles[] = $cnt + 1;
 
             $lot_words_count = $lot_words_count + $row->content_words_count;
             $lot_updated_words_count = $lot_updated_words_count + $row->updated_content_words_count;
@@ -154,7 +175,7 @@ function fetch_lot_details($lot_id) {
         $content_lot_details['lot_updated_words_count'] = $lot_updated_words_count;
         $content_lot_details['total_revert_comment'] = $total_revert_comment;
     }
-    
+
     //print "<pre>".print_r($content_lot_details,1)."</pre>";
 
     return $content_lot_details;
@@ -166,24 +187,24 @@ function fetch_lot_details($lot_id) {
 
 function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
     $lotData = array();
-    
+
     $dateCondition = "";
-    if($lotStatus != null){
-        if($lotStatus == 'created'){
+    if ($lotStatus != null) {
+        if ($lotStatus == 'created') {
             $dateCondition = " AND (DATE(cl.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
-        }else if($lotStatus == 'assigned'){
+        } else if ($lotStatus == 'assigned') {
             $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
-        }else{
-            if($lotStatus == 'completed'){
+        } else {
+            if ($lotStatus == 'completed') {
                 $lotStatus = "'completedByVendor','waitingApproval'";
-            }else{
+            } else {
                 $lotStatus = "'$lotStatus'";
             }
             $dateCondition = " AND (DATE(cl.updated_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
             $dateCondition .= " AND cl.lot_status in ($lotStatus)";
         }
-    }    
-    
+    }
+
     $content_lots = mysql_query("SELECT count(clc.id) revert_comments, admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
             . " FROM " . CONTENT_LOTS . " cl "
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
@@ -191,7 +212,7 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
             . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
             . " WHERE (cl.created_by = '" . $_SESSION['adminId'] . "' OR ca.assigned_to = '" . $_SESSION['adminId'] . "')"
-            . $dateCondition            
+            . $dateCondition
             . " GROUP BY cl.id"
             . " ORDER BY cl.id DESC");
     $count = 0;
@@ -215,12 +236,12 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
 function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null) {
     $lotData = array();
     $dateCondition = "";
-    if($lotStatus != null){        
-        $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";        
+    if ($lotStatus != null) {
+        $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
     }
     $content_lots = mysql_query("SELECT SUM(cld.status = 'revert') revert_comments, cld.lot_id as id, count(cld.entity_id) articles, "
-            . " SUM(IF(cld.status = 'complete' OR cld.status = 'revertComplete',1,0)) lot_completed_articles, "
-            . " SUM( IF(cld.status = 'complete'  OR cld.status = 'revertComplete', LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1, 0)) lot_completed_words, "
+            . " SUM(IF(cld.status = 'complete' OR cld.status = 'revertComplete'  OR (admin.role != 'contentVendor'),1,0)) lot_completed_articles, "
+            . " SUM( IF(cld.status = 'complete'  OR cld.status = 'revertComplete' OR (admin.role != 'contentVendor'), LENGTH(cld.updated_content) - LENGTH(REPLACE(cld.updated_content, ' ', ''))+1, 0)) lot_completed_words, "
             . " SUM( LENGTH(cld.content) - LENGTH(REPLACE(cld.content, ' ', ''))+1) words,"
             . " cl.lot_type, ca.status, DATE_FORMAT(ca.updated_at, '%Y/%m/%d') updated_at"
             . " FROM " . CONTENT_LOTS . " cl "
@@ -228,7 +249,7 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
             . " LEFT JOIN " . CMS_ASSIGNMENTS . " ca on ca.entity_id = cl.id"
             . " LEFT JOIN " . CONTENT_LOT_COMMENTS . " clc on clc.content_lot_id = cld.id"
             . " LEFT JOIN " . ADMIN . " admin on admin.adminid = ca.assigned_to"
-            . " WHERE (ca.assigned_to = '" . $_SESSION['adminId'] . "' AND ca.status in ('assigned', 'revertedToVendor')) "
+            . " WHERE (ca.assigned_to = '" . $_SESSION['adminId'] . "' AND ca.status in ('assigned', 'revertedToVendor', 'reverted')) "
             . $dateCondition
             . " GROUP BY cld.lot_id"
             . " ORDER BY cl.id DESC");
@@ -242,11 +263,11 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
         $lotData[$count]['lot_completed_words'] = $row->lot_completed_words;
         $lotData[$count]['words'] = $row->words;
         $lotData[$count]['revert_comments'] = $row->revert_comments;
-        $lotData[$count]['date_old'] = floor((time() - strtotime($row->updated_at))/86400);        
+        $lotData[$count]['date_old'] = floor((time() - strtotime($row->updated_at)) / 86400);
 
         $count++;
     }
-  
+
     return $lotData;
 }
 
@@ -255,16 +276,40 @@ function fetch_assigned_lots($frmDate = null, $toDate = null, $lotStatus = null)
  */
 
 function fetch_lot_content_details($lot_content_id) {
-    $lotContentDataSql = mysql_query("SELECT cld.id, cld.entity_id, cld.lot_id, cld.entity_name, cl.lot_type, loc.label as locality, city.label as lot_city,"
-            . " cld.content, cld.updated_content  "
+    $lotContentDataSql = mysql_query("SELECT cld.id, cld.entity_id, cld.lot_id, cl.lot_type, loc.label as locality, city.label as lot_city,"
+            . " cld.content, cld.updated_content, rb.builder_name, rp.project_name  "
             . " FROM " . CONTENT_LOT_DETAILS . " cld"
             . " INNER JOIN " . CONTENT_LOTS . " cl on cld.lot_id = cl.id"
             . " LEFT JOIN " . CITY . " city on city.city_id = cl.lot_city"
-            . " LEFT JOIN resi_project rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
-            . " LEFT JOIN locality loc on loc.locality_id = rp.locality_id and cl.lot_type = 'project'"
-            . " WHERE cld.id = '" . $lot_content_id . "'") or die(mysql_error());
+            . " LEFT JOIN " . RESI_PROJECT . " rp on rp.project_id = cld.entity_id and cl.lot_type = 'project'"
+            . " LEFT JOIN " . RESI_BUILDER . " rb on rp.builder_id = rb.builder_id and (cl.lot_type = 'project' OR cl.lot_type = 'builder')"
+            . " LEFT JOIN " . LOCALITY . " loc on loc.locality_id = rp.locality_id"
+            . " WHERE cld.id = '" . $lot_content_id . "'"
+            . " GROUP BY cld.entity_id") or die(mysql_error());
 
-    $lotContentData = mysql_fetch_object($lotContentDataSql);
+    $lotContentData = array();
+    if (mysql_num_rows($lotContentDataSql) > 0) {
+        $row = mysql_fetch_object($lotContentDataSql);
+        $lotContentData ['id'] = $row->id;
+        $lotContentData ['entity_id'] = $row->entity_id;
+        $lotContentData ['lot_id'] = $row->lot_id;
+        $lotContentData ['lot_type'] = $row->lot_type;
+        $lotContentData ['locality'] = $row->locality;
+        $lotContentData ['lot_city'] = $row->lot_city;
+        $lotContentData ['content'] = $row->content;
+        $lotContentData ['updated_content'] = $row->updated_content;
+
+        if ($row->lot_type == 'project')
+            $entity_name = $row->builder_name . " " . $row->project_name;
+        elseif ($row->lot_type == 'locality')
+            $entity_name = $row->locality;
+        elseif ($row->lot_type == 'builder')
+            $entity_name = $row->builder_name;
+        elseif ($row->lot_type == 'city')
+            $entity_name = $row->lot_city;
+
+        $lotContentData ['entity_name'] = $entity_name;
+    }
 
     return $lotContentData;
 }
@@ -284,13 +329,14 @@ function fetch_pagination_ids($lot_id, $lot_content_id) {
         $lotContentIds[] = $row->id;
     }
     $currentKey = array_search($lot_content_id, $lotContentIds);
-    
-    $prevKey = null; $nextKey = null;
+
+    $prevKey = null;
+    $nextKey = null;
     if (($currentKey - 1) >= 0)
         $prevKey = $lotContentIds[$currentKey - 1];
     if (($currentKey + 1) <= (count($lotContentIds) - 1))
         $nextKey = $lotContentIds[$currentKey + 1];
-   
+
     return array('prevKey' => $prevKey, 'nextKey' => $nextKey);
 }
 

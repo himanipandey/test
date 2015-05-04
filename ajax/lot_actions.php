@@ -71,7 +71,7 @@ if ($status == 'revertedToVendor') {
         try {
 
             CmsAssignment::update_all(array(
-                'set' => 'status = "' . $status . '", assigned_by = "' . $assigned_by . '"',
+                'set' => 'status = "' . $status . '"',
                 'conditions' => array('assignment_type' => 'content_lots', 'entity_id' => $lot_id)
                     )
             );

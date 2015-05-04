@@ -33,7 +33,7 @@
                                         <TD class=h1 align=left background=images/heading_bg.gif bgColor=#ffffff height=40>
                                             <TABLE cellSpacing=0 cellPadding=0 width="99%" border=0><TBODY>
                                                     <TR>
-                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Lot Details for #{$lot_id}</TD>
+                                                        <TD class=h1 width="67%"><IMG height=18 hspace=5 src="images/arrow.gif" width=18>Lot Details for #{$lot_id} <a href="content_lot_list.php"><img width="28" style="float:right" src="images/back.jpeg"></a></TD>
                                                     </TR>
                                                 </TBODY></TABLE>
                                         </TD>
@@ -46,24 +46,25 @@
                                                     <table width="100%">
                                                         <tr style='height: 50px;'>
                                                             <td><b>Lot Type: </b>{$lot_details['lot_type']|ucwords}</td>
-                                                            <td><b>Status: </b>{$lot_details['lot_status']}</td>
-                                                            <td>
-                                                                {if $lot_details['lot_status'] == 'completedByVendor'}
-                                                                    <input type='button' value='Approve'>
-                                                                {else}
-                                                                    &nbsp;
+                                                            <td><b>Status: </b>
+                                                                {$lot_details['lot_status']}
+                                                                {if $lot_details['lot_status'] == 'assigned' || $lot_details['lot_status'] == 'reverted'}
+                                                                &nbsp;to {$arrRoles[$lot_details['role']]}
                                                                 {/if}
+                                                            </td>
+                                                            <td>
+                                                                
+                                                                    &nbsp;
+                                                                
                                                             </td>
                                                         </tr>
                                                         <tr style='height: 50px;'>
                                                             <td><b>#Lot Articles: </b>{$lot_details['lot_articles']}</td>
                                                             <td>&nbsp;</td>
                                                             <td>
-                                                                {if $lot_details['lot_status'] == 'completedByVendor'}
-                                                                    <input type='button' value='Revert'>
-                                                                {else}
+                                                                
                                                                     &nbsp;
-                                                                {/if}
+                                                                
                                                             </td>
                                                         </tr>
                                                         <tr style='height: 50px;'>

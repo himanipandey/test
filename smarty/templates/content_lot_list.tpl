@@ -34,7 +34,7 @@
                     <TD vAlign=center align=middle width=10 bgColor=#f7f7f7>&nbsp;</TD>
                     <TD vAlign=top align=middle width="100%" bgColor=#eeeeee height=400>
 
-                        {if $contentDeliveryManage == true || $contentDeliveryAccess == true}
+                        {if $contentDeliveryManage == true}
 
                             <TABLE cellSpacing=1 cellPadding=0 width="100%" bgColor=#b1b1b1 border=0><TBODY>
                                     <TR>
@@ -114,7 +114,7 @@
                                                                         <a href="content_lot_details.php?l={$val['lot_id']}">LT{$val['lot_id']}</a>
                                                                     </td>
                                                                     <td>
-                                                                        {if $val['lot_status'] == 'assigned'}
+                                                                        {if $val['lot_status'] == 'assigned' || $val['lot_status'] == 'reverted'}
                                                                             {$arrLotStatus[$val['lot_status']]} to {$arrRoles[$val['role']]}
                                                                         {else}
                                                                             {$arrLotStatus[$val['lot_status']]}
