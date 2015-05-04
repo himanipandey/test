@@ -186,7 +186,7 @@
               trClone.find(".insertProject").attr("rel",countApart);
               trClone.find("select").val('');
               trClone.find("input[name!=projectId]").val('');
-              trClone.find(".unit-type").val('Apartment');
+              trClone.find(".unit-type").val('Villa');
               trClone.find("input").removeAttr("readOnly");
               
               $("#tbl_villa").append(trClone);
@@ -648,7 +648,7 @@
                               <td>
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
 
-                                    <input type='hidden' value="Villa" name='unitType[]' tempName="unitType"   />
+                                    <input type='hidden' value="Villa" class="unit-type" name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                     <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
 
