@@ -358,39 +358,40 @@ function content_lot_send_mail($vendorId, $action, $extra) {
     $teamLeadInfo = ProptigerAdmin::getUserInfoByID($vendorInfo->manager_id);
 
     if ($action == 'assigned') {
-
+        
         $to = $vendorInfo->adminemail;
         $sender = PROPTIGER_CONTENT_TEAM_EMAIL_ID;
         $cc = $teamLeadInfo->adminemail;
 
         $subject = "A new lot (# " . $extra['lot_id'] . ") has been assigned";
 
-        $email_message = 'Dear ' . $vendorInfo->fname . '.\r\n\r\n
+        $email_message = 'Dear ' . $vendorInfo->fname . '.<br/><br/>
 
-                        A new lot (# ' . $extra['lot_id'] . ') has been assigned to you by ' . $teamLeadInfo->fname . '.\r\n
+                        A new lot (# ' . $extra['lot_id'] . ') has been assigned to you by ' . $teamLeadInfo->fname . '.<br/>
 
-                        Please login to our portal and we will look forward to hear from your side.\r\n\r\n
+                        Please login to our portal and we will look forward to hear from your side.<br/><br/>
 
-                        Regards,\r\n
+                        Regards,<br/>
 
-                        PropTiger Content Team\r\n
+                        PropTiger Content Team<br/>
 
                         ' . $sender;
     } elseif ($action == 'completedByVendor') {
 
         $to = $teamLeadInfo->adminemail;
-        $sender = $vendorInfo->adminemail;
+        //$sender = $vendorInfo->adminemail;
+        $sender = PROPTIGER_CONTENT_TEAM_EMAIL_ID;
         $cc = $vendorInfo->adminemail;
 
         $subject = "Lot (# " . $extra['lot_id'] . ") has been completed";
 
-        $email_message = 'Dear ' . $teamLeadInfo->fname . '.\r\n\r\n
+        $email_message = 'Dear ' . $teamLeadInfo->fname . '.<br/><br/>
 
-                            Lot (# ' . $extra['lot_id'] . ') has been completed by ' . $vendorInfo->fname . '.\r\n
+                            Lot (# ' . $extra['lot_id'] . ') has been completed by ' . $vendorInfo->fname . '.<br/>
 
-                            Please login to our portal for more details.\r\n\r\n
+                            Please login to our portal for more details.<br/><br/>
 
-                            Regards,\r\n
+                            Regards,<br/>
 
                         ' . $vendorInfo->fname;
     } elseif ($action == 'revertedToVendor') {
@@ -400,24 +401,26 @@ function content_lot_send_mail($vendorId, $action, $extra) {
 
         $subject = "Lot (# " . $extra['lot_id'] . ") has been reverted";
 
-        $email_message = 'Dear ' . $vendorInfo->fname . '.\r\n\r\n
+        $email_message = 'Dear ' . $vendorInfo->fname . '.<br/><br/>
 
-                            Lot (# ' . $extra['lot_id'] . ') has been reverted to you by ' . $teamLeadInfo->fname . '.\r\n
+                            Lot (# ' . $extra['lot_id'] . ') has been reverted to you by ' . $teamLeadInfo->fname . '.<br/>
 
-                            Please login to our portal for more details.\r\n\r\n
+                            Please login to our portal for more details.<br/><br/>
 
-                            Regards,\r\n
+                            Regards,<br/>
 
-                            PropTiger Content Team\r\n
+                            PropTiger Content Team<br/>
 
                             ' . $sender;
     }
+    
+    //echo $to, $subject, $email_message, $sender, $cc; die;
 
-
-    $headers = 'MIME-Version: 1.0' . "\r\n";
-    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-    $headers .= 'To: ' . $to . "\r\n";
-    $headers .= 'From: ' . $sender . "\r\n";
+    $headers = 'MIME-Version: 1.0' . "<br/>";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "<br/>";
+    $headers .= 'To: ' . $to . "<br/>";
+    $headers .= 'From: ' . $sender . "<br/>";
+    
     sendMailFromAmazon($to, $subject, $email_message, $sender, $cc, null, false);
 }
 

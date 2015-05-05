@@ -16,6 +16,9 @@ define("SMALL_IMG_VER", "?v=10");
 define("ICON_IMG_VER","?v=5");
 define("ADS_IMG_VER", "?v=1");
 
+
+define('PROPTIGER_CONTENT_TEAM_EMAIL_ID', 'no-reply@proptiger.com');
+
 if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 {
 	$myDocRoot = dirname(__FILE__);
