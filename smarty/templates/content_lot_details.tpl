@@ -47,7 +47,7 @@
                                                         <tr style='height: 50px;'>
                                                             <td><b>Lot Type: </b>{$lot_details['lot_type']|ucwords}</td>
                                                             <td><b>Status: </b>
-                                                                {$lot_details['lot_status']}
+                                                                {$arrLotStatus[$lot_details['lot_status']]}
                                                                 {if $lot_details['lot_status'] == 'assigned' || $lot_details['lot_status'] == 'reverted'}
                                                                 &nbsp;to {$arrRoles[$lot_details['role']]}
                                                                 {/if}

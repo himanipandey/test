@@ -53,8 +53,11 @@
                                                         <tr style='height: 50px;'>
                                                             <td><b>Lot Type: </b>{$lot_details['lot_type']|ucwords}</td>
                                                             <td>
-                                                                {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
-                                                                    <b>Status: </b> Completed By Vendor
+                                                                {if $currentRole == 'contentEditor'}
+                                                                    <b>Status: </b> {$arrLotStatus[$lot_details['lot_status']]}
+                                                                    {if $lot_details['lot_status'] == 'assigned' || $lot_details['lot_status'] == 'reverted'}
+                                                                        &nbsp;to {$arrRoles[$lot_details['role']]}
+                                                                    {/if}
                                                                 {else}
                                                                     <b>Assignment Date: </b>{$lot_details['assignment_date']}
                                                                 {/if}
