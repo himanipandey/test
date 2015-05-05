@@ -195,19 +195,21 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
     $dateCondition = "";
     if ($lotStatus != null) {
         if ($lotStatus == 'created') {
-            $dateCondition = " AND (DATE(cl.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
-        } else if ($lotStatus == 'assigned') {
             $dateCondition = " AND (DATE(ca.created_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
         } else {
             if ($lotStatus == 'completed') {
                 $lotStatus = "'completedByVendor','waitingApproval'";
+            } elseif ($lotStatus == 'reverted') {
+                $lotStatus = "'reverted','revertedToVendor'";
             } else {
                 $lotStatus = "'$lotStatus'";
             }
-            $dateCondition = " AND (DATE(cl.updated_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
-            $dateCondition .= " AND cl.lot_status in ($lotStatus)";
+            $dateCondition = " AND (DATE(ca.updated_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
+            $dateCondition .= " AND ca.status in ($lotStatus)";
         }
+
     }
+    
 
     $content_lots = mysql_query("SELECT count(clc.id) revert_comments, admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
             . " FROM " . CONTENT_LOTS . " cl "
@@ -219,6 +221,8 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
             . $dateCondition
             . " GROUP BY cl.id"
             . " ORDER BY cl.id DESC");
+    
+    //die;
     $count = 0;
     while ($row = mysql_fetch_object($content_lots)) {
         $lotData[$count]['lot_id'] = $row->id;
@@ -289,7 +293,7 @@ function fetch_lot_content_details($lot_content_id) {
             . " LEFT JOIN " . RESI_BUILDER . " rb on rp.builder_id = rb.builder_id and (cl.lot_type = 'project' OR cl.lot_type = 'builder')"
             . " LEFT JOIN " . LOCALITY . " loc on loc.locality_id = rp.locality_id"
             . " LEFT JOIN " . LOCALITY . " loc2 on loc2.locality_id = cld.entity_id and cl.lot_type = 'locality'"
-            . " LEFT JOIN " . RESI_BUILDER . " rb2 on rb2.builder_id = cld.entity_id and cl.lot_type = 'builder'"            
+            . " LEFT JOIN " . RESI_BUILDER . " rb2 on rb2.builder_id = cld.entity_id and cl.lot_type = 'builder'"
             . " WHERE cld.id = '" . $lot_content_id . "'"
             . " GROUP BY cld.entity_id") or die(mysql_error());
 
@@ -344,6 +348,29 @@ function fetch_pagination_ids($lot_id, $lot_content_id) {
         $nextKey = $lotContentIds[$currentKey + 1];
 
     return array('prevKey' => $prevKey, 'nextKey' => $nextKey);
+}
+
+/**
+ * content_lot_send_mail : send mail based on provided data
+ */
+function content_lot_send_mail($email_to, $email_cc, $extra_perm = array()) {
+
+    $email_text = '';
+    if ($action == 'complete') {
+        $email_text = '';
+    }
+    //sending email on placing an order
+    $email = "kuldeep.patel_c@proptiger.com";
+    $subject = "New Order[" . $order_id . "] Placed!";
+    $email_message = "New order[order ID : " . $order_id . "] has been created!";
+    $to = $email;
+    $sender = "no-reply@proptiger.com";
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+    $headers .= 'To: ' . $email . "\r\n";
+    $headers .= 'From: ' . $sender . "\r\n";
+    sendMailFromAmazon($to, $subject, $email_message, $sender, null, null, false);
+    header("Location:companyOrdersList.php?compId=" . $txtCompId);
 }
 
 ?>
