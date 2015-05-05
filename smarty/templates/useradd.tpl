@@ -145,6 +145,22 @@
 				  </td>
 				    {if $ErrorMsg["selectDepartmentErr"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["selectDepartmentErr"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
+                                
+                                <tr>
+				  <td width="20%" align="right">Manager ID : </td>
+				  <td width="30%" align="left" >
+
+				   <select name="manager_id"  id="manager_id" class="field" style="width:222px;">
+				   <option value="">Select </option>
+
+                                    {foreach from=$allUsers key=k item=v}
+                                        <option {if $txtmanagerid == {$k}} value ='{$txtmanagerid}' selected="selected" {else} value ='{$k}' {/if}>{$v}</option>
+                                    {/foreach}
+                                    </select>
+
+				  </td>
+				    
+				</tr>
 		    	
 				<tr>
 				  <td width="20%" align="right" >Joining Date : </td>
