@@ -82,7 +82,7 @@
                                                         <tr>
                                                             <th style="font-size: 12px" nowrap>Lot ID</td>
                                                             <th style="font-size: 12px" nowrap>Status</th>
-                                                            <th style="font-size: 12px" nowrap>Vendor</th>
+                                                            <th style="font-size: 12px" nowrap>Vendor / Editor</th>
                                                             <th style="font-size: 12px" nowrap>City</th>
                                                             <th class="filter-false" style="font-size: 12px" nowrap>Actions</th>
                                                         </tr>

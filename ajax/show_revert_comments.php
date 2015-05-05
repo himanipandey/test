@@ -16,15 +16,16 @@ if ($_POST['role']) {
     $condition .= " AND clc.status= 'active'";
 }
 
-$sqlRevertComments = mysql_query("SELECT clc.*,cld.entity_id,rp.project_name, rb.builder_name, cl.lot_type,cl.lot_type, loc.label as locality, city.label as lot_city, 
+$sqlRevertComments = mysql_query("SELECT clc.*,cld.entity_id,rp.project_name, rb.builder_name,
+                    cl.lot_type,cl.lot_type, loc.label as locality, city.label as lot_city, 
                     admin.fname created_by FROM content_lot_comments clc
                     INNER JOIN content_lot_details cld on cld.id = clc.content_lot_id
                     LEFT JOIN content_lots cl on cld.lot_id = cl.id 
                     LEFT JOIN city city on city.city_id = cl.lot_city
                     LEFT JOIN resi_project rp on rp.project_id = cld.entity_id and cl.lot_type = 'project' 
-                   LEFT JOIN resi_builder rb on rp.builder_id = rb.builder_id 
+                   LEFT JOIN resi_builder rb on (rp.builder_id = rb.builder_id or cld.entity_id = rb.builder_id)
                        and (cl.lot_type = 'project' OR cl.lot_type = 'builder') 
-                   LEFT JOIN locality loc on loc.locality_id = rp.locality_id 
+                   LEFT JOIN locality loc on (loc.locality_id = rp.locality_id or cld.entity_id = loc.locality_id )                   
                     LEFT JOIN proptiger_admin admin on admin.adminid = clc.created_by
                     
                     WHERE cld.lot_id = '$lot_id'" . $condition . ""
