@@ -48,6 +48,7 @@ if(isset($_REQUEST['submit'])) {
        $_REQUEST['localityId'] = '';
     if(!empty($_REQUEST['localityId']) && !empty($cityId))
     {
+        
         $localityId = $_REQUEST['localityId'];
         $smarty->assign('localityId',$localityId);
        // echo $nearPlaceTypesId;//die;

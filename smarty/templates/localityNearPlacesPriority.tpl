@@ -8,8 +8,20 @@
 <script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
 <script type="text/javascript" src="js/tablesorter_default_table.js"></script>
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing"></script> 
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>-->
+ 
+<!--<script type="text/javascript" src="http://cms.localhost.com/boundaryTracing/freeHandDrawingLogic.js"></script> 
+<script type="text/javascript" src="http://cms.localhost.com/boundaryTracing/drag.js">
+  
+  static var BaseUrl = "{$CHECK}";
+</script> -->
 
 <script language="javascript">
+
+//var BaseURL = "{}";
+var BaseURL = "{$MapURL}";
+
 function chkConfirm() 
 {
     return confirm("Are you sure! you want to delete this record.");
@@ -84,6 +96,9 @@ function cleanFields(){
     $('#errmsgphone').html('');
     $('#errmsgweb').html('');
 
+    var map_title = BaseURL + "/boundaryTracing/googleMapDrawing.html";
+    $('#lmkmapinfo').attr('href',map_title);
+
 }
 
 function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkphone,lmkweb,lmkprio,lmkstatus){
@@ -100,6 +115,12 @@ function landmarkEdit(id,cityid,placeid,lmkname,lmkaddress,lmklat,lmklong,lmkpho
     $("#lmkweb").val(lmkweb);
     $("#lmkprio").val(lmkprio);
     $("#lmkstatus").val(lmkstatus);
+
+    var map_title = BaseURL+ "/boundaryTracing/googleMapDrawing.html?"+id+','+lmklat+','+lmklong;
+    $('#lmkmapinfo').attr('href',map_title);
+    //$("#lmkmapinfo").val(map_title);
+
+
     $('#search-top').hide('slow');
     $('#search-bottom').hide('slow');
     window.scrollTo(0, 0);
@@ -135,6 +156,7 @@ $("#exit_button").click(function(){
 
   $("#lmkSave").click(function(){
 
+    //var nn = saveLatLng();
     var cityid      = $('#cityddEdit').children(":selected").val();
     var placeid = $('#placeTypeEdit').children(":selected").val();
     if(!placeid)
@@ -181,9 +203,9 @@ $("#exit_button").click(function(){
 
 
     if(lmklong==''){
-      $('#errmsglong').html('<font color="red">Please enter Latitude</font>');
+      /*$('#errmsglong').html('<font color="red">Please enter Latitude</font>');
       $("#lmklong").focus();
-      error = 1;
+      error = 1;*/
     }
     else {
       if(!isNumeric(lmklong)) {
@@ -207,9 +229,9 @@ $("#exit_button").click(function(){
     //latitude   
     
     if(lmklat==''){
-      $('#errmsglat').html('<font color="red">Please enter Latitude</font>');
+      /*$('#errmsglat').html('<font color="red">Please enter Latitude</font>');
       $("#lmklat").focus();
-      error = 1;
+      error = 1;*/
     }
     else{
       if(!isNumeric(lmklat)) {
@@ -314,9 +336,6 @@ $("#exit_button").click(function(){
     
 
   });
-
-
-
 });
 
 
@@ -404,12 +423,26 @@ function projectPriorityDelete(id,type)
     } 
     
 }
+var win1, win2;
+
+function openMapInitial(new_url)
+{  
+  console.log("NNNN= "+new_url);
+win1 = window.open(new_url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');
+return false;
+
+}
 
 
-function openMap(lat, lon)
+function openMap(name, id, lat, lng)
 {
-var url = 'https://maps.google.com/maps?q= '+lat+','+lon;
-window.open(url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;
+  var sendId = id;
+  var sendlat = lat;
+  var sendlng = lng;
+
+//var url = 'https://maps.google.com/maps?q= '+lat+','+lon;
+var new_url = BaseURL+ '/boundaryTracing/googleMapDrawing.html?'+sendId + ','+ sendlat + ',' + sendlng;
+ win2 = window.open(new_url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;
 
  //alert (lat+lon);
     /*var url = '/https://maps.google.com/maps?q= '+lat+','+lon;
@@ -421,6 +454,18 @@ window.open(url,'1390911428816','width=700,height=500,toolbar=0,menubar=0,locati
         'href'                 : url,
         'type'                : 'iframe'
     })*/
+}
+
+function RemoveLandmarkTempMAP()
+{
+    $.ajax({
+        type: "POST",
+        url: '/saveNearPlacePriority.php',
+        data: { task : 'DeleteLandmark_map_data'},
+        success:function(msg){
+          console.log(msg);
+        }
+    });
 }
 
 function show_loc_inst(){
@@ -538,7 +583,7 @@ function update_locality(ctid)
                   </table>
 
                   <div align="left" style="margin-bottom:5px;">
-                  <button type="button" id="create_button" align="left">Create New Landmark</button>
+                  <button type="button" id="create_button" align="left" onclick="RemoveLandmarkTempMAP();">Create New Landmark</button>
                 </div>
                   <div id='create_Landmark' style="display:none" align="left">
                   <TABLE cellSpacing=2 cellPadding=4 width="93%" align="left" border=0 >
@@ -584,12 +629,12 @@ function update_locality(ctid)
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >*Latitude : </td>
+                      <td width="20%" align="right" >Latitude : </td>
                       <td width="30%" align="left"><input type=text name="lmklat" id="lmklat"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglat"></td>
                     </tr>
 
                     <tr>
-                      <td width="20%" align="right" >*Longitude : </td>
+                      <td width="20%" align="right" >Longitude : </td>
                       <td width="30%" align="left"><input type=text name="lmklong" id="lmklong"  style="width:250px;"></td> <td width="20%" align="left" id="errmsglong"></td>
                     </tr>
 
@@ -626,10 +671,21 @@ function update_locality(ctid)
                       </td> 
                     </tr>
 
+                     <tr>
+
+                      <td width="20%" align="right" >*Draw Map LandMark: </td>
+                      <td width="30%" align="left">
+                          <!--<a href="http://cms.localhost.com/boundaryTracing/googleMapDrawing.html" id = "lmkmapinfo" onclick="http://cms.localhost.com/boundaryTracing/googleMapDrawing.html;">Map Information</a> -->
+
+                          <a href="{$MAPURLDRAW}" id = "lmkmapinfo" onclick="return openMapInitial(href);">Map Information</a>
+
+                         </td>
+                    </tr>
+
                     <tr>
                       <td >&nbsp;</td>
                       <td align="left" style="padding-left:50px;" >
-                      <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp; <input type="button" name="exit_button" id="exit_button" value="Exit" style="cursor:pointer">                 
+                      <input type="button" name="lmkSave" id="lmkSave" value="Save" style="cursor:pointer"> &nbsp;&nbsp; <input type="button" name="exit_button" id="exit_button" value="Exit" onclick="RemoveLandmarkTempMAP();" style="cursor:pointer">                 
                       </td>
                     </tr>
                     </div>
@@ -648,10 +704,11 @@ function update_locality(ctid)
                                   <th  width=1% align="center">Serial</th>
                                   <th  width=5% align="center">Name</th>
                                   <TH  width=8% align="center">Vicinity</TH>
+                                  <!--<TH  width=8% align="center">Map</TH> --> 
                                   <TH  width=4% align="center">Place Type</TH>
                                   <TH  width=8% align="center">Location in Map</TH>
                                   
-                                  <TH  width=4% align="center">Priority
+                                  <TH  width=3% align="center">Priority
                                  <!-- {if (!isset($smarty.post) || !empty($smarty.post.desc_x) )}
                                       <span style="clear:both;margin-left:10px"><input type="image" name="asc" value="asc" src="images/arrow-up.png" width="16"></span>
                                   {else}
@@ -659,7 +716,7 @@ function update_locality(ctid)
                                   {/if}-->
                                   </TH> 
                                  <TH width=6% align="center">Status</TH> 
-         <TH width=3% align="center">Save</TH>
+                                 <TH width=3% align="center">Save</TH>
                                 </TR>
                               
                           </thead>
@@ -683,9 +740,11 @@ function update_locality(ctid)
                                 <TR {$color}>
                                   <TD align=center class=td-border>{$i} </TD>
                                   <TD align=center class=td-border>{$v.name}</TD>
-                                  <TD align=center class=td-border>{$v.vicinity}</TD>
+                                  <TD align=center class=td-border>{$v.vicinity}</TD> 
+                                  <!--<TD align=center class=td-border>{$v.vicinity}</TD>-->
+                                  <!--<TD align=center class=td-border>{$v.map}</TD> -->
                                   <TD align=center class=td-border>{$v.placeType}</TD>
-                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.latitude},{$v.longitude}</a>
+                                  <TD align=center class=td-border><a href="javascript:void(0);" onclick="return openMap('{$v.name}','{$v.id}','{$v.latitude}','{$v.longitude}');">https://maps.google.com/maps?q= {$v.name},{$v.id}</a>
                   <!--<a href="http://www.textfixer.com" onclick="javascript:void window.open('http://www.textfixer.com','1390911428816','width=700,height=500,toolbar=0,menubar=0,location=0,status=1,scrollbars=1,resizable=1,left=0,top=0');return false;">Pop-up Window</a>-->
 
                                   </TD>
