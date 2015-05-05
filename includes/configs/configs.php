@@ -792,6 +792,9 @@ $arrRoles = array(
 );
 $smarty->assign('arrRoles', $arrRoles);
 
+define('PROPTIGER_CONTENT_TEAM_EMAIL_ID', 'no-reply@proptiger.com');
+
+
 /********config for project type of residential/nonresidential******************/
 
 

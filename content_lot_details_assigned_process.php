@@ -70,6 +70,11 @@ if (isset($_POST['lotCompleted'])) {
                     )
             ); 
             
+            //sending mail to TeamLead if lot completed by vendor
+            if ($role == 'contentVendor') {                
+                content_lot_send_mail($_SESSION['adminId'], $status, array('lot_id' => $lot_id));
+            }
+            
             header("Location:content_lot_list_assigned.php");
             
         } catch (Exception $e) {

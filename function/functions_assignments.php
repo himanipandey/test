@@ -207,9 +207,8 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
             $dateCondition = " AND (DATE(ca.updated_at) BETWEEN DATE('$frmDate') AND DATE('$toDate'))";
             $dateCondition .= " AND ca.status in ($lotStatus)";
         }
-
     }
-    
+
 
     $content_lots = mysql_query("SELECT count(clc.id) revert_comments, admin.role, cl.id, cl.lot_type, cl.lot_status, cl.lot_city, admin.fname as assignedTo"
             . " FROM " . CONTENT_LOTS . " cl "
@@ -221,7 +220,7 @@ function fetch_lots($frmDate = null, $toDate = null, $lotStatus = null) {
             . $dateCondition
             . " GROUP BY cl.id"
             . " ORDER BY cl.id DESC");
-    
+
     //die;
     $count = 0;
     while ($row = mysql_fetch_object($content_lots)) {
@@ -353,24 +352,73 @@ function fetch_pagination_ids($lot_id, $lot_content_id) {
 /**
  * content_lot_send_mail : send mail based on provided data
  */
-function content_lot_send_mail($email_to, $email_cc, $extra_perm = array()) {
+function content_lot_send_mail($vendorId, $action, $extra) {
 
-    $email_text = '';
-    if ($action == 'complete') {
-        $email_text = '';
+    $vendorInfo = ProptigerAdmin::getUserInfoByID($vendorId);
+    $teamLeadInfo = ProptigerAdmin::getUserInfoByID($vendorInfo->manager_id);
+
+    if ($action == 'assigned') {
+
+        $to = $vendorInfo->adminemail;
+        $sender = PROPTIGER_CONTENT_TEAM_EMAIL_ID;
+        $cc = $teamLeadInfo->adminemail;
+
+        $subject = "A new lot (# " . $extra['lot_id'] . ") has been assigned";
+
+        $email_message = 'Dear ' . $vendorInfo->fname . '.\r\n\r\n
+
+                        A new lot (# ' . $extra['lot_id'] . ') has been assigned to you by ' . $teamLeadInfo->fname . '.\r\n
+
+                        Please login to our portal and we will look forward to hear from your side.\r\n\r\n
+
+                        Regards,\r\n
+
+                        PropTiger Content Team\r\n
+
+                        ' . $sender;
+    } elseif ($action == 'completedByVendor') {
+
+        $to = $teamLeadInfo->adminemail;
+        $sender = $vendorInfo->adminemail;
+        $cc = $vendorInfo->adminemail;
+
+        $subject = "Lot (# " . $extra['lot_id'] . ") has been completed";
+
+        $email_message = 'Dear ' . $teamLeadInfo->fname . '.\r\n\r\n
+
+                            Lot (# ' . $extra['lot_id'] . ') has been completed by ' . $vendorInfo->fname . '.\r\n
+
+                            Please login to our portal for more details.\r\n\r\n
+
+                            Regards,\r\n
+
+                        ' . $vendorInfo->fname;
+    } elseif ($action == 'revertedToVendor') {
+        $to = $vendorInfo->adminemail;
+        $sender = PROPTIGER_CONTENT_TEAM_EMAIL_ID;
+        $cc = $teamLeadInfo->adminemail;
+
+        $subject = "Lot (# " . $extra['lot_id'] . ") has been reverted";
+
+        $email_message = 'Dear ' . $vendorInfo->fname . '.\r\n\r\n
+
+                            Lot (# ' . $extra['lot_id'] . ') has been reverted to you by ' . $teamLeadInfo->fname . '.\r\n
+
+                            Please login to our portal for more details.\r\n\r\n
+
+                            Regards,\r\n
+
+                            PropTiger Content Team\r\n
+
+                            ' . $sender;
     }
-    //sending email on placing an order
-    $email = "kuldeep.patel_c@proptiger.com";
-    $subject = "New Order[" . $order_id . "] Placed!";
-    $email_message = "New order[order ID : " . $order_id . "] has been created!";
-    $to = $email;
-    $sender = "no-reply@proptiger.com";
+
+
     $headers = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-    $headers .= 'To: ' . $email . "\r\n";
+    $headers .= 'To: ' . $to . "\r\n";
     $headers .= 'From: ' . $sender . "\r\n";
-    sendMailFromAmazon($to, $subject, $email_message, $sender, null, null, false);
-    header("Location:companyOrdersList.php?compId=" . $txtCompId);
+    sendMailFromAmazon($to, $subject, $email_message, $sender, $cc, null, false);
 }
 
 ?>
