@@ -86,7 +86,7 @@
                                                                 
                                                             </td>
                                                             <td>
-                                                                {if $lot_details['lot_articles'] == $lot_details['lot_completed_articles']}
+                                                                {if $lot_details['lot_articles'] == $lot_details['lot_completed_articles'] || $lot_details['lot_status'] == 'revertedToVendor'}
                                                                     {$enabled = ""}
                                                                 {else}
                                                                     {$enabled = "disabled"}

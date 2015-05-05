@@ -21,7 +21,7 @@ $sqlRevertComments = mysql_query("SELECT clc.*,cld.entity_id,rp.project_name, rb
                     admin.fname created_by FROM content_lot_comments clc
                     INNER JOIN content_lot_details cld on cld.id = clc.content_lot_id
                     LEFT JOIN content_lots cl on cld.lot_id = cl.id 
-                    LEFT JOIN city city on city.city_id = cl.lot_city
+                    LEFT JOIN city city on (city.city_id = cl.lot_city OR city.city_id = cld.entity_id)
                     LEFT JOIN resi_project rp on rp.project_id = cld.entity_id and cl.lot_type = 'project' 
                    LEFT JOIN resi_builder rb on (rp.builder_id = rb.builder_id or cld.entity_id = rb.builder_id)
                        and (cl.lot_type = 'project' OR cl.lot_type = 'builder') 
