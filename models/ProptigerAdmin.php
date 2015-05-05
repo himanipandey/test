@@ -21,4 +21,9 @@ class ProptigerAdmin extends ActiveRecord\Model
                 array("conditions" => $conditions));
         return $getAllExec;
     }
+    
+    static function getUserInfoByID($adminId){
+        $admin = ProptigerAdmin::find($adminId);      
+        return $admin;
+    }
 }

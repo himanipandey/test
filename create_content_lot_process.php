@@ -53,6 +53,9 @@ if (isset($_POST['createLot'])) {
                 $cmsAssign->status = 'assigned';
                 $cmsAssign->created_at = date('Y-m-d H:i:s');
                 $cmsAssign->save();
+                
+                //sending mail to vendor
+                content_lot_send_mail($assigned_to, 'assigned', array('lot_id' => $contentLot->id));
             }
 
             $errors = 0;

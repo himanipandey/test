@@ -5,6 +5,8 @@ include("../dbConfig.php");
 include("../appWideConfig.php");
 include("../builder_function.php");
 include("../modelsConfig.php");
+include("../function/functions_assignments.php");
+include_once("../includes/send_mail_amazon.php");
 
 $vendorID = $_POST['vendorID'];
 $lotAction = $_POST['lotAction'];
@@ -57,6 +59,11 @@ if ($status == 'revertedToVendor') {
                 'conditions' => array('lot_id' => $lot_id)
                     )
             );
+            
+            //sending mail to TeamLead if lot reverted to  vendor
+            content_lot_send_mail($completedBy, $status, array('lot_id' => $lot_id));
+            
+            
         } catch (Exception $e) {
             print "Action Failed!";
             // print $e;
@@ -165,6 +172,11 @@ if ($status == 'revertedToVendor') {
                 'conditions' => array('content_lot_id' => $allDetailsIds)
                     )
             );
+            
+            //sending mail to TeamLead if lot completed by vendor
+            if ($role == 'contentVendor') {                
+                content_lot_send_mail($currentUser, $statuses, array('lot_id' => $lot_id));
+            }
         } catch (Exception $e) {
             print "Action Failed!";
         }
@@ -203,18 +215,17 @@ if ($status == 'revertedToVendor') {
                     $approvedProjects = new ContentLotApprovedProjects();
                     $approvedProjects->project_id = $detail->entity_id;
                     $approvedProjects->save();
-                    
+
                     //update project description                  
                     $arrInsertUpdateProject = array();
-                    $arrInsertUpdateProject['project_id'] = $detail->entity_id;                    
+                    $arrInsertUpdateProject['project_id'] = $detail->entity_id;
                     $arrInsertUpdateProject['project_description'] = $detail->updated_content;
                     $returnProject = ResiProject::create_or_update($arrInsertUpdateProject);
-                    
                 }
             }
         } catch (Exception $e) {
             //print "Action Failed!";
-             print $e;
+            print $e;
             exit;
         }
     });
@@ -224,7 +235,6 @@ if ($status == 'revertedToVendor') {
         global $status, $lot_id, $vendorID, $assigned_by, $reAssign;
 
         try {
-            //updating data into cms assignments table
             //updating data into cms assignments table
             $cmsAssign = CmsAssignment::find('all', array(
                         'select' => 'id',
@@ -268,6 +278,12 @@ if ($status == 'revertedToVendor') {
                 'conditions' => array('lot_id' => $lot_id)
                     )
             );
+
+            //sending mail if assigned to vendor
+            $vendorInfo = ProptigerAdmin::getUserInfoByID($vendorID);
+            if ($vendorInfo->role == 'contentVendor') {
+                content_lot_send_mail($vendorID, 'assigned', array('lot_id' => $lot_id));
+            }
         } catch (Exception $e) {
             print "Action Failed!";
             // print $e;
