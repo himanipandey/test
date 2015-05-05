@@ -2506,7 +2506,7 @@ function project_aliases_detail($projectID){
 function ViewUserDetails($ID){
 	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
                 ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
-                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID, MANAGER_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
@@ -2529,6 +2529,7 @@ function ViewUserDetails($ID){
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
                 $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
+                $ResDetails['MANAGER_ID'] = $Res['MANAGER_ID'];
 		return $ResDetails;
 	}
 	else
