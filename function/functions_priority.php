@@ -764,25 +764,82 @@ function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid
             $update = "priority = '$priority'";
             break;
     }*/
-    if($priority>0 && $priority<=5)
-    {
-        $update = " priority = '$priority', status = '$status'"; //die($status);
+
+    $Sql = "SELECT * FROM landmark_map_data";
+    $boundary = "";
+    $svg = "";
+    $flag_future = "";
+    $center_boundary = "";
+    $boundary_type = "";
+    $boundaryEncode = "";
+    $cnt = 0;
+    $ExecSql = mysql_query($Sql) or die();
+    if (mysql_num_rows($ExecSql) > 0) {
+        while($Res = mysql_fetch_assoc($ExecSql)) {
+            $boundary = $Res['lat_long_data'];
+            $svg = $Res['svg_data'];
+            $center_boundary = $Res['center_boundary'];
+            $boundary_type = $Res['boundary_type'];
+            $boundaryEncode = $Res['boundaryEncode'];
+            $cnt++;
+        }    
     }
+
+    //if($cnt == 0)  {
+        if($priority>0 && $priority<=5) {
+            $update = " priority = '$priority', status = '$status'"; //die($status);
+        }
+            
+        else 
+        {
+            $update = " status = '$status'"; //die("hello1");
+        }
+           
+        $qry = "UPDATE " .landmarks. " SET $update WHERE id = '".$nearPlaceId."'";
+        //die($qry);
+        mysql_query($qry);
+        if(mysql_affected_rows()>0){
+            echo "1";
+        }
+        else{
+            echo "3";
+        }
+
+    /*} else {
+        $lat = "";
+        $long = "";
+        if($center_boundary != "")  {
+            $center_boundary= trim ($center_boundary, ']');
+            $center_boundary= trim ($center_boundary, '[');
+            $json = json_decode($center_boundary);
+
+            $lat = $json->{'0'};
+            $long = $json->{'1'};
+        }
         
-    else 
-    {
-        $update = " status = '$status'"; //die("hello1");
-    }
-       
-    $qry = "UPDATE " .landmarks. " SET $update WHERE id = '".$nearPlaceId."'";
-    //die($qry);
-    mysql_query($qry);
-    if(mysql_affected_rows()>0){
-        echo "1";
-    }
-    else{
-        echo "3";
-    }
+        if($priority>0 && $priority<=5) {
+            $update = "latitude='{$lat}', longitude='{$long}', priority = '$priority', status = '$status' , boundary = '{$boundary}', center_boundary = '{$center_boundary}', svg_data = '{$svg}', boundary_type = '{$boundary_type}', boundaryEncode = '{$boundaryEncode}'"; //die($status);
+        }
+            
+        else 
+        {
+            $update = "latitude='{$lat}', longitude='{$long}', status = '$status' , boundary = '{$boundary}', center_boundary = '{$center_boundary}', svg_data = '{$svg}', boundary_type = '{$boundary_type}', boundaryEncode = '{$boundaryEncode}'"; //die("hello1");
+        }
+           
+        $qry = "UPDATE " .landmarks. " SET $update WHERE id = '".$nearPlaceId."'";
+        //die($qry);
+        mysql_query($qry);
+        if(mysql_affected_rows()>0){
+            echo "1";
+        }
+        else{
+            echo "3";
+        }
+    }*/
+
+    $query_max_id2 = "truncate table landmark_map_data";
+    $res = mysql_query($query_max_id2);  
+    
 }
 
 
