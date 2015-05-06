@@ -58,18 +58,16 @@
         else if(value == "Floor Plan" || value == "Floor Plan" || value == "3D Floor Plan" || value == "Panorama"){
       		$('<option>').val(value).text(value).appendTo('#floor_name_'+c);
       	}
-
+        var uploaded3d = $("#uploaded3D_"+c).val().split("-");
+        var uploaded2d = $("#uploaded_"+c).val().split("-");
       	$("#floor_name_"+c+" option").each(function() {
-      		var str = $("#uploaded_"+c).val();
-      		var str1 = $("#uploaded3D_"+c).val();
-
-      		console.log("str="+str);
-		console.log("str1="+str1);
-
-      		if (str.indexOf($(this).text()) >= 0 && $(this).text()!="3D Floor Plan")
+      		
+      		if (uploaded2d.indexOf($(this).text()) >= 0 && $("#image_type_" + c).val()=="2D"){
 		    	$(this).attr("disabled", true);
-		    else if (str1.indexOf($(this).text()) >= 0   && $(this).text()!="Floor Plan")
+                    }
+		    else if (uploaded3d.indexOf($(this).text()) >= 0   && $("#image_type_1").val()=="3D"){
 		    	$(this).attr("disabled", true);
+                    }
 		});
       	
       	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
@@ -105,8 +103,28 @@
 		var id = "add_"+(id+1);
 		document.getElementById(id).style.display = '';
 	 }
+         function imageTypeChanged(index,obj){
+            $("#options_" + index).html('');
+            if(obj.value != ""){
+                var options = $("#options_temp_" + index).html();
+                $("#options_" + index).append(options);
+            }else{
+                $('<option>').val("0").text("Select Floor Plan options").appendTo("#options_" + index);
+                $("#options_" + index).closest("tr").find(".json-dump-td").hide();
+            }
+            if(obj.value == "3D"){
+                $("#options_" + index).closest("tr").find(".json-dump-td").show();
+            }else if(obj.value == "2D"){
+                $("#options_" + index).closest("tr").find(".json-dump-td").hide();
+                $("#options_" + index + " option[value='Panorama']").remove();
+            }
+         }
+         $(document).ready(function(){
+             $(".json-dump-td").hide();
+             $(".floor-options").html('');
+             $('<option>').val("0").text("Select Floor Plan options").appendTo(".floor-options");
+         });
    </SCRIPT>
-
 
 
 </TD>
@@ -162,6 +180,8 @@
 				  <td nowrap="nowrap" width="7%" align="left" class=whiteTxt>Unit Name</td>
 				  <td nowrap="nowrap" width="3%" align="left" class=whiteTxt>Size/Carpet Area</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Unit Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Image Type</td>
+				  <td nowrap="nowrap" width="6%" align="left" class="whiteTxt json-dump-th">SVG</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Floor Plan Options</td>
 				  <td nowrap="nowrap" width="6%" align="left" class=whiteTxt><font color="red">*</font>Floor Plan Name</td>
 			
@@ -201,14 +221,32 @@
 {$ProjectOptionDetail[$smarty.section.foo.index]['CARPET_AREA']}
 </td>
 				  <td>{$ProjectOptionDetail[$smarty.section.foo.index]['UNIT_TYPE']}</td>
+                                  <td>
+                                      <select id="image_type_{($smarty.section.foo.index+1)}" name="image_type[]" onchange="imageTypeChanged({($smarty.section.foo.index+1)},this)">
+                                          <option value="">Select Image Type</option>
+                                          <option value="3D">3D Floor Plan</option>
+                                          <option value="2D">2D Floor Plan</option>
+                                      </select>
+                                  </td>
+                                  <td><input type="text" name="json_dump[]" class="json-dump-td"></td>
 				  {if $villApartment[$smarty.section.foo.index] == 'yes'} 
-				  <td><select id="options_{($smarty.section.foo.index+1)}" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
-				  	<Option value="0">Select Floor Plan Options</Option>
+				  <td>
+                                      <select id="options_temp_{($smarty.section.foo.index+1)}" style="display: none">
+                                        <Option value="0">Select Floor Plan Options</Option>
+				  	
+					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
+					   		<Option value="{$data}">{$data}</Option>
+					   {/foreach}
+                                        </select>
+                                        
+                                        <select id="options_{($smarty.section.foo.index+1)}" class="floor-options" onchange="return onSelectOption({($smarty.section.foo.index+1)});">
+                                        <Option value="0">Select Floor Plan Options</Option>
 				  	
 					   {foreach from=$floorPlanOptionsArr[$smarty.section.foo.index] item=data}
 					   		<Option >{$data}</Option>
 					   {/foreach}
-				  </select></td>
+                                        </select>
+                                  </td>
 				  
 				  	<td><select name = "floor_name[]" id = "floor_name_{($smarty.section.foo.index+1)}" width="60px">
 				  		<Option value="0">Select Floor Plan Name</Option>

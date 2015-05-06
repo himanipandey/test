@@ -38,6 +38,8 @@ $__builder_counts = count($__establised_date_array);
 $__establised_date_param = array();
 
 $__max_builder_age = 0;
+$__total_ages = 0;
+$__builder_count_with_established_data = 1;
 
 for($__idx = 0; $__idx < $__builder_counts; $__idx++){
 	$__builder_id = $__establised_date_array[$__idx]['id'];
@@ -45,8 +47,12 @@ for($__idx = 0; $__idx < $__builder_counts; $__idx++){
 	if (isset($__establised_date_array[$__idx]['establishedDate'])) {
 		$__builder_age = (time() - $__establised_date_array[$__idx]['establishedDate']/1000)/(30*24*3600);
 		$__establised_date_param[$__builder_id] = $__builder_age;
+		$__total_ages += $__builder_age;
+		$__builder_count_with_established_data++;
 	}
 }
+
+$__avg_builder_age = $__total_ages/$__builder_count_with_established_data;
 
 $__current_trend_api_res = file_get_contents('https://www.proptiger.com/data/v1/trend/current?fields=sumRateOfSale,sumInventory&group=builderId&start=0&rows=30000');
 $__current_trend_api_res_json = json_decode($__current_trend_api_res, true);
@@ -92,8 +98,6 @@ foreach($__trend_data_array as $__builder_id => $__status_array){
 		$__params[$__status_map[$__status]."_SOLD"] = log($__sold_count * $__sold_avg_area + 1);
 		$__params[$__status_map[$__status]."_UNSOLD"] = log($__non_sold_area+1); 
 
-		$__total_size_sum += $__sold_count * $__sold_avg_area + $__non_sold_area;
-
 		if (!isset ($__max_val[$__status_map[$__status]."_SOLD"])) {
 			$__max_val[$__status_map[$__status]."_SOLD"] = $__params[$__status_map[$__status]."_SOLD"];
 		}
@@ -137,7 +141,7 @@ foreach($__trend_data_array as $__builder_id => $__status_array){
 		$__params[$__status_map['ESTABLISED_TIME']] = ($__establised_date_param[$__builder_id]/100);
 	}
 	else {
-	 $__params[$__status_map['ESTABLISED_TIME']] = 0;
+	 	$__params[$__status_map['ESTABLISED_TIME']] = $__avg_builder_age/100;
 	}
 	 
 	if (!isset ($__max_val['BUILDER_OVERALL_DELAY'])) {

@@ -107,7 +107,7 @@
         {if $mapVarifyAuth == true}
             <tr>
                     <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                      <td align="left" height="22"><A class="leftnav" href="mapLocationVarification.php"><font color = "#f15a22">Map Location Varification Tool</font></A></td>
+                      <td align="left" height="22"><A class="leftnav" href="mapLocationVarification.php"><font color = "#f15a22">Map Location Verification Tool</font></A></td>
             </tr>
 
             <tr>
@@ -443,6 +443,10 @@
             {else if $processAssignmentExec == 1 && $processAssignmentForConstImg == 1}
                 <tr>
                     <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+                    <td align="left" height="22"><a class="leftnav" href="project_const_history.php"><font color = "#f15a22">Projects assignment history</font></a></td>
+                </tr>
+                <tr>
+                    <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                     <td align="left" height="22"><a class="leftnav" href="my_projects_const_img.php"><font color = "#f15a22">My Projects</font></a></td>
                 </tr>
             {/if}            
@@ -539,6 +543,12 @@
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
     {/if}
     
+    {if $seoMetaAuth == true}
+    <tr>
+        <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
+        <td align="left" height="22"><a class="leftnav" href="meta_templates.php"><font color = "#f15a22">SEO Meta Template</font></a></td>
+    </tr>
+    {/if}
     
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>

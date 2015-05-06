@@ -965,7 +965,7 @@ function costructionDetail($projectId,$phaseId='',$include=true) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $listed) {
   $Sql = "INSERT INTO " . RESI_BUILDER . " SET
         BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
         ENTITY  	   	     = '" . d_($legalEntity) . "',
@@ -983,6 +983,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
         REVENUE			     ='" . $revenue . "',
         DEBT			     ='" . $debt . "',
         ESTABLISHED_DATE	     = '" . $date . "',
+        listed	     = '" . $listed . "',
         updated_by                   = ".$_SESSION['adminId'].",
         created_at                   = now()";
 
@@ -1048,7 +1049,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL', $listed='No')
  {
 	$Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
@@ -1067,6 +1068,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
+				listed			     ='" . $listed . "',
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
@@ -2343,7 +2345,7 @@ function updateD_Availablitiy($projectId){
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
 								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId 
+								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  
 								group by option_type,bedrooms");

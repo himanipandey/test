@@ -49,16 +49,17 @@ if($_REQUEST['edit'] == 'edit')
         $isResaleMapped=array();
         $optionsList=array();
         if($arrProjectType['OPTIONS_ID']){
-            $optionsList = $arrProjectType['OPTIONS_ID'];
-        }else if($arrProjectType_VA['OPTIONS_ID']){
-            $optionsList = $arrProjectType_VA['OPTIONS_ID'];
-        }else if($arrProjectType_P['OPTIONS_ID']){
-            $optionsList = $arrProjectType_P['OPTIONS_ID'];
+            $optionsList = array_merge($optionsList,$arrProjectType['OPTIONS_ID']);
+        }
+        if($arrProjectType_VA['OPTIONS_ID']){
+            $optionsList = array_merge($optionsList,$arrProjectType_VA['OPTIONS_ID']);
+        }
+        if($arrProjectType_P['OPTIONS_ID']){
+            $optionsList = array_merge($optionsList,$arrProjectType_P['OPTIONS_ID']);
         }
         if($optionsList){
             $isResaleMapped = getOptionResaleMap($optionsList);
         }
-
         /**********************Query for select values according project type for update**********************/
         $smarty->assign("isResaleMapped", $isResaleMapped);
         $smarty->assign("edit_project", $projectId);
@@ -116,7 +117,8 @@ if($_REQUEST['edit'] == 'edit')
         $smarty->assign("statusval_VA",$arrProjectType_VA['STATUS']);
         /***************query for project name display if edit********************/
  }
-if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
+//if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
+if ($_POST['action'] == "save")
 {
     //echo "<pre>";print_r($_REQUEST);die;
 /*************Add new project type if projectid is blank*********************************/
@@ -581,7 +583,8 @@ if ($_POST['btnSave'] == "Next" || $_POST['btnSave'] == "Save")
 	}
 
 }
-else if($_POST['btnExit'] == "Exit")
+//else if($_POST['btnExit'] == "Exit")
+else if($_POST['action'] == "exit")
 {
       if($preview == 'true')
         header("Location:show_project_details.php?projectId=".$projectId);

@@ -51,8 +51,10 @@ if ($_POST['btnSave'] == "Save") {
     $imgSrc = trim($_POST['imgSrc']);
     $alt_text = trim($_POST['alt_text']);
     $service_image_id = trim($_POST['serviceImageId']);
+    $listed = trim($_POST['listed']);
 
 
+    $smarty->assign("listed", $dataedit['listed']);
     $smarty->assign("txtBuilderName", $txtBuilderName);
     $smarty->assign("legalEntity", $legalEntity);
     $smarty->assign("txtBuilderDescription", $txtBuilderDescription);
@@ -82,7 +84,7 @@ if ($_POST['btnSave'] == "Save") {
     $smarty->assign("alt_text", $alt_text);
     $smarty->assign("service_image_id", $service_image_id);
 
-    if (!preg_match('/^[a-zA-z0-9 ]+$/', $txtBuilderName)) {
+    if (!preg_match('/^[a-zA-z0-9- ]+$/', $txtBuilderName)) {
         $ErrorMsg["txtBuilderName"] = "Special characters are not allowed";
     }
 
@@ -162,7 +164,7 @@ if ($_POST['btnSave'] == "Save") {
         $foldername = str_replace(' ', '-', strtolower($txtBuilderName));
         $createFolder = $newImagePath . $foldername;
         //mkdir($createFolder, 0777);
-        $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr);
+        $builder_id = InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $listed);
         if ($builder_id) {
             $seoData['meta_title'] = $txtMetaTitle;
             $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -264,7 +266,7 @@ if ($_POST['btnSave'] == "Save") {
 
 
 
-                    $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $ImgDbFinalPath, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id);
+                    $rt = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $ImgDbFinalPath, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id, $listed);
                     if ($rt) {
                         $seoData['meta_title'] = $txtMetaTitle;
                         $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -335,7 +337,7 @@ if ($_POST['btnSave'] == "Save") {
                 }
             }
         } else {
-            $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgedit, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder);
+            $return = UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgedit, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, 'NULL',$listed);
             if ($return) {
                 $seoData['meta_title'] = $txtMetaTitle;
                 $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -385,6 +387,7 @@ else if ($builderid != '') {
     $dataedit = mysql_fetch_array($resedit);
     $getSeoData = SeoData::getSeoData($builderid, 'resi_builder');
 
+    $smarty->assign("listed", $dataedit['listed']);
     $smarty->assign("txtBuilderName", $dataedit['BUILDER_NAME']);
     $smarty->assign("oldval", $dataedit['BUILDER_NAME']);
     $smarty->assign("legalEntity", $dataedit['ENTITY']);
