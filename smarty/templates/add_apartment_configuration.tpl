@@ -116,7 +116,7 @@
       function onChangeActionBath(id,edit_project,resaleCount) {
         var oldBed = id+"_old";
         var valOld = $("#"+oldBed).val();
-        if(resaleCount>0){
+        if(resaleCount>0 && (id != "bathrooms_" + countApart)){
             $("#"+id).val(valOld); 
             return false;
         }
@@ -125,12 +125,87 @@
             return false;
         }
       };
+      var countApart=0;
       $(document).ready(function(){
           $("#btnSave").click(function (){
               $("#action").val("save");
           });
           $("#btnExit").click(function (){
               $("#action").val("exit");
+          });
+          var projectTypeId = {$ProjectDetail[0]['PROJECT_TYPE_ID']};
+          var apartment = "{(count($bedval)) ? count($bedval) : 0}";
+          var villas = "{(count($bedval_VA)) ? count($bedval_VA) : 0}";
+          countApart = parseInt(apartment) + parseInt(villas);
+          
+          if(countApart==0 && (projectTypeId=={$typeVA})){
+               var rowClone = (parseInt(apartment)+2);
+           }else{
+                var rowClone = (parseInt(apartment)+1);
+           }
+          if(countApart==0 && (projectTypeId=={$typeVA})){
+              countApart = countApart +2;
+          }else{
+              countApart = countApart +1;
+          }
+          
+          $("#btn_add_apart").click(function(){
+              countApart = countApart +1;
+              var trClone = $("#row_aprat_1").clone();
+              
+              var cloneHtml = trClone.html().replace(/(_1)/g,"_"+countApart);
+              var unit = "("+(countApart-1) +")";
+              cloneHtml = cloneHtml.replace(/(\(0\))/g,unit);
+              trClone.html(cloneHtml);
+              trClone.find(".aprt-sno").html(countApart);
+              trClone.find("#0").attr("name","delete["+(countApart-1)+"]");
+              trClone.find("#0").attr("id",countApart-1);
+              trClone.find(".insertProject").attr("rel",countApart);
+              trClone.find("select").val('');
+              trClone.find("input[name!=projectId]").val('');
+              trClone.find(".unit-type").val('Apartment');
+              trClone.find("input").removeAttr("readOnly");
+              
+              $("#tbl_apartment").append(trClone);
+          });
+          
+          $("#btn_add_villa").click(function(){
+              countApart = countApart +1;
+              var trClone = $("#row_villa_" + rowClone).clone();
+              
+              var re = new RegExp("_" + rowClone,"g");
+              var cloneHtml = trClone.html().replace(re,"_" + countApart);
+              var unit = "(" + (countApart-1) +")";
+              var re = new RegExp("(\\(" + (rowClone-1)+"\\))","g");
+              cloneHtml = cloneHtml.replace(re, unit);
+              trClone.html(cloneHtml);
+              trClone.find(".aprt-sno").html(countApart);
+              trClone.find("#"+(rowClone-1)).attr("name","delete["+(countApart-1)+"]");
+              trClone.find("#"+(rowClone-1)).removeAttr("disabled");
+              trClone.find("#"+(rowClone-1)).attr("id",countApart-1);
+              trClone.find(".insertProject").attr("rel",countApart);
+              trClone.find("select").val('');
+              trClone.find("input[name!=projectId]").val('');
+              trClone.find(".unit-type").val('Villa');
+              trClone.find("input").removeAttr("readOnly");
+              
+              $("#tbl_villa").append(trClone);
+          });
+          var rowCount = parseInt("{count($txtUnitName_P)}");
+          rowCount = rowCount ? rowCount :1;
+          $("#btn_add_other").click(function(){
+              rowCount = rowCount + 1;
+              var trClone = $("#row_1").clone();
+              var re = new RegExp("_1", "g");
+              var cloneHtml = trClone.html().replace(re,"_" + rowCount);
+              trClone.html(cloneHtml);
+              trClone.find(".aprt-sno").html(rowCount);
+              trClone.find("input[name!=projectId],select").val('');
+              var unitTypeVal = $(".unit-type-value").text();
+              trClone.find(".unit-type").val(unitTypeVal);
+              
+              $("#tbl_other").append(trClone);
+              
           });
       });
       
@@ -192,8 +267,9 @@
 
 			  <div style="overflow:auto;">
                       {$globalDelete  = 0}
+                      
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePA || $ProjectDetail[0]['PROJECT_TYPE_ID'] == 0}
-                      <TABLE cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
+                      <TABLE id="tbl_apartment" cellSpacing=2 cellPadding=4 width="100%" align=center  style="border:1px solid #c2c2c2;">
 
                       <div>
                          {foreach from = $ErrorMsg  key=k item = datafirst}
@@ -209,7 +285,12 @@
 
                           {/foreach}
 
-                        <tr><td colspan="18"><b><span style='font-size:15px;'>APARTMENTS</span></b></td></tr>
+                        <tr>
+                            <td colspan="18">
+                                <b><span style='font-size:15px;'>APARTMENTS</span></b>
+                                <input type="button" id="btn_add_apart" value="Add More">
+                            </td>
+                        </tr>
                         <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
                         {foreach from = $ErrorMsg2  key=k1 item = v1}
                             <tr><td colspan="18"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
@@ -242,7 +323,8 @@
 
                         {$var = 0}
 
-                        {$looprange	=	35}
+{*                        {$looprange	=	35}*}
+                        {$looprange	=	(count($bedval))? count($bedval):1}
                         {$flg = 0}
                         {section name=foo start= 0 loop={$looprange} step=1}
                           
@@ -257,10 +339,10 @@
                             {* if $txtUnitNameval[$smarty.section.foo.index] != '' *}
                                 {$flg = $flg+1}
                             {* /if *}
-                        <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                        <tr {$color} id="row_aprat_{($smarty.section.foo.index+1)}">
                           <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
                            {$globalDelete = $globalDelete+1}
-                          <td align="center">
+                          <td class="aprt-sno" align="center">
                                  {($smarty.section.foo.index+1)}
                           </td>
                            <td align="center">
@@ -307,7 +389,7 @@
                           <td>
                                   <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
 
-                                  <input type='hidden' value="Apartment" name='unitType[]' tempName="unitType"   />
+                                  <input type='hidden' class="unit-type" value="Apartment" name='unitType[]' tempName="unitType"   />
                                 <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID[{$smarty.section.foo.index}]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                 <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval[{$smarty.section.foo.index}]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
 
@@ -435,7 +517,7 @@
                        </TABLE>
                     {/if}
                     {if $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeV || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typeVA || $ProjectDetail[0]['PROJECT_TYPE_ID']==$typePV}
-                      <TABLE cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
+                      <TABLE id="tbl_villa" cellSpacing=2 cellPadding=4 width="93%" align="center"  style="border:1px solid #c2c2c2;">
 						  <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
 
                       <div>
@@ -454,7 +536,12 @@
                               {foreach from = $ErrorMsg2  key=k1 item = v1}
                                   <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}Row {($v1['dupkey'])+1} is duplicate of Row {($v1['key'])+1} {/if}</font></td></tr>
                               {/foreach}
-                            <tr><td colspan="16"><b><span style='font-size:15px;'>VILLAS</span></b></td></tr>
+                            <tr>
+                                <td colspan="16">
+                                    <b><span style='font-size:15px;'>VILLAS</span></b>
+                                    <input type="button" id="btn_add_villa" value="Add More">
+                                </td>
+                            </tr>
                             <tr><td colspan="16"></td></tr>
                             <tr class = "headingrowcolor" >
                               <td  nowrap="nowrap" width="1%" align="center" class="whiteTxt">Delete</td>
@@ -485,7 +572,8 @@
                              <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
-                            {section name=foo start= {$looprange} loop={$looprange+35} step=1}
+                            {$countVilla = (count($bedval_VA))? count($bedval_VA):1}
+                            {section name=foo start= {$looprange} loop={$looprange + $countVilla} step=1}
 
                                 {$var	=$var+1}
 
@@ -497,15 +585,15 @@
 
 
 
-                            <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                            <tr {$color} id="row_villa_{($smarty.section.foo.index+1)}">
                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
                               {$globalDelete = $globalDelete+1}
-                              <td align="center">
+                              <td align="center" class="aprt-sno">
                                      {($smarty.section.foo.index+1)}
                               </td>
                               <td align="center">
                                {if $flg != 0}
-                                    {$new_index = $smarty.section.foo.index-35}
+                                    {$new_index = $smarty.section.foo.index-$looprange}
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
@@ -560,7 +648,7 @@
                               <td>
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId"   />
 
-                                    <input type='hidden' value="Villa" name='unitType[]' tempName="unitType"   />
+                                    <input type='hidden' value="Villa" class="unit-type" name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                                     <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
 
@@ -724,7 +812,7 @@
                         {/if}
                         
                       <br />
-                      <TABLE cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
+                      <TABLE id="tbl_other" cellSpacing=2 cellPadding=4 width="60%" align="left" style="border:1px solid #c2c2c2;" border="0">
                         <tr><td colspan="17"><font color="red">{$projecteror} {if $projectId != ''}{$ErrorMsg1}{/if}</font></td></tr>
                         <div>
                             {if ($ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePA && $ProjectDetail[0]['PROJECT_TYPE_ID']!=$typePV)}
@@ -741,7 +829,12 @@
                            
                            {/if}
                            
-                            <tr><td colspan="7"><b><span style='font-size:15px;'>{$typeName}</span></b></td></tr>
+                            <tr>
+                                <td colspan="7">
+                                    <b><span class="unit-type-value" style='font-size:15px;'>{$typeName}</span></b>
+                                    <input type="button" id="btn_add_other" value="Add More">
+                                </td>
+                            </tr>
 
                             <tr><td colspan="7"></td></tr>
 
@@ -754,17 +847,18 @@
                                 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
                             </tr>
-                            {section name=foo start= {$looprange} loop={$looprange+35} step=1}
+                            {$countOther = (count($txtUnitName_P))?count($txtUnitName_P):1}
+                            {section name=foo start= 0 loop={$countOther} step=1}
                                 {$var	=$var+1}
                                 
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
                                <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_P[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
                                {$globalDelete = $globalDelete+1}
-                               <td align="center">
+                               <td align="center" class="aprt-sno">
                                      {($smarty.section.foo.index+1)}
                               </td>
 				{if $flg != 0}
-                                    {$new_index = $smarty.section.foo.index-35}
+                                    {$new_index = $smarty.section.foo.index}
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
@@ -800,7 +894,7 @@
                                        </select>    
                                   {/if}
                                     <input type='hidden' value={$projectId} name='projectId' tempName="projectId" />
-                                    <input type='hidden' value='{$typeName}' name='unitType[]' tempName="unitType" />
+                                    <input type='hidden' value='{$typeName}' class="unit-type" name='unitType[]' tempName="unitType" />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_P[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_P[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
                               </td>
                               <td align="left" >
