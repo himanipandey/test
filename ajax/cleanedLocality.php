@@ -7,6 +7,7 @@
 
     $latLongList = '0,1,2,3,4,5,6,7,8,9';
     $localityId	= $_REQUEST['localityId'];
+    $current_user = $_REQUEST['current_user'];
     
     $allProject = ResiProject::find('all', array('conditions' => array("latitude not in($latLongList) 
                     and longitude not in($latLongList) and locality_id = '".$localityId."' and status in ('Active','ActiveInCms') and version = 'Cms'"),'order' => 'LONGITUDE,LATITUDE ASC'));
@@ -25,7 +26,7 @@
         $option->min_latitude = min($arrLatitude);
         $option->min_longitude = min($arrLongitude);
         $option->is_geo_boundary_clean = true;
-        $option->updated_by = $_SESSION['adminId'];
+        $option->updated_by = $current_user;
 
         $result = $option->save();
         if($result) {

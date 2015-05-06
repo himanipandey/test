@@ -11,6 +11,9 @@
 
     $cityId = $_REQUEST['c'];
     $smarty->assign("cityid", $cityId);
+    
+    $smarty->assign('current_user', $_SESSION['adminId']);
+    
 //echo "<pre>";
 //print_r($_REQUEST);//die("herer");
     $suburbSelect = Array();
