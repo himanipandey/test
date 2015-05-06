@@ -458,8 +458,8 @@
 				  <td width="20%" align="right" >Listed : </td>
 				  <td width="30%" align="left" >
                                       <select name="listed">
-                                          <option value ="No" {($listed=="No")? "selected=selected" : ""}>No</option>
-                                          <option value ="Yes" {($listed=="Yes")? "selected=selected" : ""}>Yes</option>
+                                          <option value ="0" {($listed=="0")? "selected=selected" : ""}>No</option>
+                                          <option value ="1" {($listed=="1")? "selected=selected" : ""}>Yes</option>
                                       </select>
                                   </td>
 				  <td width="50%" align="left" ></td>
