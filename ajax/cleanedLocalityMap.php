@@ -174,7 +174,7 @@ if (count($allProject) > 0) {
                         $.ajax({
                             type: "POST",
                             url: 'ajax/cleanedLocality.php',
-                            data: {localityId: <?php echo $localityId ?>},
+                            data: {localityId: "<?php echo $localityId ?>", current_user:"<?php echo $_REQUEST['current_user'] ?>"},
                             success: function (msg) {
                                 if (msg) {
                                     if (msg.length > 823) {

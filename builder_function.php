@@ -1069,6 +1069,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
 				listed			     ='" . $listed . "',
+                                updated_by                   = ".$_SESSION['adminId'].",
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
