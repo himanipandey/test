@@ -324,12 +324,9 @@
 
                         {$var = 0}
 
-<<<<<<< HEAD
-                        {$looprange	=	15}
-=======
-{*                        {$looprange	=	35}*}
+
                         {$looprange	=	(count($bedval))? count($bedval):1}
->>>>>>> develop
+
                         {$flg = 0}
                         {section name=foo start= 0 loop={$looprange} step=1}
                           
@@ -344,13 +341,9 @@
                             {* if $txtUnitNameval[$smarty.section.foo.index] != '' *}
                                 {$flg = $flg+1}
                             {* /if *}
-<<<<<<< HEAD
-                        <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                          <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
-=======
+
                         <tr {$color} id="row_aprat_{($smarty.section.foo.index+1)}">
                           <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
->>>>>>> develop
                            {$globalDelete = $globalDelete+1}
                           <td class="aprt-sno" align="center">
                                  {($smarty.section.foo.index+1)}
@@ -582,12 +575,9 @@
                              <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
-<<<<<<< HEAD
-                            {section name=foo start= {$looprange} loop={$looprange+15} step=1}
-=======
+                            
                             {$countVilla = (count($bedval_VA))? count($bedval_VA):1}
                             {section name=foo start= {$looprange} loop={$looprange + $countVilla} step=1}
->>>>>>> develop
 
                                 {$var	=$var+1}
 
@@ -599,24 +589,16 @@
 
 
 
-<<<<<<< HEAD
-                            <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                              <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}"></td>
-=======
                             <tr {$color} id="row_villa_{($smarty.section.foo.index+1)}">
                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
->>>>>>> develop
+
                               {$globalDelete = $globalDelete+1}
                               <td align="center" class="aprt-sno">
                                      {($smarty.section.foo.index+1)}
                               </td>
                               <td align="center">
                                {if $flg != 0}
-<<<<<<< HEAD
-                                    {$new_index = $smarty.section.foo.index-15}
-=======
                                     {$new_index = $smarty.section.foo.index-$looprange}
->>>>>>> develop
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
@@ -870,12 +852,10 @@
                                 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
                             </tr>
-<<<<<<< HEAD
-                            {section name=foo start= {$looprange} loop={$looprange+15} step=1}
-=======
+
                             {$countOther = (count($txtUnitName_P))?count($txtUnitName_P):1}
                             {section name=foo start= 0 loop={$countOther} step=1}
->>>>>>> develop
+
                                 {$var	=$var+1}
                                 
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
@@ -885,11 +865,8 @@
                                      {($smarty.section.foo.index+1)}
                               </td>
 				{if $flg != 0}
-<<<<<<< HEAD
-                                    {$new_index = $smarty.section.foo.index-15}
-=======
+
                                     {$new_index = $smarty.section.foo.index}
->>>>>>> develop
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
