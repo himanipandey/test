@@ -138,15 +138,25 @@
           var villas = "{(count($bedval_VA)) ? count($bedval_VA) : 0}";
           countApart = parseInt(apartment) + parseInt(villas);
           
-          if(countApart==0 && (projectTypeId=={$typeVA})){
-               var rowClone = (parseInt(apartment)+2);
-           }else{
-                var rowClone = (parseInt(apartment)+1);
+          if(countApart==0){ 
+                if(projectTypeId=={$typeVA}){
+                    var rowClone = (parseInt(apartment)+2);
+                }
+                else{
+                     var rowClone = (parseInt(apartment)+1);
+                }
            }
-          if(countApart==0 && (projectTypeId=={$typeVA})){
-              countApart = countApart +2;
+           
+           
+          if(countApart==0){
+                      if(projectTypeId=={$typeVA}){
+              
+                            countApart = countApart +2;
+                        }
+                        else{
+                            countApart = countApart +1;
+                        }
           }
-          
           $("#btn_add_apart").click(function(){
               countApart = countApart +1;
               var trClone = $("#row_aprat_1").clone();
