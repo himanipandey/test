@@ -137,14 +137,15 @@
           var apartment = "{(count($bedval)) ? count($bedval) : 0}";
           var villas = "{(count($bedval_VA)) ? count($bedval_VA) : 0}";
           countApart = parseInt(apartment) + parseInt(villas);
-          
-          if(countApart==0){ 
+          if(countApart==0){
                 if(projectTypeId=={$typeVA}){
                     var rowClone = (parseInt(apartment)+2);
                 }
                 else{
-                     var rowClone = (parseInt(apartment)+1);
+                     var rowClone = 1;
                 }
+           }else{
+               var rowClone = (parseInt(apartment)+1);
            }
            
            
