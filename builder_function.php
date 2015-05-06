@@ -2396,9 +2396,9 @@ function updateD_Availablitiy($projectId){
 	
 	//update availability
 	if(!is_null($total_av)){		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}else{		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}
     
     #fetch resi_project project_status_id 3/4
@@ -2410,7 +2410,7 @@ function updateD_Availablitiy($projectId){
 	else
 	  $booking_status = 1;	
 	  
-	 mysql_query("UPDATE resi_project_phase SET BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
+	 mysql_query("UPDATE resi_project_phase SET updated_by = " . $_SESSION['adminId'] . ", BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
 	 
 	 //updating phase booking status
 	 updatePhaseBookingStatus($projectId);
@@ -2485,7 +2485,7 @@ function updatePhaseBookingStatus($projectId){
 			else
 			  $booking_status = 1;	
 	
-			mysql_query("update resi_project_phase set booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
+			mysql_query("update resi_project_phase set updated_by = " . $_SESSION['adminId'] . ", booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
 			###################			
 			
 		}

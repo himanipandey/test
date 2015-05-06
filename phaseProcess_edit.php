@@ -175,6 +175,7 @@ if (isset($_REQUEST['delete'])) {
         $costDetailLatest = costructionDetail($projectId);
         $qry = "UPDATE resi_project 
 					set 
+                                           updated_by = " . $_SESSION['adminId'] . ",
 					   PROMISED_COMPLETION_DATE = '" . $costDetailLatest['COMPLETION_DATE'] . "' 
 				   where PROJECT_ID = $projectId and version = 'Cms'";
         mysql_query($qry) OR DIE(mysql_error());
@@ -562,10 +563,13 @@ if (isset($_POST['btnSave'])) {
                 $phase->remarks = $remark;
                 $phase->sold_out_date = $sold_out_date;
                 $phase->construction_status = $construction_status;
+                $phase->updated_by = $_SESSION['adminId'];
                 $phase->save();
                 if ($phasename == 'No Phase') {
                     $qryUpdateProjectLaunchDate = "update resi_project 
-                            set launch_date = '" . $launch_date . "'
+                            set 
+                            updated_by = " . $_SESSION['adminId'] . ",
+                            launch_date = '" . $launch_date . "'
                             where project_id = $projectId and version = 'Cms'";
                     mysql_query($qryUpdateProjectLaunchDate);
                 }

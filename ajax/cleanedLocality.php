@@ -25,6 +25,7 @@
         $option->min_latitude = min($arrLatitude);
         $option->min_longitude = min($arrLongitude);
         $option->is_geo_boundary_clean = true;
+        $option->updated_by = $_SESSION['adminId'];
 
         $result = $option->save();
         if($result) {

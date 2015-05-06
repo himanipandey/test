@@ -185,7 +185,7 @@ if ($_POST['btnSave'] == "Save") {
             }
 
             $txtBuilderUrl = createBuilderURL($txtBuilderName, $builder_id);
-            $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builder_id;
+            $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set updated_by ="'.$_SESSION['adminId'].'", URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builder_id;
             mysql_query($updateQuery) or die(mysql_error());
 
             header("Location:BuilderList.php");
@@ -276,7 +276,7 @@ if ($_POST['btnSave'] == "Save") {
                         $seoData['updated_by'] = $_SESSION['adminId'];
                         SeoData::insetUpdateSeoData($seoData);
                         $txtBuilderUrl = createBuilderURL($txtBuilderName, $builderid);
-                        $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builderid;
+                        $updateQuery = 'UPDATE ' . RESI_BUILDER . ' set updated_by ="'.$_SESSION['adminId'].'", URL="' . $txtBuilderUrl . '" WHERE BUILDER_ID=' . $builderid;
                         mysql_query($updateQuery) or die(mysql_error());
 
                         //update all project url if builder name update
