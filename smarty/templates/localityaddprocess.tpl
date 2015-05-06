@@ -524,7 +524,7 @@ function cleanedLocality(localityId) {
 $.ajax({
          type: "POST",
          url: 'ajax/cleanedLocalityMap.php',
-         data: { localityId:localityId },
+         data: { localityId:localityId, current_user:"{$current_user}" },
          success:function(msg){
            if(msg){
              $.fancybox({

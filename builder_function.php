@@ -1069,6 +1069,7 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
 				listed			     ='" . $listed . "',
+                                updated_by                   = ".$_SESSION['adminId'].",
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
@@ -2396,9 +2397,9 @@ function updateD_Availablitiy($projectId){
 	
 	//update availability
 	if(!is_null($total_av)){		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}else{		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}
     
     #fetch resi_project project_status_id 3/4
@@ -2410,7 +2411,7 @@ function updateD_Availablitiy($projectId){
 	else
 	  $booking_status = 1;	
 	  
-	 mysql_query("UPDATE resi_project_phase SET BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
+	 mysql_query("UPDATE resi_project_phase SET updated_by = " . $_SESSION['adminId'] . ", BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
 	 
 	 //updating phase booking status
 	 updatePhaseBookingStatus($projectId);
@@ -2485,7 +2486,7 @@ function updatePhaseBookingStatus($projectId){
 			else
 			  $booking_status = 1;	
 	
-			mysql_query("update resi_project_phase set booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
+			mysql_query("update resi_project_phase set updated_by = " . $_SESSION['adminId'] . ", booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
 			###################			
 			
 		}
@@ -2508,7 +2509,7 @@ function project_aliases_detail($projectID){
 function ViewUserDetails($ID){
 	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
                 ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
-                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID, MANAGER_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
@@ -2531,6 +2532,7 @@ function ViewUserDetails($ID){
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
                 $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
+                $ResDetails['MANAGER_ID'] = $Res['MANAGER_ID'];
 		return $ResDetails;
 	}
 	else

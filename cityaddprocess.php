@@ -108,6 +108,7 @@ if (isset($_POST['btnSave'])) {
                             URL					=	'".strtolower($txtCityUrl)."',
                             DISPLAY_ORDER			=	'".$DisplayOrder."',
                             updated_at = now(),
+                            updated_by			= '" .$_SESSION['adminId']."',
                             DESCRIPTION	= '" . d_($desc) . "' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
@@ -121,6 +122,7 @@ if (isset($_POST['btnSave'])) {
                                     foreach($projList as $value) {
                                         $projUrl = createProjectURL($localityList->cityname, $localityList->label, $value->builder_name, $value->project_name, $value->project_id);
                                         $qryProUrl = "update resi_project set 
+                                                      updated_by			= '" .$_SESSION['adminId']."',
                                                       project_url = '".$projUrl."' where project_id = '".$value->project_id."'";
                                         $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
                                         
@@ -128,7 +130,8 @@ if (isset($_POST['btnSave'])) {
                                 }
 
                             $locUrl = createLocalityURL($localityList->label,$txtCityName,$localityList->locality_id,'locality');
-                            $updateLoc = "UPDATE ".LOCALITY." SET 
+                            $updateLoc = "UPDATE ".LOCALITY." SET
+                                updated_by			= '" .$_SESSION['adminId']."',
                                 URL	= '".$locUrl."',
                                 updated_at = now() WHERE LOCALITY_ID='".$localityList->locality_id."'";
                             $rt = mysql_query($updateLoc) or die(mysql_error()." loc url update");
@@ -138,6 +141,7 @@ if (isset($_POST['btnSave'])) {
                         foreach($subArr as $k=>$subList) {
                             $subUrl = createLocalityURL($subList,$txtCityName,$k,'suburb');
                             $updateSub = "UPDATE ".SUBURB." SET 
+                                updated_by			= '" .$_SESSION['adminId']."',
                                 URL	= '".$subUrl."',
                                 updated_at = now() WHERE SUBURB_ID='".$k."'";
                             $rt = mysql_query($updateSub) or die(mysql_error()." sub url update");

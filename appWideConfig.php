@@ -9,12 +9,18 @@ $gblData['noAPC'] = false;
 $gblData['prodServer'] = true;
 $gblData['beyondServerDocRoot'] = '/';
 
+
+//define("MAPURL", "http://cms.localhost.com");
+
 define("FULL_IMG_VER", "?v=2");
 define("THUMB_IMG_VER", "?v=9");
 define("LIST_IMG_VER", "?v=1");
 define("SMALL_IMG_VER", "?v=10");
 define("ICON_IMG_VER","?v=5");
 define("ADS_IMG_VER", "?v=1");
+
+
+define('PROPTIGER_CONTENT_TEAM_EMAIL_ID', 'no-reply@proptiger.com');
 
 if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 {
@@ -29,6 +35,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 	define("BEANSTALK_PORT", '11300');
 
 	//  Curl call URL
+	define("MAPURL", "http://cms.proptiger.com");
 	define("SERVER_URL", "https://www.proptiger.com");
 	define("SEND_EMAIL", TRUE);
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");
@@ -75,6 +82,7 @@ else{
 
 	$gblData['prodServer'] = false;
 	$t = $_SERVER['SERVER_NAME'];
+	define("MAPURL", "http://cms.proptiger-ws.com");
 	define("IMG_SERVER",'http://www.proptiger.com/');
 	define("JS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
 	define("CSS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
@@ -94,6 +102,7 @@ else{
 	define("DB_CRM_NAME", "ptigercrm");
 
 	//  Curl call URL
+	//define("MAP_SERVER_URL", "https://cms.proptiger-ws.com");
 	define("SERVER_URL", "https://qa.proptiger-ws.com");
 	define("SEND_EMAIL", TRUE);
 	define("RESALE_EMAIL", "ankur.dhawan@proptiger.com");

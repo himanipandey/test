@@ -11,6 +11,9 @@
 
     $cityId = $_REQUEST['c'];
     $smarty->assign("cityid", $cityId);
+    
+    $smarty->assign('current_user', $_SESSION['adminId']);
+    
 //echo "<pre>";
 //print_r($_REQUEST);//die("herer");
     $suburbSelect = Array();
@@ -129,6 +132,7 @@
                         $txtCityUrl = createLocalityURL($txtCityName, $dataCity['cityname'], $localityid, 'locality');
                        
                              $updateQry = "UPDATE ".LOCALITY." SET 
+                                           updated_by = " . $_SESSION['adminId'] . ",
                                            LABEL = '".$txtCityName."',
                                            STATUS = '".$status."',
                                            URL = '".$txtCityUrl."',
@@ -177,6 +181,7 @@
                                             foreach($projList as $value) {
                                                 $projUrl = createProjectURL($dataCity['cityname'],$txtCityName,$value->builder_name,$value->project_name, $value->project_id);
                                                 $qryProUrl = "update resi_project set 
+                                                              updated_by = " . $_SESSION['adminId'] . ",
                                                               project_url = '".$projUrl."',updated_by = '".$_SESSION['adminId']."' where project_id = $value->project_id";
                                                 $resProjUrl = mysql_query($qryProUrl) or die(mysql_error());
                                             }

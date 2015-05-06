@@ -125,6 +125,7 @@
             return false;
         }
       };
+      
       var countApart=0;
       $(document).ready(function(){
           $("#btnSave").click(function (){
@@ -323,8 +324,12 @@
 
                         {$var = 0}
 
+<<<<<<< HEAD
+                        {$looprange	=	15}
+=======
 {*                        {$looprange	=	35}*}
                         {$looprange	=	(count($bedval))? count($bedval):1}
+>>>>>>> develop
                         {$flg = 0}
                         {section name=foo start= 0 loop={$looprange} step=1}
                           
@@ -339,8 +344,13 @@
                             {* if $txtUnitNameval[$smarty.section.foo.index] != '' *}
                                 {$flg = $flg+1}
                             {* /if *}
+<<<<<<< HEAD
+                        <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                          <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
+=======
                         <tr {$color} id="row_aprat_{($smarty.section.foo.index+1)}">
                           <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
+>>>>>>> develop
                            {$globalDelete = $globalDelete+1}
                           <td class="aprt-sno" align="center">
                                  {($smarty.section.foo.index+1)}
@@ -369,7 +379,7 @@
                             
                           <td>
                               <input type = "hidden" name = "bathrooms_{($smarty.section.foo.index+1)}_old" id = "bathrooms_{($smarty.section.foo.index+1)}_old" value ="{$bathroomsval[{$smarty.section.foo.index}]}">
-                                 <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}',{$edit_project},{($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]])?$isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]:0}), fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;" >
+                                 <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}',{$edit_project}), fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
                                     <option value = "0">Select</option>
                                     <option {if $bathroomsval[{$smarty.section.foo.index}] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                     <option {if $bathroomsval[{$smarty.section.foo.index}] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -391,14 +401,14 @@
 
                                   <input type='hidden' class="unit-type" value="Apartment" name='unitType[]' tempName="unitType"   />
                                 <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID[{$smarty.section.foo.index}]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
-                                <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval[{$smarty.section.foo.index}]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval[{$smarty.section.foo.index}]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
 
                           </td>
                           <td align="left" >
-                                <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizeval[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <td align="left" >
-                                <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSizeCarpet[] id="txtSizeCarpet_{($smarty.section.foo.index+1)}"   tempName="txtSizeCarpet" value="{$txtSizevalCarpet[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizevalCarpet[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizevalCarpet[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" {($isResaleMapped[$TYPE_ID[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSizeCarpet[] id="txtSizeCarpet_{($smarty.section.foo.index+1)}"   tempName="txtSizeCarpet" value="{$txtSizevalCarpet[{$smarty.section.foo.index}]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizevalCarpet[{$smarty.section.foo.index}]} == '') OR !is_numeric({$txtSizevalCarpet[{$smarty.section.foo.index}]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                           </td>
                           <!--
                           <td>
@@ -572,8 +582,12 @@
                              <!--   <td nowrap="nowrap" width="3%" align="left" class="whiteTxt">Property Status</td> -->
 
                             </tr>
+<<<<<<< HEAD
+                            {section name=foo start= {$looprange} loop={$looprange+15} step=1}
+=======
                             {$countVilla = (count($bedval_VA))? count($bedval_VA):1}
                             {section name=foo start= {$looprange} loop={$looprange + $countVilla} step=1}
+>>>>>>> develop
 
                                 {$var	=$var+1}
 
@@ -585,15 +599,24 @@
 
 
 
+<<<<<<< HEAD
+                            <tr {$color} id="row_{($smarty.section.foo.index+1)}">
+                              <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}"></td>
+=======
                             <tr {$color} id="row_villa_{($smarty.section.foo.index+1)}">
                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]"  id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
+>>>>>>> develop
                               {$globalDelete = $globalDelete+1}
                               <td align="center" class="aprt-sno">
                                      {($smarty.section.foo.index+1)}
                               </td>
                               <td align="center">
                                {if $flg != 0}
+<<<<<<< HEAD
+                                    {$new_index = $smarty.section.foo.index-15}
+=======
                                     {$new_index = $smarty.section.foo.index-$looprange}
+>>>>>>> develop
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
@@ -626,7 +649,7 @@
                               </td>
                               <input type = "hidden" name = "bathrooms_{($smarty.section.foo.index+1)}_old" id = "bathrooms_{($smarty.section.foo.index+1)}_old" value ="{$bathroomsval_VA[$new_index]}">
                               <td>
-                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}', {$edit_project},{($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]])?$isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]:0}),fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
+                                     <select id="bathrooms_{($smarty.section.foo.index+1)}"  onchange = "onChangeActionBath('bathrooms_{($smarty.section.foo.index+1)}', {$edit_project}),fillUnitName({$smarty.section.foo.index});" tempName="bathrooms" name = bathrooms[] style="border:1px solid #c3c3c3;">
                                         <option value = "0">Select</option>
                                         <option {if $bathroomsval_VA[$new_index] == '1'} value = "1" selected = 'selected' {else} value = "1" {/if}>1</option>
                                         <option {if $bathroomsval_VA[$new_index] == '2'} value = "2" selected = 'selected' {else} value = "2" {/if}>2</option>
@@ -650,14 +673,14 @@
 
                                     <input type='hidden' value="Villa" class="unit-type" name='unitType[]' tempName="unitType"   />
                                     <input type = 'hidden' name = typeid_edit[] tempName="typeid_edit"  value="{$TYPE_ID_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$TYPE_ID_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};">
-                                    <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                    <input type=text onblur = "show_add({$smarty.section.foo.index});" tempName="txtUnitName"  name=txtUnitName[] id="txtUnitName_{($smarty.section.foo.index+1)}" value="{$txtUnitNameval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && ({$txtUnitNameval_VA[$new_index]} == '')}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "40">
 
                               </td>
                               <td align="left" >
-                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSize[] id="txtSize_{($smarty.section.foo.index+1)}"   tempName="txtSize" value="{$txtSizeval_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizeval_VA[$new_index]} == '') OR !is_numeric({$txtSizeval_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               <td align="left" >
-                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSizeCarpet[] id="txtSizeCarpet_{($smarty.section.foo.index+1)}"   tempName="txtSizeCarpet" value="{$txtSizevalCarpet_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizevalCarpet_VA[$new_index]} == '') OR !is_numeric({$txtSizevalCarpet_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10" {($isResaleMapped[$TYPE_ID_VA[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                    <input onblur = "show_add({$smarty.section.foo.index});" onkeypress="return isNumberKey(event)"  type=text name=txtSizeCarpet[] id="txtSizeCarpet_{($smarty.section.foo.index+1)}"   tempName="txtSizeCarpet" value="{$txtSizevalCarpet_VA[$new_index]}" style="width:100px;border:1px solid {if ({count($pid)} != 0)}{if ({count($pid)} >= {$var}) && (({$txtSizevalCarpet_VA[$new_index]} == '') OR !is_numeric({$txtSizevalCarpet_VA[$new_index]}))}#FF0000  {else}#c3c3c3 {/if} {else}#c3c3c3 {/if};"  maxlength = "10">
                               </td>
                               
                               <!--
@@ -847,18 +870,26 @@
                                 <!-- <td nowrap="nowrap" width="6%" align="left" class=whiteTxt>Price Per Unit Area</td> -->
                                 <td nowrap="nowrap" width="6%" align="left" class=whiteTxt >Area</td>
                             </tr>
+<<<<<<< HEAD
+                            {section name=foo start= {$looprange} loop={$looprange+15} step=1}
+=======
                             {$countOther = (count($txtUnitName_P))?count($txtUnitName_P):1}
                             {section name=foo start= 0 loop={$countOther} step=1}
+>>>>>>> develop
                                 {$var	=$var+1}
                                 
                             <tr {$color} id="row_{($smarty.section.foo.index+1)}">
-                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}" {($isResaleMapped[$TYPE_ID_P[$smarty.section.foo.index]]>0)?"disabled=disabled":""}></td>
+                               <td align="center"><input type="checkbox" name="delete[{$globalDelete}]" id = "{$globalDelete}"></td>
                                {$globalDelete = $globalDelete+1}
                                <td align="center" class="aprt-sno">
                                      {($smarty.section.foo.index+1)}
                               </td>
 				{if $flg != 0}
+<<<<<<< HEAD
+                                    {$new_index = $smarty.section.foo.index-15}
+=======
                                     {$new_index = $smarty.section.foo.index}
+>>>>>>> develop
                                 {else}
                                     {$new_index = $smarty.section.foo.index}
                                 {/if}
@@ -905,7 +936,7 @@
                               </td>
                               
                               <td>
-                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10" {($isResaleMapped[$TYPE_ID_P[$smarty.section.foo.index]]>0)?"readonly=readonly":""}>
+                                    <input onkeypress="return isNumberKey(event)" type=text name=txtPlotArea[] tempName="txtPlotArea"  id=txtPlotArea value="{$txtPlotArea_P[$keyValueForSize]}" style="width:100px;border:1px solid #c3c3c3;"  maxlength = "10">
                               </td>
                              
                             </tr>

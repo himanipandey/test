@@ -47,8 +47,8 @@ $smarty->assign("lastUpdatedDetail", $lastUpdatedDetail); //To Do
 $project_video_links = project_video_detail($projectId);
 $smarty->assign("project_video_links", count($project_video_links));
 
-$arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
-$smarty->assign("arrCalingPrimary", $arrCalingPrimary);
+//$arrCalingPrimary = fetchProjectCallingLinks($projectId, 'primary');
+//$smarty->assign("arrCalingPrimary", $arrCalingPrimary);
 
 $redevelopment_flag = fetchProjectRedevelolpmentFlag($projectId);
 $smarty->assign("redevelopment_flag", $redevelopment_flag);
@@ -80,7 +80,7 @@ foreach ($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['carpet_area'] = $value->carpet_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_no_floors'] = $value->villa_no_floors;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
-    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = date('Y-m-d', strtotime($listing_price[0]->effective_date));
+    $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $listing_price[0]->effective_date;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
 }
 
@@ -428,10 +428,6 @@ $smarty->assign("projectDetails", $projectDetails);
 $smarty->assign("CityDataArr", $CityDataArr);
 $smarty->assign("suburbSelect", $suburbSelect);
 
-/*********fetching project brochure***************/
-$brochure = getProjectBrochure($projectId);
-$smarty->assign("projectBrochure", $brochure['projectBrouchure']['service_image_path']);
-
 /* * ****code for project comment fetch from commeny history table**** */
 $cycleId = $projectDetails[0]['PROJECT_STAGE'];
 $projectComments = CommentsHistory::getCommentHistoryByProjectIdCycleId($projectId, $cycleId);
@@ -688,8 +684,8 @@ foreach ($allBrokerByProject as $key => $val) {
     $arrBrokerList[$key] = $brikerList;
 }
 
-$arrCalingSecondary = fetchProjectCallingLinks($projectId, 'secondary');
-$smarty->assign("arrCalingSecondary", $arrCalingSecondary);
+//$arrCalingSecondary = fetchProjectCallingLinks($projectId, 'secondary');
+//$smarty->assign("arrCalingSecondary", $arrCalingSecondary);
 
 $brokerIdList = array();
 $maxEffectiveDtAll = '';
