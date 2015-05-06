@@ -24,7 +24,20 @@ if(isset($_POST['Submit_x']))
 		/************update admin table for last login*******************/
 		$qryUpDate	=	"UPDATE ".ADMIN." SET LAST_LOGIN_DATE = now(),LAST_LOGIN_IP = '".$_SERVER['REMOTE_ADDR']."' WHERE ADMINID = '".$_SESSION['adminId']."'";
 		$resUpdate	=	mysql_query($qryUpDate);
+                insertIntoTimeLog();
 		header("Location:project_desktop.php"); 
 	}
+}
+
+function insertIntoTimeLog(){
+    $querySelect = "SELECT * FROM  admin_time_log WHERE adminid=".$_SESSION['adminId']." AND date='".date("Y-m-d")."'";
+    $resSelect	=	mysql_query($querySelect);
+    if(mysql_num_rows($resSelect)<=0){
+        $queryInsert = "INSERT INTO admin_time_log(adminid,date,time_spent) VALUES(".$_SESSION['adminId'].",'".date("Y-m-d")."', 0".")";
+        mysql_query($queryInsert) or die("Some error occurred");
+        if(isset($_COOKIE["time_spent"])){
+             setcookie("time_spent",0);
+        }
+    }
 }
 ?>

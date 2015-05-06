@@ -52,6 +52,16 @@
                    A.PROJECT_PHASE_ID, A.PROJECT_STAGE_ID, ADMIN_ID ORDER BY B.DEPARTMENT, B.FNAME, A.ADMIN_ID";
        $allData = ProjectStageHistory::find_by_sql($qry);
 
+       //**********************************
+       $whereQuery = str_replace("DATE_TIME", "date",$quryand);
+       $queryTimeLog = "SELECT SUM(A.time_spent) as total_time_spent, A.adminid FROM admin_time_log A INNER JOIN proptiger_admin B ON A.ADMINID=B.ADMINID".$whereQuery." GROUP BY A.ADMINID";
+       $mysqlRes = mysql_query($queryTimeLog);
+       $timeSpents = array();
+       while ($row = mysql_fetch_assoc($mysqlRes)){
+           $timeSpents[$row["adminid"]] = gmdate("H:i:s", $row["total_time_spent"]);
+       }
+       //**********************************
+       
        $finalArr = array();
        $arrAllData = array();
        foreach($allData as $data) {
@@ -61,6 +71,7 @@
 
         $mergeArr['finalArr']=$finalArr;
         $mergeArr['arrAllData']=$arrAllData;
+        $mergeArr['timeSpent']=$timeSpents;
         return $mergeArr;
     }
     

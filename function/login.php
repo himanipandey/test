@@ -100,6 +100,13 @@ $gacl = new gacl(array());
 			header("Location:index.php");
 			exit;
 		}
+                
+                if(isset($_COOKIE["time_spent"]) && $_COOKIE["time_spent"]>30){
+                    $sqlUpdateTime = "UPDATE admin_time_log SET time_spent = time_spent + ".$_COOKIE["time_spent"]." WHERE adminid = ".$_SESSION["adminId"] ." AND date = '".date("Y-m-d")."'";
+                    mysql_query($sqlUpdateTime);
+                    setcookie("time_spent",0);
+                }
+                
 	}
 
     function isUserPermitted($resource, $action, $username = NULL) {
