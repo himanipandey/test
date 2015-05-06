@@ -72,6 +72,9 @@ if ($_POST ['task'] == 'createAgent') {
 					"contactNumbers" => $contactNumbers 
 			);
 			
+			if(!empty($active_since)){
+				$active_since = substr ( $active_since, 0, 10 );
+			}
 			$post = array (
 					"name" => $name,
 					"email" => $email,
@@ -81,7 +84,7 @@ if ($_POST ['task'] == 'createAgent') {
 					"countryId" => "+91",
 					"sellerType" => $role,
 					"academicQualificationId" => $qualification,
-					"activeSince" => substr ( $active_since, 0, 10 ),
+					"activeSince" => $active_since,
 					"checkAddress" => "on",
 					"parentId" => 0,	
 					"status" => $status,
