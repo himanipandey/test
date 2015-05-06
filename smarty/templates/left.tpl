@@ -25,25 +25,7 @@
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
         {/if}
-
-    <tr>
-        <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-        <td align="left" height="22"><A class="leftnav" href="ProjectList.php?page=1&sort=all"><font color = "#f15a22">Projects Management</font></A></td>
-    </tr>
-
-    <tr>
-        <td class="thinline" align="left" colSpan="2"></td>
-    </tr>
-    {if $builderAuth == true}
-        <tr>
-            <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-            <td align="left" height="22"><A class="leftnav" href="BuilderList.php"><font color = "#f15a22">Builder Management</font></A></td>
-        </tr>
-
-        <tr>
-            <td class="thinline" align="left" colSpan="2"></td>
-        </tr>
-    {/if}
+    
 
     {if $listingAuth == true}
         <tr>
@@ -63,11 +45,6 @@
             <td align="left" height="22"><A class="leftnav" href="listing_img_add.php"><font color = "#f15a22">Upload Listing Photo</font></A></td>
         </tr>
 
-<<<<<<< HEAD
-        <tr>
-            <td class="thinline" align="left" colSpan="2"></td>
-        </tr>
-=======
             <tr>
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
@@ -94,12 +71,7 @@
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
         {/if}
->>>>>>> develop
 
-    {/if}
-
-
-<<<<<<< HEAD
     {if $companyAuth == true}
         <tr>
             <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -113,7 +85,7 @@
             <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
             <td align="left" height="22"><A class="leftnav" href="findOTP.php"><font color = "#f15a22">One Time Password</font></A></td>
         </tr>
-=======
+        {/if}
         {if $labelAuth == true}
             <tr>
                     <td class="blue_txt" noWrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -168,13 +140,10 @@
                     <td class="thinline" align="left" colSpan="2"></td>
             </tr>
         {/if}
->>>>>>> develop
-
 
         <tr>
             <td class="thinline" align="left" colSpan="2"></td>
         </tr>
-    {/if}
 
     {if $companyOrderAdminAuth == true || $companyOrderViewAuth == true}
         <tr>
@@ -591,9 +560,7 @@
         </tr>
         <tr>
             <td class="thinline" align="left" colspan="2"></td>
-<<<<<<< HEAD
-        </tr>
-=======
+
 	</tr>
     
     <tr>
@@ -722,7 +689,7 @@
             </tr>
         </table>
     </td></tr>
->>>>>>> develop
+
     {/if}
 
     {if $reportErrorPermissionAccess == true}
@@ -809,8 +776,6 @@
             </td></tr>
         {/if}
 
-<<<<<<< HEAD
-=======
     </tr>
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
     {/if}
@@ -821,8 +786,7 @@
         <td align="left" height="22"><a class="leftnav" href="meta_templates.php"><font color = "#f15a22">SEO Meta Template</font></a></td>
     </tr>
     {/if}
-    
->>>>>>> develop
+
     <tr>
         <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
         <td align="left" height="22"><a class="leftnav" href="logout.php"><font color = "#f15a22">Logout</font></a></td>
