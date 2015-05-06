@@ -188,4 +188,10 @@
     $mapVarifyAuth = isUserPermitted('map-varification', 'manage');
     $smarty->assign("mapVarifyAuth", $mapVarifyAuth );
     
+    $projectManageAuth = isUserPermitted('project-management', 'access'); 
+    $smarty->assign("projectManageAuth", $projectManageAuth);
+    
+    $townshipManageAuth = isUserPermitted('township-management', 'access');
+    $smarty->assign("townshipManageAuth", $townshipManageAuth);    
+    
 ?>
