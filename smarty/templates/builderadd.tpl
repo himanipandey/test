@@ -161,10 +161,16 @@
           }
        });
     });
+    $("#txtBName,#legalEntity").keypress(function (e) {
+        var regex = new RegExp("^[a-zA-Z0-9- ]+$");
+        var str = String.fromCharCode(!e.charCode ? e.which : e.charCode);
+        if (regex.test(str) || e.charCode==0) {
+            return true;
+        }
+        e.preventDefault();
+        return false;
+    });
   });
-  
- 
-
 </script>
 
 <script type="text/javascript" src="jscal/calendar.js"></script>
@@ -262,7 +268,7 @@
 				<tr>
                                     <td width="20%" align="right" ><font color = "red">*</font>Builder Display Name : </td>
                                     <input type=hidden name="oldbuilder" id="oldbuilder" value="{$oldval}" style="width:357px;">
-                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBuilderName value="{$txtBuilderName}" style="width:357px;"></td>
+                                    <td width="30%" align="left"><input type=text name=txtBuilderName id=txtBName value="{$txtBuilderName}" style="width:357px;"></td>
                                     {if $ErrorMsg["txtBuilderName"] != ''}
                                     <td width="50%" align="left" nowrap><font color = "red">{$ErrorMsg["txtBuilderName"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
@@ -446,6 +452,17 @@
 				  <td width="20%" align="right" > <font color = "red">*</font>Website : </td>
 				  <td width="30%" align="left" ><input type=text name="website" id="website" value="{$website}" style="width:360px;"></td>
 				  {if $ErrorMsg["website"] != ''} <td nowrap width="50%" align="left" ><font color = "red">{$ErrorMsg["website"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
+				</tr>
+                                
+				<tr>
+				  <td width="20%" align="right" >Listed : </td>
+				  <td width="30%" align="left" >
+                                      <select name="listed">
+                                          <option value ="0" {($listed=="0")? "selected=selected" : ""}>No</option>
+                                          <option value ="1" {($listed=="1")? "selected=selected" : ""}>Yes</option>
+                                      </select>
+                                  </td>
+				  <td width="50%" align="left" ></td>
 				</tr>
 
 				<tr>

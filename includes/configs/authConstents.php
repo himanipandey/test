@@ -9,6 +9,9 @@ if (isset($_SESSION['builderAuth'])) {
 }
 $smarty->assign("builderAuth", $builderAuth);
 
+$seoMetaAuth = isUserPermitted('seo-meta-template', 'templateAccess');
+$smarty->assign("seoMetaAuth", $seoMetaAuth);
+
 if (isset($_SESSION['authorityAuth'])) {
     $authorityAuth = $_SESSION['authorityAuth'];    
 } else {
@@ -461,5 +464,13 @@ if (isset($_SESSION['contentDeliveryAccess'])) {
 }
 $smarty->assign("contentDeliveryAccess", $contentDeliveryAccess);
 
-
+    $mapVarifyAuth = isUserPermitted('map-varification', 'manage');
+    $smarty->assign("mapVarifyAuth", $mapVarifyAuth );
+    
+    $projectManageAuth = isUserPermitted('project-management', 'access'); 
+    $smarty->assign("projectManageAuth", $projectManageAuth);
+    
+    $townshipManageAuth = isUserPermitted('township-management', 'access');
+    $smarty->assign("townshipManageAuth", $townshipManageAuth);    
+    
 ?>
