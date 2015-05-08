@@ -524,6 +524,7 @@
     <tr>
                 <td class="thinline" align="left" colspan="2"></td>
     </tr>
+    {/if}
       
     <!--process assignment for construction image update-->
     {if $processAssignmentForConstImg == 1}
@@ -586,7 +587,6 @@
     </td></tr>
     {/if}
     <!--end for process assignment cunstruction image-->
-
     {if $reportErrorPermissionAccess == true}
         <tr>
             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
@@ -673,7 +673,7 @@
 
     </tr>
     <tr><td class="thinline" align="left" colspan="2"></td></tr>
-    {/if}
+    
     
     {if $seoMetaAuth == true}
     <tr>
