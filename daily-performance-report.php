@@ -60,7 +60,7 @@
     $errorMsg = array();
     if(count($dateArr) == 0)
         $errorMsg['dateDiff'] = "<font color = 'red'>From date can not be greater then to date!</font>";
-    $frmdate = "2015-01-01";
+    
     $mergeArr =  getDailyPerformanceReport($frmdate, $todate, $user, $team);
 
     $smarty->assign("errorMsg", $errorMsg);
