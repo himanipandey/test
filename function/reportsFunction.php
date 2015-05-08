@@ -53,12 +53,12 @@
        $allData = ProjectStageHistory::find_by_sql($qry);
 
        //**********************************
-       $whereQuery = str_replace("DATE_TIME", "date",$quryand);
-       $queryTimeLog = "SELECT SUM(A.time_spent) as total_time_spent, A.adminid FROM admin_time_log A INNER JOIN proptiger_admin B ON A.ADMINID=B.ADMINID".$whereQuery." GROUP BY A.ADMINID";
+       $whereQuery = str_replace("DATE_TIME", "login_date",$quryand);
+       $queryTimeLog = "SELECT SUM(A.time_spent) as total_time_spent, A.admin_id FROM admin_time_log A INNER JOIN proptiger_admin B ON A.ADMIN_ID=B.ADMINID".$whereQuery." GROUP BY A.ADMIN_ID";
        $mysqlRes = mysql_query($queryTimeLog);
        $timeSpents = array();
        while ($row = mysql_fetch_assoc($mysqlRes)){
-           $timeSpents[$row["adminid"]] = gmdate("H:i:s", $row["total_time_spent"]);
+           $timeSpents[$row["admin_id"]] = gmdate("H:i:s", $row["total_time_spent"]);
        }
        //**********************************
        

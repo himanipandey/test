@@ -30,10 +30,10 @@ if(isset($_POST['Submit_x']))
 }
 
 function insertIntoTimeLog(){
-    $querySelect = "SELECT * FROM  admin_time_log WHERE adminid=".$_SESSION['adminId']." AND date='".date("Y-m-d")."'";
+    $querySelect = "SELECT * FROM  admin_time_log WHERE admin_id=".$_SESSION['adminId']." AND date='".date("Y-m-d")."'";
     $resSelect	=	mysql_query($querySelect);
     if(mysql_num_rows($resSelect)<=0){
-        $queryInsert = "INSERT INTO admin_time_log(adminid,date,time_spent) VALUES(".$_SESSION['adminId'].",'".date("Y-m-d")."', 0".")";
+        $queryInsert = "INSERT INTO admin_time_log(admin_id,login_date,time_spent) VALUES(".$_SESSION['adminId'].",'".date("Y-m-d")."', 0".")";
         mysql_query($queryInsert) or die("Some error occurred");
         if(isset($_COOKIE["time_spent"])){
              setcookie("time_spent",0);
