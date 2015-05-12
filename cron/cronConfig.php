@@ -24,7 +24,7 @@ $dailyEmail = array(
                             DATE(rp.created_at) = DATE(subdate(current_date, 1))
                             and rp.version = 'Cms'",
         'subject' => 'Projects inserted yesterday',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'akivito.chishi@proptiger.com', 'gayatri.talukdar@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects',
         'message' => '',
         'sendifnodata' => 0
@@ -268,7 +268,7 @@ $weeklyEmail = array(
         'sql' => "select project_id, project_name, CHAR_LENGTH(project_description) description_length 
                    from resi_project where CHAR_LENGTH(project_description) < 25 and version = 'Cms' and status != 'Inactive';",
         'subject' => 'Projects having description length less than 25 characters',
-        'recipients' => array('cms-cron@proptiger.com', 'pallavi.singh@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'pallavi.singh@proptiger.com', 'akivito.chishi@proptiger.com', 'gayatri.talukdar@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects_having_short_description',
         'sendifnodata' => 0
     )
