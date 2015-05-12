@@ -1,5 +1,12 @@
 <?php
-
+/*
+ * This script is to populate the builder_score in the resi_builder table which
+ * is used to compute the project livability as one of the factor. Builder score
+ * factor is computed using various factors like construction status sqft area sold, unsold,
+ * builder age and rate of unit sold by builder. 
+ */
+$docroot = dirname(__FILE__) . "/../";
+require_once $docroot.'dbConfig.php';
 /*
 |  1 | UnderConstruction | Under Construction |
 |  2 | Cancelled         | Cancelled          |
@@ -9,7 +16,7 @@
 |  7 | Launch            | Launch             |
 |  8 | PreLaunch         | Pre Launch 	      |
 */
-$con = mysql_connect("localhost", "root", "root") or die("Could not connect: " . mysql_error());
+//$con = mysql_connect("localhost", "root", "root") or die("Could not connect: " . mysql_error());
 
 $__status_map = array('Completed' => 'SQRF_AREA_COMPLETED', 'Under Construction And Pre Launch' => 'SQRF_AREA_UNDER_CONSTRUCTION_And_Pre_Launch', 
 		      'ESTABLISED_TIME' => 'ESTABLISED_TIME',
@@ -218,7 +225,7 @@ foreach($__params_array as $__builder_id => $__final_params) {
 //print_r($__id_score_map)
 foreach ($__id_score_map as $__builder_id => $__builder_score) {
 	$__update_query = "update cms.resi_builder set builder_score =". ($__builder_score) . " where builder_id =".$__builder_id;
-	mysql_query($__update_query,$con) or die(mysql_error());
+	mysql_query($__update_query) or die(mysql_error());
 }
 //print("finished bye");
 ?>
