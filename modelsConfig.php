@@ -6,7 +6,7 @@ ActiveRecord\Config::initialize(function($cfg)
 {
   $cfg->set_model_directory(".");
   $cfg->set_connections(array('development' =>
-    'mysql://root:root@localhost/cms'));
+    'mysql://root:proptiger@localhost/cms'));
 });
 ActiveRecord\DateTime::$DEFAULT_FORMAT = 'Y-m-d';
 $ar_adapter = ActiveRecord\ConnectionManager::get_connection();
