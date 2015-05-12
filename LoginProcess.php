@@ -30,7 +30,7 @@ if(isset($_POST['Submit_x']))
 }
 
 function insertIntoTimeLog(){
-    $querySelect = "SELECT * FROM  admin_time_log WHERE admin_id=".$_SESSION['adminId']." AND date='".date("Y-m-d")."'";
+    $querySelect = "SELECT * FROM  admin_time_log WHERE admin_id=".$_SESSION['adminId']." AND login_date='".date("Y-m-d")."'";
     $resSelect	=	mysql_query($querySelect);
     if(mysql_num_rows($resSelect)<=0){
         $queryInsert = "INSERT INTO admin_time_log(admin_id,login_date,time_spent) VALUES(".$_SESSION['adminId'].",'".date("Y-m-d")."', 0".")";
