@@ -259,11 +259,11 @@ else {
     if($pricePerUnitArea == '' || $pricePerUnitArea == null) {
         $pricePerUnitArea = null;
     }
-    if($$price == '' || $$price == null) {
-        $$price = null;
+    if($price == '' || $price == null) {
+        $price = null;
     }
-    if($$other_charges == '' || $$other_charges == null) {
-        $$other_charges = null;
+    if($other_charges == '' || $other_charges == null) {
+        $other_charges = null;
     }
     $currentListingPrice = array(
         'pricePerUnitArea'=> $pricePerUnitArea,
@@ -278,10 +278,17 @@ else {
     /*"{"floor":"2","jsonDump":{"comment":"QA Marketplace Test Company"},"sellerId":null,"flatNumber":"3","homeLoanBankId":"select bank","noOfCarParks":"4","negotiable":"true","transferCharges":"","plc":"","otherInfo":{"size":"","projectId":"503095","bedrooms":null,"unitType":"Sq. Ft.","facing":"East"},"currentListingPrice":{"pricePerUnitArea":"100"}}"*/
 
     //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
+    
+    /*if($_POST["vendor"] !=""){
+        $dataArr["vendor"] = $_POST["vendor"];
+    }
+    if($_POST["broker"] == "No"){
+        $dataArr["broker"] = false;
+    }else if($_POST["broker"] == "Yes"){
+        $dataArr["broker"] = true;
+    }*/
 
 
-//print("<pre>");
-//print_r($dataArr); 
     $dataJson = json_encode($dataArr);
     //print("<pre>");
 //    echo($dataJson); die;

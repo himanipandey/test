@@ -183,6 +183,8 @@ foreach($bookingStatus as $bookingStatus){
 }
 $smarty->assign("bStatusList", $bStatusList);
 
+$typeArr = Company::getCompanyByType("VendorClassified"); 
+$smarty->assign("comptype", $typeArr);
 //code pagination --------------------------------------------
 
 

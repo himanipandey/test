@@ -943,10 +943,9 @@ $("#lmkSave").click(function(){
       return true;
      }
       
-
-   
-
     var $body = $("body");
+    var vendor_classified = $("#vendor_classified").val();
+    var broker_check = $("#broker_check").val();
     //$("body").addClass("loading"); /*$("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);*/
     $.ajax({
             type: "POST",
@@ -958,7 +957,7 @@ $("#lmkSave").click(function(){
               $("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task, bookingStatusId:bookingStatusId},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, vendor:vendor_classified, broker:broker_check ,property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task, bookingStatusId:bookingStatusId},
 
 
 
@@ -1671,13 +1670,33 @@ function getParameterByName(name) {
                               <!-- <input type=text name="seller3" id="seller3"> --> 
                               <select id="seller3" name="seller3" >
                                     <option value=''>Seller ID</option>                                    
-                              </select>      
+                              </select>
                             </td>
                             	
                         </tr>
+                        <tr id="trv">
+                            <td id="tdvlbl"><font color="red">*</font>Vendor Classified</td>
+                            <td>
+                                <select name="vendor" id="vendor_classified">
+                                    <option value="">Select Vendor Classified</option>
+                                   {foreach from=$comptype item=comp}
+                                       <option value="{$comp}">{$comp}</option>
+                                   {/foreach}
+                                </select>
+                            </td>
+                            <td width="100px;"></td>
+                            <td></td>
+                            <td><font color="red">*</font>Broker:</td>
+                            <td>
+                                <select name="broker" id="broker_check">
+                                    <option value="">Select</option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                </select>
+                            </td>
+                        </tr>
                       
-                        	<hr id = "line1" >
-                      
+                        <hr id = "line1" >
 
                         <tr id="name_number1">
                               <td id="name1">
