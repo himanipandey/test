@@ -672,7 +672,7 @@ if ($_POST['forwardFlag'] == 'no') {
 $currentCycle = currentCycleOfProject($projectId, $projectDetails[0]['PROJECT_PHASE'], $projectDetails[0]['PROJECT_STAGE']);
 $smarty->assign('currentCycle', $currentCycle);
 /* * ********************************* */
-include('builder_contact_info_process.php');
+//include('builder_contact_info_process.php');
 
 /* * code for secondary price dispaly*********** */
 include("function/resale_functions.php");
@@ -774,6 +774,7 @@ if (isset($_REQUEST['flag'])) {
         $msg = "callerNumber Not Inserted";
 }
 $smarty->assign("callerMessage", $msg);
+$smarty->assign("currentUser", $_SESSION['adminId']);
 $smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
 
 /* * *****code for check user have access to move in audit1 stage or not********** */
