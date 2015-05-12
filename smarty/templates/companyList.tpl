@@ -338,8 +338,9 @@
 
                 var pan = $('#pan').val().trim();
                 var status = $('#status').val();
+                var isVerified = $('#is_verified').val();
                 var compid = $('#compid').val();
-
+                
                 /*****************************************initializers****************************/
                 window.error = 0;
                 var mode = '';
@@ -494,7 +495,7 @@
 
                 //var data = { id:compid, type:compType, broker_info_type:broker_info_type, name:name, des:des, address : address, city:city, pincode : pincode, compphone : compphone, compfax:compfax, email:email, web:web, image:img, imageId:imgId, ipArr : ipArr, off_loc_data:off_loc_data, coverage_data:coverage_data, contact_person_data:contact_person_data, cust_care_data:cust_care_data, broker_extra_fields:broker_extra_fields, pan:pan, status:status, task : "createComp", mode:mode}; 
 
-                var data = {id: compid, type: compType, broker_info_type: broker_info_type, name: name, des: des, address: address, city: city, pincode: pincode, compphone: compphone, compfax: compfax, email: email, web: web, image: img, signUpForm: sign_up_form, imageId: imgId, formId: formId, ipArr: ipArr, contact_person_data: contact_person_data, broker_extra_fields: broker_extra_fields, pan: pan, status: status, bank_details: bank_details, task: "createComp", mode: mode};
+                var data = {id: compid, type: compType, broker_info_type: broker_info_type, name: name, des: des, address: address, city: city, pincode: pincode, compphone: compphone, compfax: compfax, email: email, web: web, image: img, signUpForm: sign_up_form, imageId: imgId, formId: formId, ipArr: ipArr, contact_person_data: contact_person_data, broker_extra_fields: broker_extra_fields, pan: pan, status: status, isVerified:isVerified, bank_details: bank_details, task: "createComp", mode: mode};
 
                 /******************************validation****************************************/
 
@@ -991,6 +992,7 @@
             var phone = str.phone;
             var active_since = str.active_since;
             var web = str.web;
+            var isVerified = str.verified;
             var a = str.extra_json;
 
 
@@ -1025,6 +1027,8 @@
             $("#compfax").val(compfax);
             $("#web").val(web);
             $("#compemail").val(email);
+            $("#is_verified").val(isVerified);
+            
             // var ipstring = ipstring.substring(0, ipstring.length -1);
 
 
@@ -2516,6 +2520,17 @@
 
                                                                 </select>
                                                             </td> 
+                                                        </tr>
+                                                        
+                                                        <tr>
+                                                            <td width="20%" align="right" >Is Verified? : </td>
+                                                            <td width="30%" align="left">
+                                                                <select id="is_verified" name="is_verified" >
+                                                                    <option  value='1'> Yes </option>
+                                                                    <option  value='0' > No </option>
+
+                                                                </select>
+                                                            </td>
                                                         </tr>
 
                                                         <!--  broker extra details --------------------------------------------------------------------     -->
