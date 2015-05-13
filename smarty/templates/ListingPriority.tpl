@@ -1685,8 +1685,9 @@ function getParameterByName(name) {
                                 </select>
                             </td>
                             <td width="100px;"></td>
-                            <td></td>
+                            
                             <td><font color="red">*</font>Broker:</td>
+                            <td width="40px;"></td>
                             <td>
                                 <select name="broker" id="broker_check">
                                     <option value="">Select</option>
