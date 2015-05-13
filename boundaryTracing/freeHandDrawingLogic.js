@@ -1,12 +1,25 @@
-var BaseUrl = "http://cms.proptiger.com";
-//var BaseUrl = "http://cms.localhost.com";
-
 
 var theArrayofLatLng = [];
 var x = 5;
 var FreeHandPoly;
 var mywindow;
 var encodeString = "";
+
+var url = window.location.search;
+url = url.replace("?", ''); // remove the ?
+var urlElement = url.split(',');
+
+var id = "";
+var getLat = "";
+var getLong = "";
+var sessionID = "";
+var BaseUrl = "http://";
+sessionID = urlElement[0];
+BaseUrl = BaseUrl + urlElement[1] + ".com";
+getLat = urlElement[2];
+getLong = urlElement[3];
+id = urlElement[4];
+
 
 var t = document;
 var theNewScript = t.createElement("script");
@@ -101,13 +114,6 @@ var init = function(map){
                     encodeString = google.maps.geometry.encoding.encodePath(triangleCoords);
                     console.log("Encode = "+encodeString);
 
-
-                    /*var t = document;
-                    var theNewScript = t.createElement("script");
-                    theNewScript.type = "text/javascript";
-                    theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-                    document.getElementsByTagName("head")[0].appendChild(theNewScript);*/
-                    
                     var convertToPixelNEW = function () {
                         overlay = new google.maps.OverlayView();
                         overlay.draw = function () {};
@@ -130,7 +136,7 @@ var init = function(map){
                           $.ajax({
                             url: '/saveNearPlacePriority.php',          
                             type: "POST",
-                            data: {JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
+                            data: {sessionID: sessionID, JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
 
                             success:function(msg){
                               console.log(msg);  
@@ -145,31 +151,19 @@ var init = function(map){
                     window.setTimeout(waitForLoadNEW, 100);
                     
                    
-
-                    //theArrayofLatLng.push({k: -1 ,D: -1});
                     self.currentPolygon = FreeHandPoly;
                     google.maps.event.addListener(FreeHandPoly.getPath(), 'set_at', function(e) {
-                        //here this has changed path
-                        //saveLatLng(e);
                         theArrayofLatLng = FreeHandPoly.getPath();
                         console.log(theArrayofLatLng);
-                        
-                        //console.log("e");
- 
-
                     });
 
                     google.maps.event.addListener(FreeHandPoly.getPath(), 'insert_at', function(eve) {
-                        //here this has changed path
-                        console.log("eve");
-                        //saveLatLng(eve);
                         theArrayofLatLng = FreeHandPoly.getPath();    
                     });
 
                     google.maps.event.clearListeners(map, 'mouseup');
                     
-                    //console.log("Path of the polyline " + theArrayofLatLng[0].lat() +" "  + theArrayofLatLng[1].lng());
-                    
+                    //console.log("Path of the polyline " + theArrayofLatLng[0].lat() +" "  + theArrayofLatLng[1].lng());  
                 });
             });
            
@@ -179,7 +173,6 @@ var init = function(map){
 function restorePolygon(){
    var p = localStorage.getItem('latlngArray');
    var c = JSON.parse(p);
-   //console.log(c[0].k);
    var path=[];
    for(var i = 0; i < c.length; i++){
         path[i] = new google.maps.LatLng(parseFloat(c[i].k), parseFloat(c[i].D));
@@ -193,26 +186,20 @@ function restorePolygon(){
                         clickable: false,
                         zIndex: 1,
                         suppressUndo: true,
-                        //path:theArrayofLatLng,
                         path: path,
                         editable: true
                     }
-                    // draw polygon
                     var poly = new google.maps.Polygon(polyOptions);
 
 }
 
 function clearPolygone(){
-     //FreeHandPoly.setMap(null);
      initializeErase();
-     //utilinit();
 }
 function saveLatLngDrawingMode(){
-    //theArrayofLatLng.push({k: -2 ,D: -2});
     console.log('The = '+theArrayofLatLng.getArray());
     var Type = "polygon"; 
     if(theArrayofLatLng == "")  {
-        console.log("CCCCCCCCC");
         saveLatLngCheck();
     } else {
         saveLatLng(Type, theArrayofLatLng.getArray());

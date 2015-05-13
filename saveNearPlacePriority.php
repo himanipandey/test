@@ -32,6 +32,24 @@ $boundary_array = "";
     //echo $landmarkType;
 }*/
 
+if($_GET['task'] == 'CityLatLong')  {
+    $cityID = $_GET['id'];
+    $tmp = array();
+    $LatLng = array();
+
+    $sql = "SELECT * FROM city where CITY_ID = {$cityID}";
+    $ExecSql = mysql_query($sql);
+    if(mysql_num_rows($ExecSql) > 0)  {
+        while($Res = mysql_fetch_assoc($ExecSql))  {
+            $tmp['lat'] = $Res['CENTER_LATITUDE'];
+            $tmp['lng'] = $Res['CENTER_LONGITUDE'];
+            array_push($LatLng, $tmp);
+        }
+    }
+    echo json_encode($LatLng); 
+}
+
+
 if($_GET['task'] === 'GetMINDistance')  {
 
    $XDestination = '28.695640467825957';
@@ -87,11 +105,6 @@ function distance($lat1, $lon1, $lat2, $lon2, $unit) {
     }
 }
 
-/*echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
-echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
-echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>"; */
-
-
 if($_GET['task'] === 'GetLength')  {
    $getData = $_GET['latlngArray'];
    echo $getData; 
@@ -117,8 +130,6 @@ if($_GET['task'] === 'GetPopUpdataSendCMs')  {
             array_push($PopUpData, $tmp);
         }    
     }
-    //$result = $place . ' '.$city . ' ' . $landtype;
-    //echo $result;
     echo json_encode($PopUpData);
 }
 
@@ -165,23 +176,26 @@ if($_POST['task'] === 'DeleteLandmark_map_data')  {
 
 
 if($_POST['task'] === 'EmptyLandmark_map_data')  {
-
-    $Sql = "truncate table landmark_map_data";
+    $sessionID = (int)$_POST['sessionID'];
+    //$Sql = "truncate table landmark_map_data";
+    $Sql = "delete from landmark_map_data where id = {$sessionID}";
     mysql_query($Sql) or die();
 
-    $Sql = "INSERT INTO landmark_map_data(id) values (1)";
-    mysql_query($Sql) or die(); 
+    //$Sql = "INSERT INTO landmark_map_data(id) values (1)";
+    //mysql_query($Sql) or die(); 
 
-    echo "Complete";
+    //echo "Complete";
 }
 
 if($_POST['task'] === 'saveEncodedBoundary')  {
     $EncodeLatLong = $_POST['encodeString'];
     $JsonSVG = $_POST['JsonSVG'];
-    $Sql = "truncate table landmark_map_data";
+    $sessionID = (int)$_POST['sessionID'];
+    //$Sql = "truncate table landmark_map_data";
+    $Sql = "delete from landmark_map_data where id = {$sessionID}";
     mysql_query($Sql) or die();
 
-    $Sql = "INSERT INTO landmark_map_data(id, svg_data, boundaryEncode) values (1,'{$JsonSVG}','{$EncodeLatLong}')";
+    $Sql = "INSERT INTO landmark_map_data(id, svg_data, boundaryEncode) values ({$sessionID},'{$JsonSVG}','{$EncodeLatLong}')";
     mysql_query($Sql) or die(); 
 
     echo "Complete";
@@ -189,6 +203,8 @@ if($_POST['task'] === 'saveEncodedBoundary')  {
 
 
 if($_POST['task'] === 'MapdataSendCMs')  {
+    $sID = $_POST['sessionID'];
+    $sessionID = (int)$sID;
     $boundary_array = $_POST['boundary'];
     $center_of_boundary = $_POST['center_of_boundary'];
     $JsonSVG = $_POST['JsonSVG'];
@@ -199,7 +215,7 @@ if($_POST['task'] === 'MapdataSendCMs')  {
     //$Sql = "truncate table landmark_map_data";
     //mysql_query($Sql) or die();
 
-    $Sql = "SELECT * FROM landmark_map_data";
+    $Sql = "SELECT * FROM landmark_map_data where id = {$sessionID}";
     $cnt = 0;
     $ExecSql = mysql_query($Sql) or die();
     if (mysql_num_rows($ExecSql) > 0) {
@@ -210,22 +226,12 @@ if($_POST['task'] === 'MapdataSendCMs')  {
 
 
     if($cnt == 0)  {
-        $Sql = "INSERT INTO landmark_map_data(id, lat_long_data, svg_data, center_boundary, boundary_type) values (1,'{$boundary_array}','{$JsonSVG}','{$center_of_boundary}','{$boundary_type}')";
+        $Sql = "INSERT INTO landmark_map_data(id, lat_long_data, svg_data, center_boundary, boundary_type) values ({$sessionID},'{$boundary_array}','{$JsonSVG}','{$center_of_boundary}','{$boundary_type}')";
         mysql_query($Sql) or die();
     } else {
-        $sql = "UPDATE landmark_map_data set lat_long_data='{$boundary_array}', svg_data='{$JsonSVG}', center_boundary='{$center_of_boundary}', boundary_type='{$boundary_type}' where id=1";
+        $sql = "UPDATE landmark_map_data set lat_long_data='{$boundary_array}', svg_data='{$JsonSVG}', center_boundary='{$center_of_boundary}', boundary_type='{$boundary_type}' where id={$sessionID}";
         $res_sql = mysql_query($sql);
     }    
-}
-
-function isCheck($val)  
-{
-
-    if($val == '0' || $val == '1' || $val == '2' || $val == '3' || $val == '4' || $val == '5' || $val == '6' || $val == '7' || $val == '8' || $val == '9' || $val == '.')  {
-        return 1;
-    } else {
-        return 0;
-    }
 }
 
 if($_GET['task'] === 'GetMapdataType')  {
@@ -263,12 +269,11 @@ if($_GET['task'] === 'GetMapdataFromCMs')  {
             $cnt++;    
         }    
     }
-    //echo $langlong;
-
     echo json_encode($getData);
 }
 
 if($_POST['task']=='editpriority'){
+    $sessionID = int($_POST['sessionID']);
     $priority   = $_POST['prio'];
     $cityId     = $_POST['cityid'];
     if(!empty($_POST['nearPlaceId']))
@@ -283,7 +288,7 @@ if($_POST['task']=='editpriority'){
             if($count > 0)
             {
                 
-                updateNearPlace($nearPlaceId, $priority, 'suburb', $sub);
+                updateNearPlaceForMap($nearPlaceId, $sessionID, $priority, 'suburb', $sub);
             }else{
                 echo "2";
             }
@@ -292,12 +297,12 @@ if($_POST['task']=='editpriority'){
             if($count > 0)
             {
                 
-                updateNearPlace($nearPlaceId, $priority, 'locality', $loc);
+                updateNearPlaceForMap($nearPlaceId, $sessionID, $priority, 'locality', $loc);
             }else{
                 echo "2";
             }
         }else{
-            updateNearPlace($nearPlaceId, $priority, $status, 'city', $cityId);
+            updateNearPlaceForMap($nearPlaceId, $sessionID, $priority, $status, 'city', $cityId);
             
         }
     }
@@ -311,6 +316,7 @@ if($_POST['task']=='editpriority'){
     }
 }
 else if($_POST['task']=='createLandmarkAlias'){
+    $sessionID = (int)$_POST['sessionID'];
     $id = $_POST['id'];
     $city_id = $_POST['cid'];
     $place_type_id = $_POST['placeid'];
@@ -327,10 +333,12 @@ else if($_POST['task']=='createLandmarkAlias'){
     $prio   = $_POST['prio'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
+    $futureflag = $_POST['futureflag'];
+
     //$map = $_POST['map'];
     if($mode=='update' && $id!==null){
 
-        $Sql = "SELECT * FROM landmark_map_data";
+        $Sql = "SELECT * FROM landmark_map_data where id = {$sessionID}";
         $boundary = "";
         $svg = "";
         $flag_future = "";
@@ -363,7 +371,7 @@ else if($_POST['task']=='createLandmarkAlias'){
         $flag = 0;
         
         if($cnt != 0)  {
-          $sql = "UPDATE landmarks set city_id='{$city_id}', place_type_id='{$place_type_id}', name='{$name}', vicinity='{$address}', latitude='{$lat}', longitude='{$long}', phone_number='{$phone}', website='{$web}', priority='{$prio}', status='{$status}', boundary = '{$boundary}', center_boundary = '{$center_boundary}', svg_data = '{$svg}', boundary_type = '{$boundary_type}', boundaryEncode = '{$boundaryEncode}' where id='{$id}'";
+          $sql = "UPDATE landmarks set city_id='{$city_id}', place_type_id='{$place_type_id}', name='{$name}', vicinity='{$address}', latitude='{$lat}', longitude='{$long}', phone_number='{$phone}', website='{$web}', priority='{$prio}', status='{$status}', boundary = '{$boundary}', center_boundary = '{$center_boundary}', future_flag = '{$futureflag}', svg_data = '{$svg}', boundary_type = '{$boundary_type}', boundaryEncode = '{$boundaryEncode}' where id='{$id}'";
           $res_sql = mysql_query($sql);
           if(mysql_affected_rows()>0)
               echo "1";
@@ -371,7 +379,7 @@ else if($_POST['task']=='createLandmarkAlias'){
           else  echo "3";
 
         } else {
-            $sql = "UPDATE landmarks set city_id='{$city_id}', place_type_id='{$place_type_id}', name='{$name}', vicinity='{$address}', latitude='{$lat}', longitude='{$long}', phone_number='{$phone}', website='{$web}', priority='{$prio}', status='{$status}' where id='{$id}'";
+            $sql = "UPDATE landmarks set city_id='{$city_id}', place_type_id='{$place_type_id}', name='{$name}', vicinity='{$address}', latitude='{$lat}', longitude='{$long}', phone_number='{$phone}', website='{$web}', priority='{$prio}', status='{$status}', future_flag = '{$futureflag}' where id='{$id}'";
             $res_sql = mysql_query($sql);
             if(mysql_affected_rows()>0)
                 echo "1";
@@ -381,14 +389,16 @@ else if($_POST['task']=='createLandmarkAlias'){
         
 
 
-        $query_max_id2 = "truncate table landmark_map_data";
+        //$query_max_id2 = "truncate table landmark_map_data";
+       
+        $query_max_id2 = "delete from landmark_map_data where id = {$sessionID}";
         $res = mysql_query($query_max_id2);  
     }
     if ($mode=='create'){
         
         //$query = "INSERT INTO landmarks(city_id, place_type_id, name, vicinity, latitude, longitude, phone_number, website, priority, status, created_at) values ('{$city_id}', '{$place_type_id}','{$name}','{$address}','{$lat}','{$long}','{$phone}','{$web}','{$prio}','{$status}', NOW())";
 
-        $Sql = "SELECT * FROM landmark_map_data";
+        $Sql = "SELECT * FROM landmark_map_data where id = {$sessionID}";
         $boundary = "";
         $svg = "";
         $flag_future = "";
@@ -424,14 +434,15 @@ else if($_POST['task']=='createLandmarkAlias'){
         //$query_max_id1 = "select max(id) from landmark_new";
         //$max_id1 = mysql_query($query_max_id1);
 
-        $query = "INSERT INTO landmarks(city_id, place_type_id, name, vicinity, latitude, longitude, phone_number, website, priority, status, created_at, boundary, center_boundary, future_flag, svg_data, boundary_type, boundaryEncode) values ('{$city_id}', '{$place_type_id}','{$name}','{$address}', '{$lat}','{$long}','{$phone}','{$web}','{$prio}','{$status}', NOW(),'{$boundary}','{$center_boundary}', 0, '{$svg}', '{$boundary_type}', '{$boundaryEncode}')";
+        $query = "INSERT INTO landmarks(city_id, place_type_id, name, vicinity, latitude, longitude, phone_number, website, priority, status, created_at, boundary, center_boundary, future_flag, svg_data, boundary_type, boundaryEncode) values ('{$city_id}', '{$place_type_id}','{$name}','{$address}', '{$lat}','{$long}','{$phone}','{$web}','{$prio}','{$status}', NOW(),'{$boundary}','{$center_boundary}', '{$futureflag}', '{$svg}', '{$boundary_type}', '{$boundaryEncode}')";
         $res = mysql_query($query);
         if(mysql_affected_rows()>0)
             echo "1";
         else
             echo "3".mysql_error();
 
-        $query_max_id2 = "truncate table landmark_map_data";
+        //$query_max_id2 = "truncate table landmark_map_data";
+        $query_max_id2 = "delete from landmark_map_data where id = {$sessionID}";
         //echo " max id = ",$max_id2;
         //$queryforboundarydata = "INSERT INTO boundary_data(landmark_id, latitude, longitude, boundary) values ('{$max_id2}', '{$lat}','{$long}','{$boundary_array}')";
         $res = mysql_query($query_max_id2);      
