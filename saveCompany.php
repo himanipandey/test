@@ -181,6 +181,7 @@ if($_POST['task']=='createComp'){
     $ipArr = $_POST['ipArr'];
     
     $pan   = $_POST['pan'];
+    $isVerified = $_POST['isVerified'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
     $altText = "company ".$name;
@@ -295,7 +296,7 @@ if($_POST['task']=='createComp'){
                 }
             }
 
-            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', verified='{$isVerified}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
             
             $res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -580,8 +581,8 @@ if($_POST['task']=='createComp'){
 
     }
     if ($mode=='create'){
-        
-        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, website, company_info_type, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$web}', '{$broker_info_type}', NOW(), {$_SESSION['adminId']})";
+                
+        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, verified, website, company_info_type, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$isVerified}', '{$web}', '{$broker_info_type}', NOW(), {$_SESSION['adminId']})";
         
         $res = mysql_query($query) or mysql_error();
         if(mysql_affected_rows()>0){
