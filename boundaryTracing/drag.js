@@ -88,7 +88,6 @@ function initialize() {
   });
   var waitForLoad = function () {
       if (typeof jQuery != "Undefined") {
-          //console.log('define');
 
           $.ajax({
             url: '/saveNearPlacePriority.php',          
@@ -157,9 +156,6 @@ function initialize() {
                       title: "Property!"
                   });
 
-                  // define map
-                  //map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
                   marker.setMap(map);  
               }
 
@@ -187,34 +183,6 @@ function initialize() {
                     fillOpacity: 0.35
                   });
 
-                  /*var res = encodeLatLngPolygon(triangleCoords);
-                  console.log("RES = "+res);
-
-                  function encodeLatLngPolygon(array) {
-
-                      var polyOptions = {
-                      strokeColor: '#000000',
-                      strokeOpacity: 1.0,
-                      strokeWeight: 3
-                        }
-                        poly = new google.maps.Polyline(polyOptions);
-
-                      var path = poly.getPath();
-
-                      for(var i=0;i<array.length;i++) {
-                          var xyz = new google.maps.LatLng(parseFloat(array[i][0]).toFixed(2), parseFloat(array[i][1]).toFixed(2));
-                          path.push(xyz);            
-
-                      }
-
-                      var code = google.maps.geometry.encoding.encodePath(path)
-
-                      return code;
-                  }*/
-
-                 // var EncodeLatLong = google.maps.geometry.encoding.encodePath(triangleCoords);
-
-                 // console.log("Encode = "+EncodeLatLong);
 
 
                   // ************** POLYGON Next **************************************************
@@ -289,9 +257,6 @@ function initialize() {
             }
     
             function showArrays(event) {
-
-                // Since this polygon has only one path, we can call getPath()
-                // to return the MVCArray of LatLngs.
                 var vertices = this.getPath();
 
                 var contentString = '<b>Bermuda Triangle polygon</b><br>' +
@@ -373,16 +338,7 @@ function initialize() {
                         console.log("markerB drag event fired");
                     });
 
-                      google.maps.event.addListener(markerA, 'dragend', function () {
-                        /*
-                        var newPointA = markerA.getPosition();
-                        var newPointB = markerB.getPosition();
-                        var x = newPointB.lat() + (newPointA.lat() - initMarkerA.lat()); 
-                        var y = newPointB.lng() + (newPointA.lng() - initMarkerA.lng());
-                        newPointB = new google.maps.LatLng(x, y);  
-                        markerB.setPosition(newPointB); 
-                       */ 
-                            
+                      google.maps.event.addListener(markerA, 'dragend', function () {                            
                           var newPointA = markerA.getPosition();
                           var newPointB = markerB.getPosition();
                           console.log("point1"+ newPointA);
@@ -414,13 +370,6 @@ function initialize() {
 
 
 function initializeErase() {
-
-  /*var t = document;
-  var theNewScript = t.createElement("script");
-  theNewScript.type = "text/javascript";
-  theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-  document.getElementsByTagName("head")[0].appendChild(theNewScript);*/
-
   var getData = [];
   var XBoundary = 0.0;
   var YBoundary = 0.0;
@@ -594,9 +543,6 @@ function initializeErase() {
             }
     
             function showArrays(event) {
-
-                // Since this polygon has only one path, we can call getPath()
-                // to return the MVCArray of LatLngs.
                 var vertices = this.getPath();
 
                 var contentString = '<b>Bermuda Triangle polygon</b><br>' +
@@ -711,12 +657,7 @@ function initializeErase() {
 
 
 function utilinit(){
-  //var latlng = new google.maps.LatLng(28.6707515716552730,77.1130905151367200); 
-  //getLocation(latlng); 
   init(map);
-
-  
-  //mywindow = window.open("http://cms.localhost.com/boundaryTracing/popup.html", "_blank", "toolbar=no, scrollbars=no, resizable=yes, top=300, left=500, width=200, height=100");
 }
 
 function getLocation(latlng){
@@ -772,15 +713,12 @@ function setMap(){
   getCity = getaddr[2].split(",")[0];
   city = getCity;
   flag = 0;
-  //var x = parseFloat(latlng[1]);
   var x = parseFloat(latlng[latlng.length-2]);
-  //var y1 = latlng[2].split('.');
   var y1 = latlng[latlng.length-1].split('.');
   y1[1] = '.' + y1[1];
   var y = parseFloat(y1[0]);
   var f = parseFloat(y1[1]);
   y = y + f;
-  //console.log(x+" "+y);
   addr = x+", "+y;
   console.log(city);
   console.log(addr);
@@ -806,7 +744,6 @@ function imageOptacityIncrease(){
   opacity = op.toString();
   console.log(opacity);
   check = 1;
-  //img.style.opacity = opacity;
   DebugOverlay.prototype.onAdd();
 
 }
@@ -818,14 +755,12 @@ function imageOptacityDecrease(){
   opacity = op.toString();
   console.log(opacity);
   check = 1;
-  //img.style.opacity = opacity;
   DebugOverlay.prototype.onAdd();
 
 }
 var img;
 DebugOverlay.prototype.onAdd = function() {
 
- //img= document.createElement('img');
  if(check != 1){
   var div = document.createElement('div');
   div.style.borderStyle = 'none';
@@ -893,15 +828,7 @@ function startTracing(){
       ]
     },
     markerOptions: {
-      //icon: 'images/download.png';
-      /*marker = new google.maps.Marker({
-          position: latlng,
-          map:map,
-          draggable:true,
-          animation: google.maps.Animation.DROP
-      });*/
-      //marker = new google.maps.Marker({position: event.latLng, map: map});
-      //google.maps.event.addListener(marker, 'click', toggleBounce);
+
     },
     circleOptions: {
       fillColor: '#ffff00',
@@ -922,18 +849,14 @@ function startTracing(){
   });
 
   google.maps.event.addListener(drawingManager, 'markercomplete', function(point) {
-      //console.log(point['position']['A']);
       var latPoint = point['position']['A'];
       var lngPoint = point['position']['F'];
       PointArray.push(point['position']);
-      //saveLatLng('point', PointArray);
-      //point['position'];
-      //var radius = circle.getRadius();
+
   });
 
   google.maps.event.addListener(drawingManager, 'polylinecomplete', function(line) {
     p = line;
-    //alert(line.getPath().getArray().toString());
     latlngArray = line.getPath().getArray();
     console.log(latlngArray[0]);
 
@@ -960,13 +883,6 @@ function startTracing(){
     }
     encodeString = google.maps.geometry.encoding.encodePath(triangleCoords);
     console.log("Encode = "+encodeString);
-
-    /*var t = document;
-    var theNewScript = t.createElement("script");
-    theNewScript.type = "text/javascript";
-    theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-    document.getElementsByTagName("head")[0].appendChild(theNewScript);*/
-
 
     var waitForLoadNEW = function () {
       var JsonSVG = JSON.stringify(pixelArray);
@@ -1000,7 +916,6 @@ function startTracing(){
             $.ajax({
               url: '/saveNearPlacePriority.php',          
               type: "GET",
-              //dataType: "json",
               data: { latlngArray: jsonString , task: 'GetLength'},
 
               success:function(msg){
@@ -1018,13 +933,9 @@ function startTracing(){
             window.setTimeout(waitForLoad, 1000);
         }
     };
-    //window.setTimeout(waitForLoad, 1);
 
-
-    //console.log("Lat Long = ",latlngArray[0]['k'],latlngArray[0]['D']);
     google.maps.event.addListener(line, 'dragend', function() {
     console.log("chamged!!!!");
-      //alert(line.getPath().getArray().toString());
     });
   });
 
@@ -1041,9 +952,7 @@ function savePoint()  {
 
 function path1(){
   var Type = "polyline";
-  //console.log("EEEE= " + encodeString);
   saveLatLng(Type, p.getPath().getArray()); 
-  //return repoints;
 } 
 
 function saveLatLngCheck(){
@@ -1116,14 +1025,7 @@ function saveLatLng(Type, pts){
 
    saveCms = JSON.stringify(latlngArray);
    var center_of_boundary = JSON.stringify(center_lat_long);
-   console.log('c = '+saveCms);
     }
-   //console.log(saveCms);
-    /*var t = document;
-    var theNewScript = t.createElement("script");
-    theNewScript.type = "text/javascript";
-    theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-    document.getElementsByTagName("head")[0].appendChild(theNewScript);*/
 
     var waitForLoad = function () {
         var JsonSVG = JSON.stringify(pixelArray);
@@ -1146,19 +1048,12 @@ function saveLatLng(Type, pts){
         }
     };
     window.setTimeout(waitForLoad, 0);
-    
 
-   /*localStorage.setItem('latlngArray', JSON.stringify(latlngArray));
-     
-   localStorage["latlngArray"] = JSON.stringify(latlngArray);
-   var storedNames = JSON.parse(localStorage["latlngArray"]);
-   /*console.log( "localStorage  "+storedNames[0].lat; */
 }
 
 
 function clearPolyline () {
   initializeErase();
-  //poly.setMap(null);
 }
 
 function restorePolyline () {
@@ -1179,32 +1074,5 @@ function convertToPixel(){
 
 
   var myJsonString = JSON.stringify(pixelArray);
-  //console.log(myJsonString);
-
-  /*var t = document;
-  var theNewScript = t.createElement("script");
-  theNewScript.type = "text/javascript";
-  theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-  document.getElementsByTagName("head")[0].appendChild(theNewScript);
-
-  var waitForLoad = function () {
-      if (typeof jQuery != "undefined") {
-          console.log('define ');
-          $.ajax({
-            url: '/saveNearPlacePriority.php',          
-            type: "POST",
-            data: {Pixels: myJsonString, task: 'PixeldataSendCMs'},
-
-            success:function(msg){
-              console.log(msg);
-              console.log("success !!");  
-            },
-          });
-      } else {
-          console.log('undefine');
-          window.setTimeout(waitForLoad, 1000);
-      }
-  };
-  window.setTimeout(waitForLoad, 1000);*/
     
 }
