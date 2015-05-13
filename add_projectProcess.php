@@ -764,25 +764,27 @@ if (isset($_POST['btnSave']) || isset($_POST['btnExit'])) {
 
 
             ## - desccripion content flag handeling
-            $cont_flag = TableAttributes::find('all', array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project')));
+            if(in_array($_SESSION['DEPARTMENT'], array('ADMINISTRATOR', 'CONTENT'))){
+                $cont_flag = TableAttributes::find('all', array('conditions' => array('table_id' => $returnProject->project_id, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'resi_project')));
 
-            if ($cont_flag) {
-                $content_flag = ($_POST["content_flag"]) ? 1 : 0;
-                if (is_numeric($content_flag)) {
-                    $cont_flag = TableAttributes::find($cont_flag[0]->id);
+                if ($cont_flag) {
+                    $content_flag = ($_POST["content_flag"]) ? 1 : 0;
+                    if (is_numeric($content_flag)) {
+                        $cont_flag = TableAttributes::find($cont_flag[0]->id);
+                        $cont_flag->updated_by = $_SESSION['adminId'];
+                        $cont_flag->attribute_value = $content_flag;
+                        $cont_flag->save();
+                    }
+                } else {
+                    //add mode by dataEntry
+                    $cont_flag = new TableAttributes();
+                    $cont_flag->table_name = 'resi_project';
+                    $cont_flag->table_id = $returnProject->project_id;
+                    $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
+                    $cont_flag->attribute_value = ($_POST["content_flag"]) ? 1 : 0;
                     $cont_flag->updated_by = $_SESSION['adminId'];
-                    $cont_flag->attribute_value = $content_flag;
                     $cont_flag->save();
                 }
-            } else {
-                //add mode by dataEntry
-                $cont_flag = new TableAttributes();
-                $cont_flag->table_name = 'resi_project';
-                $cont_flag->table_id = $returnProject->project_id;
-                $cont_flag->attribute_name = 'DESC_CONTENT_FLAG';
-                $cont_flag->attribute_value = ($_POST["content_flag"]) ? 1 : 0;
-                $cont_flag->updated_by = $_SESSION['adminId'];
-                $cont_flag->save();
             }
 
             //echo $eff_date_to." heer";die;
