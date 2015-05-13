@@ -547,7 +547,7 @@ function getNearPlacesArrfromCity($status, $cityId, $order, $placeType=0)
     else
         $where .= "np.city_id = $cityId and  np.place_type_id = $placeType"; //.$queryLessThenMax;
     $orderby = " ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
-    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.name as placeType, np.priority, np.place_type_id, np.phone_number, np.website
+    $qry = "SELECT np.name, np.id, np.city_id, np.latitude, np.longitude, np.vicinity, np.status, npt.name as placeType, np.priority, np.place_type_id, np.phone_number, np.website, np.future_flag
             FROM " . landmarks. " np 
             inner join landmark_types npt on npt.id = np.place_type_id
             WHERE ".$where." ". $orderby;
@@ -567,7 +567,6 @@ function getNearPlacesArr($status, $cityId, $localityId ,$type, $order, $placeTy
     global $orderBy;
     $orderBy = $order;
     $queryLessThenMax = "";
-    
     switch($type)
     {
         case "city":
@@ -650,13 +649,12 @@ function getNearPlacesArr($status, $cityId, $localityId ,$type, $order, $placeTy
            
             $orderby = "ORDER BY np.priority $orderBy, np.place_type_id, np.name ASC";
             
-            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.name, np.priority, np.place_type_id, np.phone_number, np.website
+            $qry = "SELECT np.name, np.city_id, np.id, np.latitude, np.longitude, np.vicinity, np.status, npt.name, np.priority, np.place_type_id, np.phone_number, np.website, np.future_flag
             FROM " . landmarks. " np 
                 
             inner join landmark_types npt on npt.id = np.place_type_id
             where get_distance_in_kms_between_geo_locations($lat, $lon, np.latitude, np.longitude) < 5"
             .$where." ".$orderby;
-
              //print_r($qry);
             break;
     }
@@ -716,7 +714,7 @@ function getDistance($lat, $lon, $lat2, $lon2)
 
 function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid = null)
 {
-    /*switch($mode)
+    switch($mode)
     {
         case "city":
             $locList = "select l.locality_id from locality l 
@@ -763,9 +761,32 @@ function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid
             $where = "locality_id = '" . $modeid . "'";
             $update = "priority = '$priority'";
             break;
-    }*/
+    }
 
-    $Sql = "SELECT * FROM landmark_map_data";
+    if($priority>0 && $priority<=5) {
+        $update = " priority = '$priority', status = '$status'"; //die($status);
+    }
+        
+    else 
+    {
+        $update = " status = '$status'"; //die("hello1");
+    }
+       
+    $qry = "UPDATE " .landmarks. " SET $update WHERE id = '".$nearPlaceId."'";
+    //die($qry);
+    mysql_query($qry);
+    if(mysql_affected_rows()>0){
+        echo "1";
+    }
+    else{
+        echo "3";
+    }
+
+}
+
+function updateNearPlaceForMap($nearPlaceId, $sessionID, $priority, $status, $mode = null, $modeid = null)
+{
+    $Sql = "SELECT * FROM landmark_map_data where id = {$sessionID}";
     $boundary = "";
     $svg = "";
     $flag_future = "";
@@ -837,11 +858,10 @@ function updateNearPlace($nearPlaceId, $priority, $status, $mode = null, $modeid
         }
     }*/
 
-    $query_max_id2 = "truncate table landmark_map_data";
+    $query_max_id2 = "delete from landmark_map_data where id = {$sessionID}";
     $res = mysql_query($query_max_id2);  
     
 }
-
 
 function checkNearPlaceAvail($nearPlaceId = null, $priority = null, $mode = null, $modeid = null)
 {

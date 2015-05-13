@@ -1,6 +1,3 @@
-var BaseUrl = "http://cms.proptiger.com";
-//var BaseUrl = "http://cms.localhost.com";
-
 
 var overlay;
 var geocoder;
@@ -14,6 +11,7 @@ var arrMarker = [];
 var p;
 var overlay;
 var latlngArray = [];
+var PointArray = [];
 
 var iniMarkerA;
 var iniMarkerB;
@@ -29,6 +27,24 @@ var EncodeLatLong = "check";
 var encodeString = "";
 
 DebugOverlay.prototype = new google.maps.OverlayView();
+
+
+
+var url = window.location.search;
+url = url.replace("?", ''); // remove the ?
+var urlElement = url.split(',');
+
+var id = "";
+var getLat = "";
+var getLong = "";
+var sessionID = "";
+var BaseUrl = "http://";
+sessionID = urlElement[0];
+BaseUrl = BaseUrl + urlElement[1] + ".com";
+getLat = urlElement[2];
+getLong = urlElement[3];
+id = urlElement[4];
+
 
 var t = document;
 var theNewScript = t.createElement("script");
@@ -50,38 +66,9 @@ function initialize() {
   var LatNear2 = '';
   var LngNear2 = '';
 
-  var url = window.location.search;
-  url = url.replace("?", ''); // remove the ?
-  //console.log('URL = '+url);
-  var id = "";
-  var getLat = "";
-  var getLong = "";
+  console.log(sessionID);
 
-  var checkFlag = 0;
-  for(var k = 0; k < url.length; k++)  {
-      if(checkFlag == 0)  {
-        if(url[k] == ',')  {
-          checkFlag = 1;
-        } else {
-          id = id.concat(url[k]);
-        }
-      } else if(checkFlag == 1)  {
-        if(url[k] == ',')  {
-          checkFlag = 2;
-        } else {
-          getLat = getLat.concat(url[k]);
-        }
-      } else if(checkFlag == 2)  {
-        if(url[k] == ',')  {
-          checkFlag = 3;
-        } else {
-          getLong = getLong.concat(url[k]);
-        }
-      }
-  }
-  console.log("id = "+ id + " lat = "+ getLat + " long = "+getLong);
-
-  if(getLat == '0.000000' || getLong == '0.000000' || getLat == ''|| getLong == '')  {
+  if(getLat == '0.000000' || getLong == '0.000000' || getLat == ''|| getLong == 'null' || getLat == 'null')  {
     getLat = '28.580464';
     getLong = '77.3175427';
   }
@@ -109,19 +96,21 @@ function initialize() {
             data: {id : id, place : place, task: 'GetMapdataFromCMs'},
 
             success:function(msg){
-              console.log("WORK!!!");
+              console.log("WORKing!!!");
+              var coorArray = [];
               if(BoundaryType == "polyline" || BoundaryType == "polygon" || BoundaryType == "point")  {
                 var polygons = [];
-                var coorArray = [];
+                
                 msg = $.parseJSON(msg);
                 getData = msg[0];
+                console.log(getData);
                 
                  
                 var cnt = 0;
                 var divideCnt = 1;
                 
-
-                if(msg[0] == "") {
+                
+                if(msg[0] == "" || msg[0] == 'null' || msg[0] == 'check') {
 
                 } else {
                     $.each(msg, function(k,v) {
@@ -138,6 +127,7 @@ function initialize() {
                             BoundaryArray.push({0: v2['A'] ,1: v2['F']});
                             divideCnt++;
                         });
+
                         coorArray.push(coorArrayTemp);
                         cnt++;
                     });
@@ -147,7 +137,7 @@ function initialize() {
                     XBoundary = XBoundary / divideCnt;
                     YBoundary = YBoundary / divideCnt;   
                 }
-                console.log("WORK!!!");
+                
               }
 
               var centerMap = new google.maps.LatLng(getLat, getLong);  
@@ -158,18 +148,18 @@ function initialize() {
               };
 
               var bounds = new google.maps.LatLngBounds();
-
-
-              var marker = new google.maps.Marker({
-                  position: centerMap,
-                  title:"PropTiger!"
-              });
-
-              // define map
               map = new google.maps.Map(document.getElementById('map'),
-                  mapOptions);
+                      mapOptions);
+              if(BoundaryType == "point" && coorArray[0].length == 1)  {
+                  var pointMap = new google.maps.LatLng(coorArray[0][0][0], coorArray[0][0][1]);
+                  var marker = new google.maps.Marker({
+                      position: pointMap,
+                      title: "Property!"
+                  });
 
-              if(coorArray[0].length == 1)  {
+                  // define map
+                  //map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
                   marker.setMap(map);  
               }
 
@@ -436,41 +426,7 @@ function initializeErase() {
   var YBoundary = 0.0;
   var BoundaryArray = [];
 
-
-  var url = window.location.search;
-  url = url.replace("?", ''); // remove the ?
-  console.log('URL = '+url);
-
-
-  var id = "";
-  var getLat = "";
-  var getLong = "";
-
-  var checkFlag = 0;
-  for(var k = 0; k < url.length; k++)  {
-      if(checkFlag == 0)  {
-        if(url[k] == ',')  {
-          checkFlag = 1;
-        } else {
-          id = id.concat(url[k]);
-        }
-      } else if(checkFlag == 1)  {
-        if(url[k] == ',')  {
-          checkFlag = 2;
-        } else {
-          getLat = getLat.concat(url[k]);
-        }
-      } else if(checkFlag == 2)  {
-        if(url[k] == ',')  {
-          checkFlag = 3;
-        } else {
-          getLong = getLong.concat(url[k]);
-        }
-      }
-  }
-  console.log("id = "+ id + " lat = "+ getLat + " long = "+getLong);
-
-  if(getLat == '0.000000' || getLong == '0.000000' || getLat == ''|| getLong == '')  {
+  if(getLat == 'null' || getLong == '0.000000' || getLat == ''|| getLong == 'null')  {
     getLat = '28.580464';
     getLong = '77.3175427';
   }
@@ -483,7 +439,7 @@ function initializeErase() {
   $.ajax({
     url: '/saveNearPlacePriority.php',          
     type: "POST",
-    data: {task: 'EmptyLandmark_map_data'},
+    data: { sessionID: sessionID, task: 'EmptyLandmark_map_data'},
 
     success:function(msg){
       console.log(msg);
@@ -912,9 +868,6 @@ DebugOverlay.prototype.onRemove = function() {
   this.div_ = null;
 };
 
-
-
-
 function show_popup() {
   console.log("Calling");
   var p = window.createPopup();
@@ -942,12 +895,13 @@ function startTracing(){
     markerOptions: {
       //icon: 'images/download.png';
       /*marker = new google.maps.Marker({
+          position: latlng,
           map:map,
           draggable:true,
           animation: google.maps.Animation.DROP
-      });
+      });*/
       //marker = new google.maps.Marker({position: event.latLng, map: map});
-      google.maps.event.addListener(marker, 'click', toggleBounce);*/
+      //google.maps.event.addListener(marker, 'click', toggleBounce);
     },
     circleOptions: {
       fillColor: '#ffff00',
@@ -966,18 +920,16 @@ function startTracing(){
       editable: true
     }
   });
-  /*google.maps.event.addListener(map, 'click', function(event) {
 
-    marker = new google.maps.Marker({position: event.latLng, map: map});
-    alert(event.latlng); 
-  }); */
-  
-  /*google.maps.event.addListener(drawingManager, 'overlaycomplete', function(event) {
-    if (event.type == google.maps.drawing.OverlayType.MARKER) {
-        console.log("ALERT!!!!!!!");
-    }
-  });*/
-
+  google.maps.event.addListener(drawingManager, 'markercomplete', function(point) {
+      //console.log(point['position']['A']);
+      var latPoint = point['position']['A'];
+      var lngPoint = point['position']['F'];
+      PointArray.push(point['position']);
+      //saveLatLng('point', PointArray);
+      //point['position'];
+      //var radius = circle.getRadius();
+  });
 
   google.maps.event.addListener(drawingManager, 'polylinecomplete', function(line) {
     p = line;
@@ -1024,7 +976,7 @@ function startTracing(){
           $.ajax({
             url: '/saveNearPlacePriority.php',          
             type: "POST",
-            data: {JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
+            data: {sessionID : sessionID, JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
 
             success:function(msg){
               console.log(msg);  
@@ -1082,20 +1034,19 @@ function startTracing(){
   drawingFlag = true; 
 }
 
+function savePoint()  {
+  var Type = "point";
+  saveLatLng(Type, PointArray);
+}
+
 function path1(){
   var Type = "polyline";
-  console.log("EEEE= " + encodeString);
+  //console.log("EEEE= " + encodeString);
   saveLatLng(Type, p.getPath().getArray()); 
   //return repoints;
 } 
 
 function saveLatLngCheck(){
-
-    /*var t = document;
-    var theNewScript = t.createElement("script");
-    theNewScript.type = "text/javascript";
-    theNewScript.src = "http://cms.localhost.com/boundaryTracing/jquery-1.8.3.min.js";
-    document.getElementsByTagName("head")[0].appendChild(theNewScript);*/
 
     var waitForLoad = function () {
         var JsonSVG = JSON.stringify(pixelArray);
@@ -1105,7 +1056,7 @@ function saveLatLngCheck(){
             $.ajax({
               url: '/saveNearPlacePriority.php',          
               type: "POST",
-              data: {EncodeLatLong : null, center_of_boundary : null, boundary: null , JsonSVG : null, Type : null, task: 'MapdataSendCMs'},
+              data: {sessionID : sessionID, EncodeLatLong : null, center_of_boundary : null, boundary: null , JsonSVG : null, Type : null, task: 'MapdataSendCMs'},
 
               success:function(msg){
                 console.log('Encode = '+msg);
@@ -1122,9 +1073,8 @@ function saveLatLngCheck(){
 
 
 function saveLatLng(Type, pts){
-   console.log("POP"+pts);
    latlngArray = pts;
-   //console.log(pts);
+   console.log(pts);
    var convertToPixelNEW = function () {
         overlay = new google.maps.OverlayView();
         overlay.draw = function () {};
@@ -1135,14 +1085,16 @@ function saveLatLng(Type, pts){
           pixelArray[i] = overlay.getProjection().fromLatLngToContainerPixel(latlngArray[i]);
         }
     }
-
-   window.setTimeout(convertToPixelNEW, 0);
+    if (Type != 'point')  {
+        window.setTimeout(convertToPixelNEW, 0);   
+    }
+   
    var count = 0;
    var lang = 0.0;
    var longi = 0.0;
    console.log(pts);
-   var center_of_boundary = "check";
-   var saveCms = "check";
+   var center_of_boundary = "";
+   var saveCms = "";
 
    if(pts.length != 0)  {
 
@@ -1164,6 +1116,7 @@ function saveLatLng(Type, pts){
 
    saveCms = JSON.stringify(latlngArray);
    var center_of_boundary = JSON.stringify(center_lat_long);
+   console.log('c = '+saveCms);
     }
    //console.log(saveCms);
     /*var t = document;
@@ -1180,10 +1133,10 @@ function saveLatLng(Type, pts){
             $.ajax({
               url: '/saveNearPlacePriority.php',          
               type: "POST",
-              data: {EncodeLatLong : EncodeLatLong, center_of_boundary : center_of_boundary, boundary: saveCms, JsonSVG : JsonSVG, Type : Type, task: 'MapdataSendCMs'},
+              data: {sessionID : sessionID, EncodeLatLong : EncodeLatLong, center_of_boundary : center_of_boundary, boundary: saveCms, JsonSVG : JsonSVG, Type : Type, task: 'MapdataSendCMs'},
 
               success:function(msg){
-                console.log('Encode = '+msg);
+                //console.log('Encode = '+msg);
                 console.log("success !!");  
               },
             });

@@ -1,12 +1,25 @@
-var BaseUrl = "http://cms.proptiger.com";
-//var BaseUrl = "http://cms.localhost.com";
-
 
 var theArrayofLatLng = [];
 var x = 5;
 var FreeHandPoly;
 var mywindow;
 var encodeString = "";
+
+var url = window.location.search;
+url = url.replace("?", ''); // remove the ?
+var urlElement = url.split(',');
+
+var id = "";
+var getLat = "";
+var getLong = "";
+var sessionID = "";
+var BaseUrl = "http://";
+sessionID = urlElement[0];
+BaseUrl = BaseUrl + urlElement[1] + ".com";
+getLat = urlElement[2];
+getLong = urlElement[3];
+id = urlElement[4];
+
 
 var t = document;
 var theNewScript = t.createElement("script");
@@ -130,7 +143,7 @@ var init = function(map){
                           $.ajax({
                             url: '/saveNearPlacePriority.php',          
                             type: "POST",
-                            data: {JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
+                            data: {sessionID: sessionID, JsonSVG: JsonSVG, encodeString : encodeString, task: 'saveEncodedBoundary'},
 
                             success:function(msg){
                               console.log(msg);  
@@ -212,7 +225,6 @@ function saveLatLngDrawingMode(){
     console.log('The = '+theArrayofLatLng.getArray());
     var Type = "polygon"; 
     if(theArrayofLatLng == "")  {
-        console.log("CCCCCCCCC");
         saveLatLngCheck();
     } else {
         saveLatLng(Type, theArrayofLatLng.getArray());
