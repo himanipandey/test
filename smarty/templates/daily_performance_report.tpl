@@ -148,6 +148,9 @@
                                               <td nowrap align = "center"  colspan="4">
                                                 <b>Secondary Price</b>
                                               </td>
+                                              <td nowrap align = "center">
+                                                <b>Time Spent</b>
+                                              </td>
                                             </tr>
                                             <tr height="30px;" bgcolor="#f2f2f2">
                                                 <td nowrap align = "center">
@@ -201,6 +204,8 @@
                                                 </td>
                                                 <td nowrap align = "center">
                                                   <b> Revert</b>
+                                                </td>
+                                                <td nowrap align = "center">
                                                 </td>
                                             </tr>
                                             {else}
@@ -300,6 +305,9 @@
                                                      <td nowrap align = "center">
                                                        {$value['SecondaryPriceCycle']['Revert']}
                                                        {$se_revert = $se_revert + $value['SecondaryPriceCycle']['Revert']}
+                                                     </td>
+                                                     <td nowrap align = "center">
+                                                       {$timeSpent[$adminId]}
                                                      </td>
                                                     </tr>
                                                   {/foreach} 

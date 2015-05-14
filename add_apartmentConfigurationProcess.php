@@ -415,7 +415,7 @@ if ($_POST['action'] == "save")
                       }else{  
                          
                       }
-                      echo $apartmentsType[0]->attribute_value." != ".$apartmentType;//die("-end");
+                      //echo $apartmentsType[0]->attribute_value." != ".$apartmentType;//die("-end");
                         if($apartmentsType[0]->attribute_value != $apartmentType && $apartmentType != '' && $apartmentsType[0]->attribute_value=='' ){ 
                           //add mode by dataEntry
                                  $apartmentsType = new TableAttributes();
@@ -454,13 +454,43 @@ if ($_POST['action'] == "save")
                                          ############## Transaction Start##############
 					 ResiProject::transaction(function(){
 						
-						global $list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
+						global $isResaleMapped,$list_option_id,$projectId,$flg_delete,$ErrorMsg1,$bed,$unitType;
+                                                
+                                                
 						
 						if($unitType == 'Plot' || $unitType == 'Office' || $unitType == 'Shop')
 							$bed = 0;
 																		
 						       $flag = 0;
-						try{						
+						try{	
+                                                    
+                                                    if($isResaleMapped[$list_option_id]){
+                                                        throw new Exception("Resale");
+                                                    }else{
+                                                        //fetch resale listing id
+                                                        $resale_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst where lst.option_id = ".$list_option_id." 	and lst.status = 'Inactive' and lst.listing_category='Resale'");	
+                                                        
+                                                      if($resale_listing){ 
+                                                          $resale_listings_arr = array();
+                                                          foreach($resale_listing as $lsts){
+                                                              $resale_listings_arr[] = $lsts->id;
+                                                          }
+                                                          $resale_listings_str = implode(",",$resale_listings_arr);
+                                                          
+                                                          //delete resale Amenities
+                                                        mysql_query("DELETE FROM `listing_amenities` WHERE listing_id IN (".$resale_listings_str.")");
+                                                        //update resale listings
+                                                        Listings::update_all(array('set' => 'current_price_id = null','conditions' => array("id IN (".$resale_listings_str.")", 'listing_category' => 'Resale')));
+                                                        
+                                                       //delete resale prices
+                                                       ListingPrices::delete_all(array('conditions'=>array("listing_id in (".$resale_listings_str.")")));
+                                                        //delete resale listings
+                                                        Listings::delete_all(array('conditions'=>array("id in (".$resale_listings_str.")")));                            
+                                                                                                                        
+                                                        
+                                                      }
+                                                        
+                                                    }
 										
 						$actual_listing = Listings::find_by_sql("SELECT lst.id from ".LISTINGS." lst left join ".RESI_PROJECT_PHASE." rpp on lst.phase_id = rpp.phase_id where lst.option_id = ".$list_option_id." and phase_type = 'Actual' 
 											and lst.status = 'Active' and rpp.version = 'Cms' and lst.listing_category='Primary'");											
@@ -538,8 +568,13 @@ if ($_POST['action'] == "save")
 							  $ErrorMsg1 = "Couuld not delete! Prices exists for the config($txtUnitName).";
 							elseif(strstr($e, 'listings_fk_1'))
 							  $ErrorMsg1 = "Couuld not delete! Mapping exists for the config($txtUnitName).";
+                                                        elseif(strstr($e, 'Resale'))
+                                                            $ErrorMsg1 = 'Resale Mapping is Active!';
 							else
-							  $ErrorMsg1 = 'Couuld not delete!';							
+							  $ErrorMsg1 = 'Couuld not delete!';
+                                                        
+                                                        //print $e; die;
+                                                        
 							return false;
 						}							
 					});					
