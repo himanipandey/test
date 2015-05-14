@@ -198,7 +198,7 @@ if (($_POST['btnSave'] == "Next") || ($_POST['btnSave'] == "Submit") || ($_POST[
                                     /*                                     * **********Working for floor plan********************** */
 
 
-                                    if ($floor_name == "3D Floor Plan" || ($imageType=="3D"))
+                                    if ($floor_name == "3D Floor Plan" || ($imageType=="3D" && $floor_name !="Panorama"))
                                         $image_type = "3DFloorPlan";
                                     else if ($floor_name == "Panorama")
                                         $image_type = "Panoramic";
