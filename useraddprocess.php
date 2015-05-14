@@ -126,7 +126,7 @@ if ($_POST['btnSave'] == "Save") {
                         CLOUDAGENT_ID =  '".$cloudAgentId."',  
                         manager_id =  '".$manager_id."',
                         RESIGNATION_DATE = '".$resignationdate."'";
-		$DataInsert = mysql_query($sql) or die(mysql_error());
+		$DataInsert = mysql_query($sql) or die(mysql_error()."E-001");
                 $lastId = mysql_insert_id();
                 //code for insert data in proptiger admin city
                 //echo "<pre>";
@@ -161,8 +161,9 @@ if ($_POST['btnSave'] == "Save") {
                                $cnt++;
                            }
                     }
+                    $cityData = substr($cityData, 0,-1);
                     $finalStr = $cityQry.$cityData;
-                    $resCity = mysql_query($finalStr) or die(mysql_error());
+                    $resCity = mysql_query($finalStr) or die(mysql_error()."E-002");
                 }
                 if($DataInsert)
                     header("Location:userList.php");
@@ -208,7 +209,7 @@ if ($_POST['btnSave'] == "Save") {
                 $arrCityList[$cityDataFetch['city_id']] = $cityDataFetch;
             }
                        
-            if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
+            if(count($_REQUEST['city'])>0 && ($department == 'SURVEY' || $department == 'RESALE')) {
                   //delete data if deselect
                     foreach($arrCityList as $k=>$v) {
                         if(!in_array($k,$_REQUEST['city'])) {
