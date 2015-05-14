@@ -1,7 +1,9 @@
 <?php
-
+include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+include("modelsConfig.php");
+include("includes/configs/configs.php");
 include("httpful.phar");
 
 $page = filter_input(INPUT_GET, "page");
@@ -23,6 +25,13 @@ $start = $page * $size;
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
     $filterArr->and[] = array("equal" => array("cityId" => $cityId));
+}else if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
+    $cityArray = getUserCities($_SESSION["adminId"]);
+    $cityOr = array();
+    foreach ($cityArray as $id=>$label){
+        $cityOr[] = $id;
+    }
+    $filterArr->and[] = array("equal" => array("cityId" => $cityOr));
 }
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
     $filterArr->and[] = array("equal" => array("projectId" => $projectId));
@@ -114,5 +123,15 @@ function getBroker($seller_id) {
         return array(null, null);
     }
 }
-
+function getUserCities($admin_id){
+    $cities = array();
+    $query = "SELECT ct.CITY_ID, ct.LABEL FROM proptiger_admin_city act LEFT JOIN city ct ON act.CITY_ID=ct.CITY_ID WHERE act.ADMIN_ID={$admin_id}";
+    $result = mysql_query($query) or die(mysql_query()."(E-001)");
+    if(mysql_num_rows($result)>0){
+        while ($row = mysql_fetch_assoc($result)){
+            $cities[$row["CITY_ID"]] = $row["LABEL"];
+        }
+    }
+    return $cities;
+}
 ?>

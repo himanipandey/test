@@ -405,7 +405,7 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor','propertyAdvisor'=>'City Head Property Advisor','propertyAdvisors'=>'Team Lead Property Advisors');
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor','cityHeadpropertyAdvisor'=>'City Head Property Advisor','teamLeadpropertyAdvisors'=>'Team Lead Property Advisor');
 	$smarty->assign("designationArray", $designationArray);
 
 
