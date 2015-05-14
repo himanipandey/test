@@ -8,7 +8,7 @@ include("dbConfig.php");
 
 if($_POST['task'] === 'get_tower')  {
    
-    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
+    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME,NO_OF_FLOORS FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
     $Tower = array();
     $ExecSql = mysql_query($Sql) or die();
     $cnt = 0;
@@ -17,6 +17,7 @@ if($_POST['task'] === 'get_tower')  {
             $tmp = array();
             $tmp['tower_id'] = $Res['TOWER_ID'];
             $tmp['tower_name'] = $Res['TOWER_NAME'];
+            $tmp['total_floor'] = $Res['NO_OF_FLOORS'];
             if($Res['TOWER_ID']!='')
                 array_push($Tower, $tmp);
             $cnt++;
