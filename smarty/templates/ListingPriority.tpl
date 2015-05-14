@@ -69,6 +69,9 @@ function submitButton(){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"range_from=" + $('#range_from').val().trim();
         queryStrUrl += ((queryStrUrl)? "&" :"") +"range_to=" + $('#range_to').val().trim();
     }
+    if($("#bookingStatusId_search").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
+    }
     queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
     window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
     return false;
@@ -380,6 +383,18 @@ jQuery(document).ready(function(){
     
   var i;
 
+$("#tower2").change(function(){
+    var total_floor = $('option:selected', this).attr('data-floor');
+    if(total_floor>0){
+        $("#total_floor1").html('');
+        var option = '<option value=' + total_floor + '>' + total_floor + '</option>';
+        $("#total_floor1").append(option);
+    }else{
+        populate_total_floor();
+    }
+});
+
+
 $('#search-top').show('slow');
     $('#search-bottom').show('slow');
 
@@ -433,6 +448,7 @@ $('#search_range').val(getParameterByName('search_range'));
 $('#range_from').val(getParameterByName('range_from'));
 $('#range_to').val(getParameterByName('range_to'));
 $('#search_term').val(getParameterByName('search_term'));
+$('#bookingStatusId_search').val(getParameterByName('bStatusId'));
 
 
 if($('#search_term').val()=="gpid"){
@@ -514,6 +530,9 @@ selProject = $("#selProjId").val();*/
           }
           if($("#listingId_search").val()){
              url += '&listingId=' + $("#listingId_search").val();
+          }
+          if($("#bookingStatusId_search").val()){
+             url += '&bStatusId=' + $("#bookingStatusId_search").val();
           }
           if($("#search_term").val()){
               if($("#search_value").val()){
@@ -1193,6 +1212,7 @@ $("#lmkSave").click(function(){
                 get_towers(project_id);
                    
                 get_phases(projectId);
+                populate_total_floor();
                                
               }
           });
@@ -1413,15 +1433,16 @@ function get_towers(project_id){
 
                         success:function(msg){  
                            //console.log(msg);
-              
+                           $("#tower2").html('<option value="">Select</option>');
                             var options = $("#tower2");
                             //var i = 0;
 
 
                             msg = $.parseJSON(msg);
                             $.each(msg, function(k,v) {
-                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
-                            }); 
+                              //options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                              options.append("<option value= " + v['tower_id'] + " data-floor=" + v['total_floor'] + ">" + v["tower_name"] + "</option>");
+                            });
                             var towerId = $("#towerIdHidden").val();
                             if(towerId!='')
                               options.val(towerId);
@@ -1590,6 +1611,7 @@ function getParameterByName(name) {
                                                 </td>
                                                 
                                             </tr>
+
                                             <tr>
                                                
                                                 <td>
@@ -1604,6 +1626,17 @@ function getParameterByName(name) {
                                                     <input type="text" name="search_value" id="search_value" placeholder="Search Value">
                                                     <input type="text" name="search_landmark" id="search_landmark" placeholder="Search Landmark" class="hide-input">
                                                 </td>
+                                                <td style="padding-left: 10px;">
+                                                    <select name="bookingStatusId" id="bookingStatusId_search">
+                                                        <option value="">Select Booking Status</option>
+                                                        {foreach from=$bStatusList key=bStatusId item=bstatus}
+                                                            <option value="{$bStatusId}"> {$bstatus} </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"></td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
                                                     <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
@@ -2088,7 +2121,7 @@ function getParameterByName(name) {
                           <td>Booking Status</td>
                           <td>
                                 <select name="booking_status" id="booking_status">
-                                    <option value=""> Select Booking Status </option>
+                                    {*<option value=""> Select Booking Status </option>*}
                                     {foreach from=$bStatusList key=bStatusId item=bstatus}
                                         <option value="{$bStatusId}"> {$bstatus} </option>
                                     {/foreach}
@@ -2313,12 +2346,19 @@ $(document).ready(function(){
         if($("#search_term").val() == "gpid"){
             $( "#search_landmark" ).removeClass("hide-input");
             $( "#search_value" ).addClass("hide-input");
-        }else{
+        }
+        else{
             $( "#search_landmark" ).addClass("hide-input");
             $( "#search_value" ).removeClass("hide-input");
         }
     });
     
+    $("#project_search").keypress(function(event){
+        if($("#citydd").val() == "" && (event.which >47 && event.which<123)){
+            event.preventDefault();
+            alert("Please select city");
+        }
+    });
     
 });
 
