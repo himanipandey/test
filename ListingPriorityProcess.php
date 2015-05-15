@@ -1,5 +1,7 @@
 <?php
 //calling function for all the cities
+$listingDelAuth = isUserPermitted('listing', 'delete');
+$smarty->assign('listingDelAuth',$listingDelAuth);
 if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
     $cityArray = getUserCities($_SESSION["adminId"]);
 }  else {

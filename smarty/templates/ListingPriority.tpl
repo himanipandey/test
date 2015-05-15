@@ -20,6 +20,7 @@
 
 <style>
     .hide-input{ display: none !important; }
+    .tablesorter thead .disabled { display: none }
 </style>
 <script language="javascript">
 var pid;
@@ -462,7 +463,7 @@ if($('#search_term').val()=="gpid"){
     $('#search_value').removeClass("hide-input");
     $('#search_landmark').addClass("hide-input");
 }
-
+var listingDelAuth = "{$listingDelAuth}";
 // tablesorter ajax pager
  tableSotderUrl='';
 {literal}
@@ -576,6 +577,7 @@ selProject = $("#selProjId").val();*/
       // ]
       // OR
       // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
+      
       ajaxProcessing: function(data){
         //console.log(data);
         if (data && data.hasOwnProperty('rows')) {
@@ -615,7 +617,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 11){
+                   }else if(indx == 11 && listingDelAuth==true){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -2203,18 +2205,20 @@ function getParameterByName(name) {
                         <form name="form1" method="post" action="">
                            <thead>
                                 <TR class = "headingrowcolor">
-                                  <th align="center">Serial</th>
-                                  <TH align="center">Listing Id</TH>
-                                  <th align="center">City</th>
-                                  <TH align="center">Broker Name</TH>
-                                  <TH align="center">Project</TH>
-                                  <TH align="center">Listing</TH>
-                                  <TH align="center">Price</TH>
-                                  <TH align="center">Created Date</TH>
-                                  <TH align="center">Photo</TH>
-                                  <TH align="center">Verified</TH>
-                                  <TH align="center">Save</TH>
-                                  <TH align="center">Delete</TH>
+                                    <th align="center" class="filter-false sorter-false">Serial</th>
+                                  <TH align="center" class="filter-false sorter-false">Listing Id</TH>
+                                  <th align="center" class="filter-false sorter-false">City</th>
+                                  <TH align="center" class="filter-false sorter-false">Broker Name</TH>
+                                  <TH align="center" class="filter-false sorter-false">Project</TH>
+                                  <TH align="center" class="filter-false sorter-false">Listing</TH>
+                                  <TH align="center" class="filter-false sorter-false">Price</TH>
+                                  <TH align="center" class="filter-false sorter-false">Created Date</TH>
+                                  <TH align="center" class="filter-false sorter-false">Photo</TH>
+                                  <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Save</TH>
+                                  {if $listingDelAuth==true}
+                                    <TH align="center" class="filter-false sorter-false">Delete</TH>
+                                  {/if}
                                 </TR>
                               
                           </thead>
@@ -2237,7 +2241,9 @@ function getParameterByName(name) {
                                 <th>9</th>
                                 <th>10</th>
                                 <th>11</th>
-                                <th>12</th>
+                                {if $listingDelAuth==true}
+                                    <th>12</th>
+                                {/if}
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
