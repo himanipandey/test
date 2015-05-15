@@ -61,7 +61,7 @@ if (isset($gpid) && $gpid != "") {
 
 $filter = json_encode($filterArr);
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
-$fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
+$fields = '"fields":["vendorId","brokerConsent","imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -86,10 +86,10 @@ try {
             if ($row->currentListingPrice->otherCharges != 0) {
                 $price .= "<br>Other Charges - " . $row->currentListingPrice->otherCharges;
             }
-            $v->property->project->description = '';
-            $v->property->project->locality->description = '';
-            $v->property->project->locality->suburb->description = '';
-            $v->property->project->locality->suburb->city->description = '';
+            $row->property->project->description = '';
+            $row->property->project->locality->description = '';
+            $row->property->project->locality->suburb->description = '';
+            $row->property->project->locality->suburb->city->description = '';
             $data_rows = array(
                 "Serial" => $start + $index + 1,
                 "City" => $row->property->project->locality->suburb->city->label,

@@ -133,27 +133,17 @@ function cleanFields(){
 
 
 function editListing(str){
-  //console.log("inside editListing");
-  
-  //debugger;
-  //console.log(str);
-  //str = unescape(str);
-  //console.log(str);
+    
   str = JSON.parse(unescape(str));
-  //console.log(str);
     cleanFields();
-    //console.log(str.jsonDump.tower);
     $('#search-top').hide('slow');
     $('#search-bottom').hide('slow');
     $('#create_Landmark').show('slow'); 
-    //var List = $.parseJSON(str);
-    ///console.log(str);
 
     if(str.id!=null)
       $("#listing_id").val(str.id);
     $("#image_link").html("<a href=listing_img_add.php?listing_id="+str.id+">Add/Edit Listing Images</a>");
     $("#cityddEdit").val(str.property.project.locality.suburb.city.id);
-    //$("#bkn2").val(str.seller.id);
     $("#project").val(str.property.project.name);
     var projectId = str.property.project.projectId;
     $("#proj").val(projectId);
@@ -161,25 +151,22 @@ function editListing(str){
     get_towers(projectId);
     $("#towerIdHidden").val(str.towerId);
     $("#phaseIdHidden").val(str.phaseId);
+    
+    $("#vendor_classified").val(str.vendorId);
+    $("#broker_check").val(str.brokerConsent);
 
     if(str.seller!=null){
       var seller_id = str.seller.id;
-      //console.log(seller_id);
       
       $('#bkn2').val(str.seller.brokerId); 
       getSeller();
       $("#seller3").val(seller_id);
-      //debugger;
-
-      //var broker_id = $("#bkn2 :selected").val();
+      
       var pt_broker_id =  $("#pt_broker_id").val();
-      //console.log(broker_id +" "+pt_broker_id);
       if(str.seller.brokerId == pt_broker_id){
-        //console.log("ids matched" );  
         $('#name_font').show(1);
         $('#number_font').show(1);  
       } else {
-        //console.log("ids not matched"); 
         $('#name_font').hide(1);
         $('#number_font').hide(1);  
 
@@ -191,14 +178,8 @@ function editListing(str){
     $("#floor2").val(str.floor);
     $("#tfr2").val(str.transferCharges);
     $("#flt2").val(str.flatNumber);
-   
-
-
     
-
    var unit_name = str.property.unitName+"-"+str.property.size+" "+str.property.unitType; 
-
-//fill option field
 
     $('#bh3').html(''); 
     $('#bh3').append($("<option selected='selected' />").val("0").text(unit_name));
@@ -217,13 +198,8 @@ function editListing(str){
       $("#alt_number").val(jsonDump.alt_owner_number);
 
       $("#total_floor1").val(jsonDump.total_floor);
-
-
-
     }
     
-
-
     $("#description3").val(str.description);
     $("#booking_status").val(str.bookingStatusId);
     $("#review3").val(str.remark);
@@ -236,10 +212,7 @@ function editListing(str){
         tmp['propertyId'] =str.property.propertyId;
       tmp['unitType'] = str.property.unitType;
       option.push(tmp);
-      //console.log(option);
-
-
-
+      
     if(str.currentListingPrice != null){
       if(str.currentListingPrice.pricePerUnitArea > 0){
          $("#prs5").val('2');
@@ -261,53 +234,28 @@ function editListing(str){
          $('#pr').show();
          $('#other_charges').hide();
          $('#othr_prs2').val('');
-
       }
-      
-      
     }
 
-    
-
-   
-    
-  
-
-
-
-
-     $("#park2").val(str.noOfCarParks);
+    $("#park2").val(str.noOfCarParks);
     $("#bnk_lst").val(str.homeLoanBankId);
     if(str.homeLoanBankId!='' && str.homeLoanBankId!=null && str.homeLoanBankId>0){
-      //console.log("bank yes");
       $("#bnk_lst").show();
-      /*$('#yes').attr('checked', true);
-      $('#no').removeAttr('checked');*/
     }
     else{
-      //console.log("bank no");
-      /*$("#bank_list2").hide();*/
       $("#bnk_lst").val('');
-      /*$('#yes').removeAttr('checked');
-      $('#no').attr('checked', true);*/
     }
     $("#plc5").val(str.plc);
     if(str.plc!='' && str.plc!=null && str.plc>0){
-      //console.log("plc yes");
       $("#plc5").show();
       $('#plcn').removeAttr('checked');
       $('#plcy').attr('checked', true);
     }
     else{
-      //console.log("plc no");
-      /*$("#plc5").hide();*/
       $('#plc5').val("");
       $('#plcn').attr('checked', true);
       $('#plcy').removeAttr('checked');
     }
-
-
-
     if(str.negotiable!=null){
       if(str.negotiable==true){
         $("#nego_select").val("1");
@@ -317,28 +265,13 @@ function editListing(str){
       }
     }
     
-    //console.log(str);
-    
     $("#cityddEdit").attr('disabled',true);
     $("#project").attr('readonly',true);
     $("#proj").attr('readonly',true);
     $("#bh3").attr('disabled',true);
-    
-
-    /*if(str.towerId!=null){
-      //var a = $("#tower2 options")
-      $("#tower2").val(str.towerId);
-      debugger;
-    }
-    if(str.phaseId!=null){
-      $("#phase_id3").val(str.phaseId);
-    }*/
 
     window.scrollTo(0, 0);
 
-     /*$('#create_company input,#create_company select,#create_company textarea').each(function(key, value){
-      $(this).attr('disabled',false);       
-    });*/
 }
 
 function getSeller(){
@@ -1710,24 +1643,23 @@ function getParameterByName(name) {
                             	
                         </tr>
                         <tr id="trv">
-                            <td id="tdvlbl"><font color="red">*</font>Vendor Classified</td>
+                            <td id="tdvlbl" width="100px;">Vendor</td>
                             <td>
                                 <select name="vendor" id="vendor_classified">
-                                    <option value="">Select Vendor Classified</option>
-                                   {foreach from=$comptype item=comp}
-                                       <option value="{$comp}">{$comp}</option>
+                                    <option value="">Select Vendor</option>
+                                   {foreach from=$comptype key=id item=comp}
+                                       <option value="{$id}">{$comp}</option>
                                    {/foreach}
                                 </select>
                             </td>
                             <td width="100px;"></td>
                             
-                            <td><font color="red">*</font>Broker:</td>
+                            <td>Broker Consent:</td>
                             <td width="40px;"></td>
                             <td>
                                 <select name="broker" id="broker_check">
-                                    <option value="">Select</option>
-                                    <option value="Yes">Yes</option>
-                                    <option value="No">No</option>
+                                    <option value="false">No</option>
+                                    <option value="true">Yes</option>
                                 </select>
                             </td>
                         </tr>
