@@ -1,7 +1,13 @@
 <?php
 //calling function for all the cities
+$listingDelAuth = isUserPermitted('listing', 'delete');
+$smarty->assign('listingDelAuth',$listingDelAuth);
+if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
+    $cityArray = getUserCities($_SESSION["adminId"]);
+}  else {
+    $cityArray = City::CityArr();
+}
 
-$cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 $smarty->assign('dirname',$dirName);
 
@@ -187,6 +193,16 @@ $typeArr = Company::getCompanyByType("VendorClassified");
 $smarty->assign("comptype", $typeArr);
 //code pagination --------------------------------------------
 
-
+function getUserCities($admin_id){
+    $cities = array();
+    $query = "SELECT ct.CITY_ID, ct.LABEL FROM proptiger_admin_city act LEFT JOIN city ct ON act.CITY_ID=ct.CITY_ID WHERE act.ADMIN_ID={$admin_id}";
+    $result = mysql_query($query) or die(mysql_query()."(E-001)");
+    if(mysql_num_rows($result)>0){
+        while ($row = mysql_fetch_assoc($result)){
+            $cities[$row["CITY_ID"]] = $row["LABEL"];
+        }
+    }
+    return $cities;
+}
 
 ?>

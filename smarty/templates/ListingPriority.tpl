@@ -20,6 +20,7 @@
 
 <style>
     .hide-input{ display: none !important; }
+    .tablesorter thead .disabled { display: none }
 </style>
 <script language="javascript">
 var pid;
@@ -68,6 +69,9 @@ function submitButton(){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"search_range=" + $("#search_range option:selected").val();
         queryStrUrl += ((queryStrUrl)? "&" :"") +"range_from=" + $('#range_from').val().trim();
         queryStrUrl += ((queryStrUrl)? "&" :"") +"range_to=" + $('#range_to').val().trim();
+    }
+    if($("#bookingStatusId_search").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
     }
     queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
     window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
@@ -380,6 +384,18 @@ jQuery(document).ready(function(){
     
   var i;
 
+$("#tower2").change(function(){
+    var total_floor = $('option:selected', this).attr('data-floor');
+    if(total_floor>0){
+        $("#total_floor1").html('');
+        var option = '<option value=' + total_floor + '>' + total_floor + '</option>';
+        $("#total_floor1").append(option);
+    }else{
+        populate_total_floor();
+    }
+});
+
+
 $('#search-top').show('slow');
     $('#search-bottom').show('slow');
 
@@ -433,6 +449,7 @@ $('#search_range').val(getParameterByName('search_range'));
 $('#range_from').val(getParameterByName('range_from'));
 $('#range_to').val(getParameterByName('range_to'));
 $('#search_term').val(getParameterByName('search_term'));
+$('#bookingStatusId_search').val(getParameterByName('bStatusId'));
 
 
 if($('#search_term').val()=="gpid"){
@@ -446,7 +463,7 @@ if($('#search_term').val()=="gpid"){
     $('#search_value').removeClass("hide-input");
     $('#search_landmark').addClass("hide-input");
 }
-
+var listingDelAuth = "{$listingDelAuth}";
 // tablesorter ajax pager
  tableSotderUrl='';
 {literal}
@@ -515,6 +532,9 @@ selProject = $("#selProjId").val();*/
           if($("#listingId_search").val()){
              url += '&listingId=' + $("#listingId_search").val();
           }
+          if($("#bookingStatusId_search").val()){
+             url += '&bStatusId=' + $("#bookingStatusId_search").val();
+          }
           if($("#search_term").val()){
               if($("#search_value").val()){
                     url += '&search_term=' + $("#search_term").val();
@@ -557,6 +577,7 @@ selProject = $("#selProjId").val();*/
       // ]
       // OR
       // return [ total_rows, $rows (jQuery object; optional), headers (array; optional) ]
+      
       ajaxProcessing: function(data){
         //console.log(data);
         if (data && data.hasOwnProperty('rows')) {
@@ -596,7 +617,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 11){
+                   }else if(indx == 11 && listingDelAuth==true){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -1192,6 +1213,7 @@ $("#lmkSave").click(function(){
                 get_towers(project_id);
                    
                 get_phases(projectId);
+                populate_total_floor();
                                
               }
           });
@@ -1412,15 +1434,16 @@ function get_towers(project_id){
 
                         success:function(msg){  
                            //console.log(msg);
-              
+                           $("#tower2").html('<option value="">Select</option>');
                             var options = $("#tower2");
                             //var i = 0;
 
 
                             msg = $.parseJSON(msg);
                             $.each(msg, function(k,v) {
-                              options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
-                            }); 
+                              //options.append($("<option/>").val(v['tower_id']).text(v['tower_name']));
+                              options.append("<option value= " + v['tower_id'] + " data-floor=" + v['total_floor'] + ">" + v["tower_name"] + "</option>");
+                            });
                             var towerId = $("#towerIdHidden").val();
                             if(towerId!='')
                               options.val(towerId);
@@ -1589,6 +1612,7 @@ function getParameterByName(name) {
                                                 </td>
                                                 
                                             </tr>
+
                                             <tr>
                                                
                                                 <td>
@@ -1603,6 +1627,17 @@ function getParameterByName(name) {
                                                     <input type="text" name="search_value" id="search_value" placeholder="Search Value">
                                                     <input type="text" name="search_landmark" id="search_landmark" placeholder="Search Landmark" class="hide-input">
                                                 </td>
+                                                <td style="padding-left: 10px;">
+                                                    <select name="bookingStatusId" id="bookingStatusId_search">
+                                                        <option value="">Select Booking Status</option>
+                                                        {foreach from=$bStatusList key=bStatusId item=bstatus}
+                                                            <option value="{$bStatusId}"> {$bstatus} </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"></td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
                                                     <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
@@ -2108,7 +2143,7 @@ function getParameterByName(name) {
                           <td>Booking Status</td>
                           <td>
                                 <select name="booking_status" id="booking_status">
-                                    <option value=""> Select Booking Status </option>
+                                    {*<option value=""> Select Booking Status </option>*}
                                     {foreach from=$bStatusList key=bStatusId item=bstatus}
                                         <option value="{$bStatusId}"> {$bstatus} </option>
                                     {/foreach}
@@ -2190,18 +2225,20 @@ function getParameterByName(name) {
                         <form name="form1" method="post" action="">
                            <thead>
                                 <TR class = "headingrowcolor">
-                                  <th align="center">Serial</th>
-                                  <TH align="center">Listing Id</TH>
-                                  <th align="center">City</th>
-                                  <TH align="center">Broker Name</TH>
-                                  <TH align="center">Project</TH>
-                                  <TH align="center">Listing</TH>
-                                  <TH align="center">Price</TH>
-                                  <TH align="center">Created Date</TH>
-                                  <TH align="center">Photo</TH>
-                                  <TH align="center">Verified</TH>
-                                  <TH align="center">Save</TH>
-                                  <TH align="center">Delete</TH>
+                                    <th align="center" class="filter-false sorter-false">Serial</th>
+                                  <TH align="center" class="filter-false sorter-false">Listing Id</TH>
+                                  <th align="center" class="filter-false sorter-false">City</th>
+                                  <TH align="center" class="filter-false sorter-false">Broker Name</TH>
+                                  <TH align="center" class="filter-false sorter-false">Project</TH>
+                                  <TH align="center" class="filter-false sorter-false">Listing</TH>
+                                  <TH align="center" class="filter-false sorter-false">Price</TH>
+                                  <TH align="center" class="filter-false sorter-false">Created Date</TH>
+                                  <TH align="center" class="filter-false sorter-false">Photo</TH>
+                                  <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Save</TH>
+                                  {if $listingDelAuth==true}
+                                    <TH align="center" class="filter-false sorter-false">Delete</TH>
+                                  {/if}
                                 </TR>
                               
                           </thead>
@@ -2224,7 +2261,9 @@ function getParameterByName(name) {
                                 <th>9</th>
                                 <th>10</th>
                                 <th>11</th>
-                                <th>12</th>
+                                {if $listingDelAuth==true}
+                                    <th>12</th>
+                                {/if}
                               </tr>
                               <tr>
                                 <td class="pager" colspan="7">
@@ -2333,12 +2372,19 @@ $(document).ready(function(){
         if($("#search_term").val() == "gpid"){
             $( "#search_landmark" ).removeClass("hide-input");
             $( "#search_value" ).addClass("hide-input");
-        }else{
+        }
+        else{
             $( "#search_landmark" ).addClass("hide-input");
             $( "#search_value" ).removeClass("hide-input");
         }
     });
     
+    $("#project_search").keypress(function(event){
+        if($("#citydd").val() == "" && (event.which >47 && event.which<123)){
+            event.preventDefault();
+            alert("Please select city");
+        }
+    });
     
 });
 

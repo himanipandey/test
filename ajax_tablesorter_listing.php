@@ -1,7 +1,9 @@
 <?php
-
+include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+include("modelsConfig.php");
+include("includes/configs/configs.php");
 include("httpful.phar");
 
 $page = filter_input(INPUT_GET, "page");
@@ -15,22 +17,33 @@ $search_range = filter_input(INPUT_GET, "search_range");
 $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
+$bookingStatusId = filter_input(INPUT_GET, "bStatusId");
 
-$filterArr = array();
+$filterArr = new stdClass();
 
 $start = $page * $size;
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
-    $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
+    $filterArr->and[] = array("equal" => array("cityId" => $cityId));
+}else if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
+    $cityArray = getUserCities($_SESSION["adminId"]);
+    $cityOr = array();
+    foreach ($cityArray as $id=>$label){
+        $cityOr[] = $id;
+    }
+    $filterArr->and[] = array("equal" => array("cityId" => $cityOr));
 }
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
-    $filterArr["and"][] = array("equal" => array("projectId" => $projectId));
+    $filterArr->and[] = array("equal" => array("projectId" => $projectId));
 }
 if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
-    $filterArr["and"][] = array("equal" => array("listingId" => $listingId));
+    $filterArr->and[] = array("equal" => array("listingId" => $listingId));
 }
 if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
-    $filterArr["and"][] = array("equal" => array($search_term => $search_value));
+    $filterArr->and[] = array("equal" => array($search_term => $search_value));
+}
+if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
+    $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
 }
 if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
     if ($range_from != "" || $range_to != "") {
@@ -39,15 +52,13 @@ if (isset($search_range) && !empty($search_range) && ($search_range != "null") &
     if ($range_to != "") {
         $tempRange["range"][$search_range]["to"] = (int) $range_to;
     }
-    $filterArr["and"][] = $tempRange;
+    $filterArr->and[] = $tempRange;
 }
 $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
     $gpidFilter = "gpid=" . $gpid . "&";
 }
-if (!$filterArr) {
-    $filterArr = array("and" => array(array("equal" => array("cityId" => 2))));
-}
+
 $filter = json_encode($filterArr);
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
@@ -112,5 +123,15 @@ function getBroker($seller_id) {
         return array(null, null);
     }
 }
-
+function getUserCities($admin_id){
+    $cities = array();
+    $query = "SELECT ct.CITY_ID, ct.LABEL FROM proptiger_admin_city act LEFT JOIN city ct ON act.CITY_ID=ct.CITY_ID WHERE act.ADMIN_ID={$admin_id}";
+    $result = mysql_query($query) or die(mysql_query()."(E-001)");
+    if(mysql_num_rows($result)>0){
+        while ($row = mysql_fetch_assoc($result)){
+            $cities[$row["CITY_ID"]] = $row["LABEL"];
+        }
+    }
+    return $cities;
+}
 ?>

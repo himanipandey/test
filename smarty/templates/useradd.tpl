@@ -112,7 +112,7 @@
 				  </td>
 				    {if $ErrorMsg["selectDepartmentErr"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["selectDepartmentErr"]}</font></td>{else} <td width="50%" align="left"></td>{/if}
 				</tr>
-                                {if $txtdepartment == 'SURVEY'}
+                                {if $txtdepartment == 'SURVEY' || $txtdepartment == 'RESALE'}
                                     {$stye = ""}
                                 {else}
                                      {$stye = 'style = "display:none;"'}
@@ -245,7 +245,7 @@
 <script type="text/javascript">
 //function for show hide department only display city list when department is survey
 function showHideCity(department) {
-    if(department == 'SURVEY') {
+    if(department == 'SURVEY' || department == 'RESALE') {
         jQuery("#showhide").show();
     }else {
         jQuery("#showhide").hide();
