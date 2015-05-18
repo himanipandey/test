@@ -16,7 +16,7 @@
 <script type="text/javascript" src="jscal/calendar-setup.js"></script> 
 <script type="text/javascript" src="js/numberToWords.js"></script> 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript" src="/js/jss.js"></script> 
+<script type="text/javascript" src="/js/jss.js"></script>
 
 <style>
     .hide-input{ display: none !important; }
@@ -154,6 +154,9 @@ function editListing(str){
     
     $("#vendor_classified").val(str.vendorId);
     $("#broker_check").val(str.brokerConsent);
+    if(str.homeLoanBank !=undefined){
+        $("#home_loan").val(str.homeLoanBank.toString());
+    }
 
     if(str.seller!=null){
       var seller_id = str.seller.id;
@@ -202,6 +205,7 @@ function editListing(str){
     
     $("#description3").val(str.description);
     $("#booking_status").val(str.bookingStatusId);
+    $("#furnished_options").val(str.furnished);
     $("#review3").val(str.remark);
  
     option.length = 0;
@@ -540,7 +544,7 @@ selProject = $("#selProjId").val();*/
 //alert(JSON.stringify(d[r]));
                 // add each table cell data to row array
                 if (indx >= 0) {
-                  if(indx==10){//encodeURIComponent(JSON.stringify(d[r][c]))
+                  if(indx==11){//encodeURIComponent(JSON.stringify(d[r][c]))
                     //d[r][c] = {'description': "hello'yes boys"};  
                     var a = d[r][c];
                     //console.log(a);
@@ -550,7 +554,7 @@ selProject = $("#selProjId").val();*/
                  //var hello = {};
                  //console.log(d[r][c]);
                   //row[indx] =  "<button type='button' id='edit_button_' onclick='return editListing("+ hello+ ")' align='left'>Edit</button>" ;
-                   }else if(indx == 11 && listingDelAuth==true){
+                   }else if(indx == 12 && listingDelAuth==true){
                         var lid = d[r]['ListingId'];
                         row[indx] =  "<button type='button' class='delete-list' data-listingId=" + lid + " align='left'>Delete</button>";
                         
@@ -891,6 +895,11 @@ $("#lmkSave").click(function(){
          alert('Floor number should be less than or equal to total number of floors');
          return false;
      }
+     
+     if($("#bnk_lst").val()!="" && $("#home_loan").val()!=="true"){
+         alert('Please select yes in home loan');
+         return false;
+     }
 
      if (error != '' ){
       alert(error);
@@ -911,7 +920,7 @@ $("#lmkSave").click(function(){
               $("body").addClass("loading");
             },
 
-            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, vendor:vendor_classified, broker:broker_check ,property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task, bookingStatusId:bookingStatusId},
+            data: { listing_id:listing_id, cityid: cityid, seller_id:seller_id, project_id : project_id, vendor:vendor_classified, broker:broker_check ,property_id:property_id, owner_name:owner_name, owner_email:owner_email, owner_number:owner_number, alt_owner_number:alt_owner_number, unit_type:unit_type, bedrooms: bedrooms, facing : facing, size:size, bathrooms:bathrooms, tower:tower, phase_id: phase_id, floor : floor , total_floor:total_floor, price_type:price_type, price:price, price_per_unit_area:price_per_unit_area, other_charges:other_prs, trancefer_rate:trancefer_rate, flat_number:flat_number, parking:parking, loan_bank:loan_bank, plc_val:plc_val, study_room:study_room, servant_room:servant_room, penthouse_studio:penthouse_studio, negotiable:negotiable, description:description, review:review, task:task, bookingStatusId:bookingStatusId, furnished : $("#furnished_options").val(),homeLoanBank: $("#home_loan").val()},
 
 
 
@@ -1130,7 +1139,7 @@ $("#lmkSave").click(function(){
                 });  
                 
                 var bbt = [];
-                bbt[0] = "Others";
+                //bbt[0] = "Others";
                 var j = 0;;
                 $.each(bbt, function() {
                     options.append($("<option/>").val('other').text(bbt[j]));
@@ -1655,7 +1664,7 @@ function getParameterByName(name) {
                             <td width="100px;"></td>
                             
                             <td>Broker Consent:</td>
-                            <td width="40px;"></td>
+                            <td width="4px"></td>
                             <td>
                                 <select name="broker" id="broker_check">
                                     <option value="false">No</option>
@@ -2004,36 +2013,36 @@ function getParameterByName(name) {
                             </td>  --> 
 
                         </tr>
-
-		                
-
-
-                    	<tr id="hln">
                        
-                        	<td id="hln1">
-                                Home Loan Bank
-                        	</td>
-
+                      
+                    	<tr id="hln">
+                            
+                            <td width="100px">Home Loan</td>
+                            <td>
+                                <select name="home_loan" id="home_loan" style="width:100px;margin-right: 20px;">
+                                  <option value="">Select</option>
+                                  <option value="true">Yes</option>
+                                  <option value="false">No</option>
+                              </select>
+                           </td>
+                        	<td id="hln1">Home Loan Bank</td>
                         	<td  id="hln2" >
                           		<select name="bnk_lst" id="bnk_lst" style="width:200px;" >
-                                 	<option value=''> select bank	</option>
-                                    {foreach from=$bankArray key=k item=v}
-                                        <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
-                                    {/foreach}
-                            	</select> 
+                                            <option value=''> select bank	</option>
+                                            {foreach from=$bankArray key=k item=v}
+                                                <option value="{$k}" {if $bankId==$k}  selected="selected" {/if}>{$v}</option>
+                                            {/foreach}
+                                        </select> 
                         	</td> 
-                       
 
-	                        <td id = "plc1">
-	                            PLC
-	                        </td>
+	                        <td id = "plc1">PLC</td>
 	                                        
 	                        <td id="plc4" >
 	                           <input type=text name="plc5" id="plc5" width="20px" style="text-align: left;">
 	                        </td> 
 	                         
 	                        
-                      </tr>    
+                      </tr>
 
                       <tr id = "negotiable_id" style="position:absolute;left:300px;top:1240px">
                           <td id ="tfr1" >
@@ -2080,6 +2089,16 @@ function getParameterByName(name) {
                                         <option value="{$bStatusId}"> {$bstatus} </option>
                                     {/foreach}
                                 </select>
+                          </td>
+                          <td width="110px"></td>
+                          <td width="100px">Frunished</td>
+                          <td>
+                              <select name="furnished_options" id="furnished_options">
+                                  <option value="">Select</option>
+                                  {foreach from=$furnished_options item=furnished_option}
+                                    <option value="{$furnished_option}">{$furnished_option}</option>
+                                  {/foreach}
+                              </select>
                           </td>
                       </tr>
 
@@ -2167,6 +2186,7 @@ function getParameterByName(name) {
                                   <TH align="center" class="filter-false sorter-false">Created Date</TH>
                                   <TH align="center" class="filter-false sorter-false">Photo</TH>
                                   <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Error Messsage</TH>
                                   <TH align="center" class="filter-false sorter-false">Save</TH>
                                   {if $listingDelAuth==true}
                                     <TH align="center" class="filter-false sorter-false">Delete</TH>
@@ -2193,8 +2213,9 @@ function getParameterByName(name) {
                                 <th>9</th>
                                 <th>10</th>
                                 <th>11</th>
+                                <th>12</th>
                                 {if $listingDelAuth==true}
-                                    <th>12</th>
+                                    <th>13</th>
                                 {/if}
                               </tr>
                               <tr>

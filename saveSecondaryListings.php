@@ -209,6 +209,12 @@ else {
     if($_POST['bookingStatusId'] != "")  {
         $dataArr['bookingStatusId'] = $_POST['bookingStatusId'];    
     }
+    if($_POST['furnished'] != "")  {
+        $dataArr['furnished'] = $_POST['furnished'];    
+    }
+    if($_POST['homeLoanBank'] != "")  {
+        $dataArr['homeLoanBank'] = $_POST['homeLoanBank'];    
+    }
     
 
     $masterAmenityIds = array(

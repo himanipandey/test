@@ -17,7 +17,7 @@ if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != ""))
 
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $filter = json_encode($filterArr);
-$fields = '"fields":["imageCount","verified","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","tower","towerId","towerName"]}';
+$fields = '"fields":["errorMessage","imageCount","verified","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facing","direction","facingId","tower","towerId","towerName"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -55,7 +55,10 @@ try {
                 "verified" => ($row->verified) ? "Yes" : "No",
                 "floor" => ($row->floor) ? $row->floor : "",
                 "flatNumber" => ($row->flatNumber) ? $row->flatNumber : "",
-                "towerName" => ($row->tower->towerName) ? $row->tower->towerName : ""
+                "towerName" => ($row->tower->towerName) ? $row->tower->towerName : "",
+                "plc" => $row->plc,
+                "facingDirection" => $row->facing->direction,
+                "errorMessage" => $row->errorMessage
             );
             array_push($tbsorterArr['rows'], $data_rows);
         }
@@ -74,6 +77,9 @@ try {
     <td>Verified</td>
     <td>Floor</td>
     <td>Flat Number</td>
+    <td>PLC</td>
+    <td>Facing</td>
+    <td>Error Message</td>
     <td>Created Date</td>
     <td>Photo</td>
     </tr>";
@@ -90,6 +96,9 @@ try {
             $pdf_content .= "<td align='center'>" . $row['verified'] . "</td>";
             $pdf_content .= "<td align='center'>" . $row['floor'] . "</td>";
             $pdf_content .= "<td align='center'>" . $row['flatNumber'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['plc'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['facingDirection'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['errorMessage'] . "</td>";
             $pdf_content .= "<td align='center'>" . $row['CreatedDate'] . "</td>";
             $pdf_content .= "<td align='center'>" . $row['Photo'] . "</td></tr>";
         }
