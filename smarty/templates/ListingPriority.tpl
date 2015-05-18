@@ -232,14 +232,21 @@ function editListing(str){
       else if(str.currentListingPrice.price >0) {
         $("#prs5").val('1');
         var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
-         price_value = price_value/100000;
-         price_value = price_value.toFixed(2).toString();
-         $("#prs3").val(price_value);
-         $('#pr').show();
-         $('#other_charges').hide();
-         $('#othr_prs2').val('');
-      }
+        price_value = price_value/100000;
+        if(price_value>=100){
+            price_value = price_value/100;
+            $("#crs1").val('y');
+            $("#crs1").attr('checked','checked');
+            $("#lkhs1").val('n');
+            $("#lkhs1").removeAttr('checked');
+        }
+        price_value = price_value.toFixed(2).toString();
+        $("#prs3").val(price_value);
+        $('#pr').show();
+        $('#other_charges').hide();
+        $('#othr_prs2').val('');
     }
+  }
 
     $("#park2").val(str.noOfCarParks);
     $("#bnk_lst").val(str.homeLoanBankId);
