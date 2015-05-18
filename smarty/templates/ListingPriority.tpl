@@ -153,7 +153,9 @@ function editListing(str){
     $("#phaseIdHidden").val(str.phaseId);
     
     $("#vendor_classified").val(str.vendorId);
-    $("#broker_check").val(str.brokerConsent);
+    if(str.brokerConsent !=undefined){
+        $("#broker_check").val(str.brokerConsent.toString());
+    }
     if(str.homeLoanBank !=undefined){
         $("#home_loan").val(str.homeLoanBank.toString());
     }
