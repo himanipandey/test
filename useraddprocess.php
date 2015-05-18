@@ -161,7 +161,8 @@ if ($_POST['btnSave'] == "Save") {
                                $cnt++;
                            }
                     }
-                    $finalStr = $cityQry.$cityData;
+                    
+                    $finalStr = $cityQry.rtrim($cityData, ",");
                     $resCity = mysql_query($finalStr) or die(mysql_error());
                 }
                 if($DataInsert)
@@ -208,7 +209,7 @@ if ($_POST['btnSave'] == "Save") {
                 $arrCityList[$cityDataFetch['city_id']] = $cityDataFetch;
             }
                        
-            if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
+            if(count($_REQUEST['city'])>0 && ($department == 'SURVEY' || $department == 'RESALE')) {
                   //delete data if deselect
                     foreach($arrCityList as $k=>$v) {
                         if(!in_array($k,$_REQUEST['city'])) {

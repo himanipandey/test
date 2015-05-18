@@ -722,3 +722,6 @@ body.loading .modal {
     display: block;
 }
 
+#listing_table td{
+    text-align:center;
+}

@@ -195,6 +195,7 @@ DEFINE("CONTENT_LOT_DETAILS","content_lot_details");
 DEFINE("CONTENT_LOT_COMMENTS","content_lot_comments");
 DEFINE("CMS_ASSIGNMENTS","cms_assignments");
 DEFINE("CONTENT_LOT_APPROVED_PROJECTS","content_lot_approved_projects");
+DEFINE("LISTING_SCHEDULES"," listing_schedules");
 
 
 /**************This always put at the end of define tables*******************/
@@ -405,7 +406,7 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor');
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor', 'rm' => 'Relationship Manager', 'crm' => 'CRM', 'fieldManager' => 'Field Manager', 'photoGrapher' => 'Photographer', 'reToucher' => 'Re-Toucher');
 	$smarty->assign("designationArray", $designationArray);
 
 
@@ -413,7 +414,7 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT", "RESALE" => "RESALE");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
