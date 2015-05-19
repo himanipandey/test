@@ -2194,7 +2194,7 @@ function getParameterByName(name) {
                                   <TH align="center" class="filter-false sorter-false">Price</TH>
                                   <TH align="center" class="filter-false sorter-false">Created Date</TH>
                                   <TH align="center" class="filter-false sorter-false">Photo</TH>
-                                  <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Price Verified</TH>
                                   <TH align="center" class="filter-false sorter-false">Error Messsage</TH>
                                   <TH align="center" class="filter-false sorter-false">Save</TH>
                                   {if $listingDelAuth==true}
