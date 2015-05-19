@@ -24,7 +24,11 @@ if (isset($_POST['btnSave'])) {
 		$status = trim($_POST['status']);
 		$desc = trim($_POST['desc']);
 		$oldDesc = trim($_POST['oldDesc']);
-		$content_flag =	trim($_POST['content_flag']);	
+		$content_flag =	trim($_POST['content_flag']);
+		$min_lat =	trim($_POST['min_lattitude']);
+		$max_lat =	trim($_POST['max_lattitude']);
+		$min_long =	trim($_POST['min_longitude']);
+		$max_long =	trim($_POST['max_longitude']);
                 
 		$smarty->assign("txtCityName", $txtCityName);
 		$smarty->assign("txtCityUrl", $txtCityUrl);
@@ -35,6 +39,10 @@ if (isset($_POST['btnSave'])) {
 		$smarty->assign("txtMetaDescription", $txtMetaDescription);
 		$smarty->assign("status", $status);
 		$smarty->assign("desc", $desc);
+                $smarty->assign("min_lat", $min_lat);
+                $smarty->assign("max_lat", $max_lat);
+                $smarty->assign("min_long", $min_long);
+                $smarty->assign("max_long", $max_long);
 		 
 		if( $txtCityName == '')  {
 			 $ErrorMsg["txtCityName"] = "Please enter City name.";
@@ -58,6 +66,18 @@ if (isset($_POST['btnSave'])) {
 		if( $desc == '')   {
 			 $ErrorMsg["desc"] = "Please enter city description.";
 		   }  
+		if($min_lat == ''){
+                    $ErrorMsg["minLat"] = "Please enter min lattitude.";
+                }
+		if($max_lat == ''){
+                    $ErrorMsg["maxLat"] = "Please enter max lattitude.";
+                }
+		if($min_long == ''){
+                    $ErrorMsg["minLong"] = "Please enter min longitude.";
+                }
+		if($max_long == ''){
+                    $ErrorMsg["maxLong"] = "Please enter max longitude.";
+                }
 		   
         /*******city url already exists**********/
         $cityURL = "";
@@ -79,7 +99,7 @@ if (isset($_POST['btnSave'])) {
 		
 	} 
 	else if ($cityid == '') {	
-		$city_id = InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$status,$desc);
+		$city_id = InsertCity($txtCityName, $txtCityUrl, $DisplayOrder,$status,$desc, $min_lat, $max_lat,$min_long,$max_long);
 		if($city_id){
                     $seoData['meta_title'] = $txtMetaTitle;
                     $seoData['meta_keywords'] = $txtMetaKeywords;
@@ -103,12 +123,16 @@ if (isset($_POST['btnSave'])) {
 	}else if($cityid!= ''){
 	
 		$updateQry = "UPDATE ".CITY." SET 
-                            LABEL					=	'".$txtCityName."',
-                            STATUS				=	'".$status."',
-                            URL					=	'".strtolower($txtCityUrl)."',
-                            DISPLAY_ORDER			=	'".$DisplayOrder."',
-                            updated_at = now(),
-                            updated_by			= '" .$_SESSION['adminId']."',
+                            LABEL				= '".$txtCityName."',
+                            STATUS				= '".$status."',
+                            URL					= '".strtolower($txtCityUrl)."',
+                            DISPLAY_ORDER			= '".$DisplayOrder."',
+                            updated_at                          = now(),
+                            updated_by                          = '" .$_SESSION['adminId']."',
+                            SOUTH_WEST_LATITUDE			= '" .$min_lat."',
+                            NORTH_EAST_LATITUDE			= '" .$max_lat."',
+                            SOUTH_WEST_LONGITUDE		= '" .$min_long."',
+                            NORTH_EAST_LONGITUDE		= '" .$max_long."',
                             DESCRIPTION	= '" . d_($desc) . "' WHERE CITY_ID='".$cityid."'";
 		$rt = mysql_query($updateQry);
 		if($rt){
@@ -183,13 +207,17 @@ if (isset($_POST['btnSave'])) {
 
 elseif($cityid!=''){
 
-	$cityDetailsArray		=   ViewCityDetails($cityid);
+	$cityDetailsArray		=       ViewCityDetails($cityid);
 	$txtCityName			=	trim($cityDetailsArray['LABEL']);
-	$txtCityUrl				=	trim($cityDetailsArray['URL']);
+	$txtCityUrl			=	trim($cityDetailsArray['URL']);
 	$txtCityUrlOld			=	trim($cityDetailsArray['URL']);
 	$DisplayOrder			=	trim($cityDetailsArray['DISPLAY_ORDER']);
-	$status					=	trim($cityDetailsArray['STATUS']);
-	$desc					=	trim($cityDetailsArray['DESCRIPTION']);
+	$status				=	trim($cityDetailsArray['STATUS']);
+	$desc				=	trim($cityDetailsArray['DESCRIPTION']);
+	$min_lat			=	trim($cityDetailsArray['MIN_LAT']);
+	$max_lat			=	trim($cityDetailsArray['MAX_LAT']);
+	$min_long			=	trim($cityDetailsArray['MIN_LONG']);
+	$max_long			=	trim($cityDetailsArray['MAX_LONG']);
 	
 	//getting meta data
 	$getSeoData = SeoData::getSeoData($cityid, 'city');
@@ -206,6 +234,10 @@ elseif($cityid!=''){
 	$smarty->assign("txtMetaDescription", $txtMetaDescription);
 	$smarty->assign("status", $status);
 	$smarty->assign("desc", $desc);
+	$smarty->assign("min_lat", $min_lat);
+	$smarty->assign("max_lat", $max_lat);
+	$smarty->assign("min_long", $min_long);
+	$smarty->assign("max_long", $max_long);
 	
 	$contentFlag = TableAttributes::find('all',array('conditions' => array('table_id' => $cityid, 'attribute_name' => 'DESC_CONTENT_FLAG', 'table_name' => 'city')));   
             
