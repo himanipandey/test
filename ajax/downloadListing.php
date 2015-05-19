@@ -4,22 +4,20 @@ include("../appWideConfig.php");
 include("../dbConfig.php");
 include("../httpful.phar");
 
-$size = 1000;
+$size = 200000;
 $cityId = filter_input(INPUT_GET, "cityId");
-$filterArr = array();
+$filterArr = new stdClass();
 
 $start = 0;
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
-    $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
+    $filterArr->and[] = array("equal" => array("cityId" => $cityId));
 }
 
-if (!$filterArr) {
-    $filterArr = array("and" => array(array("equal" => array("cityId" => 2))));
-}
+
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $filter = json_encode($filterArr);
-$fields = '"fields":["imageCount","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
+$fields = '"fields":["errorMessage","imageCount","verified","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facing","direction","facingId","tower","towerId","towerName"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -27,8 +25,6 @@ try {
     $responseLists = \Httpful\Request::get($uriListing)->send();
     if ($responseLists->body->statusCode == "2XX") {
         $data = $responseLists->body->data;
-        $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Save", "Delete");
         $tbsorterArr['rows'] = array();
         foreach ($data as $index => $row) {
             $brokerName = "";
@@ -56,7 +52,13 @@ try {
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
                 "Photo" => ($row->imageCount > 0) ? "Done" : "Not Done",
-                "Delete" => ''
+                "verified" => ($row->verified) ? "Yes" : "No",
+                "floor" => ($row->floor) ? $row->floor : "",
+                "flatNumber" => ($row->flatNumber) ? $row->flatNumber : "",
+                "towerName" => ($row->tower->towerName) ? $row->tower->towerName : "",
+                "plc" => $row->plc,
+                "facingDirection" => $row->facing->direction,
+                "errorMessage" => $row->errorMessage
             );
             array_push($tbsorterArr['rows'], $data_rows);
         }
@@ -70,21 +72,35 @@ try {
     <td>City</td>
     <td>Broker Name</td>
     <td>Listing</td>
+    <td>Tower Name</td>
     <td>Price</td>
+    <td>Verified</td>
+    <td>Floor</td>
+    <td>Flat Number</td>
+    <td>PLC</td>
+    <td>Facing</td>
+    <td>Error Message</td>
     <td>Created Date</td>
     <td>Photo</td>
     </tr>";
         foreach ($tbsorterArr['rows'] as $row) {
             $pdf_content .= "<tr  bgcolor='#FFFFFF' valign='top'><td>" . $row['Serial'] . "</td>";
-            $pdf_content .= "<td>" . $row['ListingId'] . "</td>";
-            $pdf_content .= "<td>" . $row['ProjectId'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['ListingId'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['ProjectId'] . "</td>";
             $pdf_content .= "<td>" . $row['Project'] . "</td>";
             $pdf_content .= "<td>" . $row['City'] . "</td>";
             $pdf_content .= "<td>" . $row['BrokerName'] . "</td>";
             $pdf_content .= "<td>" . $row['Listing'] . "</td>";
-            $pdf_content .= "<td>" . $row['Price'] . "</td>";
-            $pdf_content .= "<td>" . $row['CreatedDate'] . "</td>";
-            $pdf_content .= "<td>" . $row['Photo'] . "</td></tr>";
+            $pdf_content .= "<td>" . $row['towerName'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['Price'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['verified'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['floor'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['flatNumber'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['plc'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['facingDirection'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['errorMessage'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['CreatedDate'] . "</td>";
+            $pdf_content .= "<td align='center'>" . $row['Photo'] . "</td></tr>";
         }
         $pdf_content .= "</table>";
 
