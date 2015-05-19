@@ -153,7 +153,9 @@ function editListing(str){
     $("#phaseIdHidden").val(str.phaseId);
     
     $("#vendor_classified").val(str.vendorId);
-    $("#broker_check").val(str.brokerConsent);
+    if(str.brokerConsent !=undefined){
+        $("#broker_check").val(str.brokerConsent.toString());
+    }
     if(str.homeLoanBank !=undefined){
         $("#home_loan").val(str.homeLoanBank.toString());
     }
@@ -232,14 +234,21 @@ function editListing(str){
       else if(str.currentListingPrice.price >0) {
         $("#prs5").val('1');
         var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
-         price_value = price_value/100000;
-         price_value = price_value.toFixed(2).toString();
-         $("#prs3").val(price_value);
-         $('#pr').show();
-         $('#other_charges').hide();
-         $('#othr_prs2').val('');
-      }
+        price_value = price_value/100000;
+        if(price_value>=100){
+            price_value = price_value/100;
+            $("#crs1").val('y');
+            $("#crs1").attr('checked','checked');
+            $("#lkhs1").val('n');
+            $("#lkhs1").removeAttr('checked');
+        }
+        price_value = price_value.toFixed(2).toString();
+        $("#prs3").val(price_value);
+        $('#pr').show();
+        $('#other_charges').hide();
+        $('#othr_prs2').val('');
     }
+  }
 
     $("#park2").val(str.noOfCarParks);
     $("#bnk_lst").val(str.homeLoanBankId);
@@ -2185,7 +2194,7 @@ function getParameterByName(name) {
                                   <TH align="center" class="filter-false sorter-false">Price</TH>
                                   <TH align="center" class="filter-false sorter-false">Created Date</TH>
                                   <TH align="center" class="filter-false sorter-false">Photo</TH>
-                                  <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Price Verified</TH>
                                   <TH align="center" class="filter-false sorter-false">Error Messsage</TH>
                                   <TH align="center" class="filter-false sorter-false">Save</TH>
                                   {if $listingDelAuth==true}
