@@ -126,6 +126,22 @@ $dailyEmail = array(
         'attachmentname' => 'Carpet Area Greater than 80 and Less than 60',
         'message' => "Carpet Area Greater than 80% and Less than 60% of Size",
         'sendifnodata' => 0
+    ),
+    array(
+        'sql' => "select city.LABEL as CITY_NAME, rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, city.SOUTH_WEST_LONGITUDE as MIN_LONGITUDE, city.NORTH_EAST_LONGITUDE as MAX_LONGITUDE, city.SOUTH_WEST_LATITUDE as MIN_LATITUDE, city.NORTH_EAST_LATITUDE as MAX_LATITUDE,rp.LATITUDE as PROJECT_LATITUDE, rp.LONGITUDE as PROJECT_LONGITUDE
+            from locality l inner join resi_project rp
+            on l.LOCALITY_ID = rp.LOCALITY_ID
+            inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city on s.city_id = city.city_id
+            inner join resi_builder rb on rp.builder_id = rb.builder_id
+             where 
+             rp.version = 'Cms' and rp.status in('Active','ActiveInCms')
+            and ((rp.LONGITUDE not between city.SOUTH_WEST_LONGITUDE and city.NORTH_EAST_LONGITUDE) or (rp.LATITUDE not between city.SOUTH_WEST_LATITUDE and city.NORTH_EAST_LATITUDE))
+             and (rp.LATITUDE not in ($latLongList) or rp.LONGITUDE not in ($latLongList)) and rp.LATITUDE is not null and rp.LONGITUDE is not null;",
+        'subject' => 'Projects Lat Long Beyond City Boundary Limits',
+        'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'attachmentname' => 'Projects_beyond_City_boundary_limit',
+        'sendifnodata' => 0
     )
 );
 
