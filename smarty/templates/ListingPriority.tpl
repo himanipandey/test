@@ -21,6 +21,7 @@
 <style>
     .hide-input{ display: none !important; }
     .tablesorter thead .disabled { display: none }
+    .tablesorter-bootstrap .tablesorter-header{ cursor: text }
 </style>
 <script language="javascript">
 var pid;
@@ -2214,26 +2215,8 @@ function getParameterByName(name) {
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           
-                          <tfoot>
-                              <tr>
-                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
-                                <th>2</th>
-                                <th>3</th>
-                                <th>4</th>
-                                <th>5</th>
-                                <th>6</th>
-                                <th>7</th>
-                                <th>8</th>
-                                <th>9</th>
-                                <th>10</th>
-                                <th>11</th>
-                                <th>12</th>
-                                {if $listingDelAuth==true}
-                                    <th>13</th>
-                                {/if}
-                              </tr>
-                              <tr>
-                                <td class="pager" colspan="7">
+                          <tr>
+                                <td class="pager" colspan="13">
                                   <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
                                   <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
                                   <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -2246,8 +2229,6 @@ function getParameterByName(name) {
                                   </select>
                                 </td>
                               </tr>
-                          </tfoot>
-
                         </form>
                     </TABLE>
 
