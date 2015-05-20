@@ -108,12 +108,12 @@
                                                         </tr>
                                                         
                                                         <tr>
-                                                            <td align="right" valign = top>Min Lattitude</td>
+                                                            <td align="right" valign = top>Min Latitude</td>
                                                             <td><input type="text" name="min_lattitude" id="min_lattitude" value="{$min_lat}"></td>
                                                             <td>{if $ErrorMsg['minLat']}<font color = "red">{$ErrorMsg['minLat']}</font>{/if}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" valign = top>Max Lattitude</td>
+                                                            <td align="right" valign = top>Max Latitude</td>
                                                             <td><input type="text" name="max_lattitude" id="max_lattitude" value="{$max_lat}"></td>
                                                             <td>{if $ErrorMsg['maxLat']}<font color = "red">{$ErrorMsg['maxLat']}</font>{/if}</td>
                                                         </tr>

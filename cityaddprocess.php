@@ -67,10 +67,10 @@ if (isset($_POST['btnSave'])) {
 			 $ErrorMsg["desc"] = "Please enter city description.";
 		   }  
 		if($min_lat == ''){
-                    $ErrorMsg["minLat"] = "Please enter min lattitude.";
+                    $ErrorMsg["minLat"] = "Please enter min latitude.";
                 }
 		if($max_lat == ''){
-                    $ErrorMsg["maxLat"] = "Please enter max lattitude.";
+                    $ErrorMsg["maxLat"] = "Please enter max latitude.";
                 }
 		if($min_long == ''){
                     $ErrorMsg["minLong"] = "Please enter min longitude.";
