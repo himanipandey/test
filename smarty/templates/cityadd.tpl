@@ -10,6 +10,9 @@
         theme: "advanced"
     });
 </script>
+<style>
+    .asterisk{ color:red }
+</style>
 <div class="modal">Please Wait..............</div>
 </TD>
 </TR>
@@ -47,11 +50,11 @@
                                                     <TABLE cellSpacing=2 cellPadding=4 width="93%" align=center border=0>
 
                                                         <tr>
-                                                            <td width="20%" align="right" >*City Name : </td>
+                                                            <td width="20%" align="right" ><span class="asterisk">*</span>City Name : </td>
                                                             <td width="30%" align="left"><input type=text name=txtCityName id=txtCityName value="{$txtCityName}" style="width:250px;"></td> {if $ErrorMsg["txtCityName"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtCityName"]}</font></td>{else} <td width="50%" align="left" id="errmsgname"></td>{/if}
                                                         </tr>
                                                         <tr>
-                                                            <td width="20%" align="right" >*City URL : </td>
+                                                            <td width="20%" align="right" ><span class="asterisk">*</span>City URL : </td>
                                                             <td width="30%" align="left" ><input type=text disabled name=txtCityUrl id=txtCityUrl value="{$txtCityUrl}" style="width:250px;"></td>				   
                                                         <input type = "hidden" name = "txtCityUrlOld" value = "{$txtCityUrlOld}">
                                                         <td width="50%" align="left" >
@@ -70,7 +73,7 @@
                                                         </td>
                                                         </tr>
                                                         <tr>
-                                                            <td width="20%" align="right">*Display Order : </td>
+                                                            <td width="20%" align="right"><span class="asterisk">*</span>Display Order : </td>
                                                             <td width="30%" align="left" >				  				  				 						
 
                                                                 <select name="DisplayOrder"  id="DisplayOrder" class="field" style="width:150px;">						 						 	
@@ -81,64 +84,61 @@
                                                                 </select>
                                                             </td>{if $ErrorMsg["DisplayOrder"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["DisplayOrder"]}</font></td>{else} <td width="50%" align="left" id="errmsgdispord"></td>{/if}
                                                         </tr>				<tr>
-                                                            <td width="20%" align="right" >* Meta Title : </td>
+                                                            <td width="20%" align="right" ><span class="asterisk">*</span> Meta Title : </td>
                                                             <td width="30%" align="left" ><input type=text name=txtMetaTitle id=txtMetaTitle value="{$txtMetaTitle}" style="width:250px;"></td>				   {if $ErrorMsg["txtMetaTitle"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaTitle"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetatitle"></td>{/if}
                                                         </tr>				<tr>
-                                                            <td width="20%" align="right" valign="top">*Meta Keywords :</td>
+                                                            <td width="20%" align="right" valign="top"><span class="asterisk">*</span>Meta Keywords :</td>
                                                             <td width="30%" align="left" >
                                                                 <textarea name="txtMetaKeywords" rows="10" cols="35" id="txtMetaKeywords" style="width:250px;">{$txtMetaKeywords}</textarea>
                                                             </td>{if $ErrorMsg["txtMetaKeywords"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaKeywords"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetakey"></td>{/if}
                                                         </tr>				<tr>
-                                                            <td width="20%" align="right" valign="top">*Meta Description :</td>
+                                                            <td width="20%" align="right" valign="top"><span class="asterisk">*</span>Meta Description :</td>
                                                             <td width="30%" align="left" >
                                                                 <textarea name="txtMetaDescription" rows="10" cols="35" id="txtMetaDescription" style="width:250px;">{$txtMetaDescription}</textarea>
                                                             </td>{if $ErrorMsg["txtMetaDescription"] != ''} <td width="50%" align="left" ><font color = "red">{$ErrorMsg["txtMetaDescription"]}</font></td>{else} <td width="50%" align="left" id="errmsgmetades"></td>{/if}
                                                         </tr>									
 
                                                         <tr>
-                                                            <td width="20%" align="right" valign = top >*Description  : </td>
+                                                            <td width="20%" align="right" valign = top ><span class="asterisk">*</span>Description  : </td>
                                                             <td width="30%" align="left" ><textarea name = 'desc' id = 'desc' class="myTextEditor" cols = "35" rows = "10" style="width:250px;">{$desc}</textarea>
                                                                 {if $desc != ''}
                                                                     <input type="hidden" name="oldDesc" value="yes" />
                                                                 {else}
                                                                     <input type="hidden" name="oldDesc" value="" />
                                                                 {/if}
+                                                                {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
+                                                                    <br/>
+                                                                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
+                                                                {/if}
+
 
                                                             </td>	{if $ErrorMsg["desc"] != ''} <td valign = 'top' width="50%" align="left" ><font color = "red">{$ErrorMsg["desc"]}</font></td>{else} <td width="50%" align="left" id="errmsgdes"></td>{/if}
                                                         </tr>
-                                                        
+
                                                         <tr>
-                                                            <td align="right" valign = top>Min Latitude</td>
+                                                            <td align="right" valign = top><span class="asterisk">*</span>Min Latitude</td>
                                                             <td><input type="text" name="min_lattitude" id="min_lattitude" value="{$min_lat}"></td>
                                                             <td>{if $ErrorMsg['minLat']}<font color = "red">{$ErrorMsg['minLat']}</font>{/if}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" valign = top>Max Latitude</td>
+                                                            <td align="right" valign = top><span class="asterisk">*</span>Max Latitude</td>
                                                             <td><input type="text" name="max_lattitude" id="max_lattitude" value="{$max_lat}"></td>
                                                             <td>{if $ErrorMsg['maxLat']}<font color = "red">{$ErrorMsg['maxLat']}</font>{/if}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" valign = top>Min Longitude</td>
+                                                            <td align="right" valign = top><span class="asterisk">*</span>Min Longitude</td>
                                                             <td><input type="text" name="min_longitude" id="min_longitude" value="{$min_long}"></td>
                                                             <td>{if $ErrorMsg['minLong']}<font color = "red">{$ErrorMsg['minLong']}</font>{/if}</td>
                                                         </tr>
                                                         <tr>
-                                                            <td align="right" valign = top>Max Longitude</td>
+                                                            <td align="right" valign = top><span class="asterisk">*</span>Max Longitude</td>
                                                             <td><input type="text" name="max_longitude" id="min_longitude" value="{$max_long}"></td>
                                                             <td>{if $ErrorMsg['maxLong']}<font color = "red">{$ErrorMsg['maxLong']}</font>{/if}</td>
                                                         </tr>
-                                                        <tr>
-                                                            <td></td>
-                                                            <td>
-                                                                {if ($dept=='ADMINISTRATOR') || ($dept=='CONTENT')}
-                                                                    <br/><br/>
-                                                                    <input type="checkbox" name="content_flag" {if $contentFlag}checked{/if}/> Reviewed?
-                                                                {/if}
-                                                            </td>
-                                                        </tr>
+                                                        
 
                                                         <tr>
-                                                            <td width="20%" align="right">*Status  : </td>
+                                                            <td width="20%" align="right"><span class="asterisk">*</span>Status  : </td>
                                                             <td width="30%" align="left" >
                                                                 <select name = "status" id="status" style="width:150px;"> 
                                                                     <option {if $status == 'Inactive'} value = "Inactive" selected = 'selected' {else} value = "Inactive" {/if}>Inactive</option>
