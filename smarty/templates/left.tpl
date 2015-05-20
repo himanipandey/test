@@ -558,20 +558,17 @@
                     <tr>
                         <td class="thinline" align="left" colspan="2"></td>
                     </tr>
-                    {if $listingAssignmentManage == true}
+                    {if $listingAssignmentManage == true || $listingAssignmentAccess == true}
                         <tr>
                             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                             <td align="left" height="22"><a class="leftnav" href="listing_assignment_list.php"><font color = "#f15a22">Listings</font></a></td>
                         </tr>
+                        
+                    {/if}
+                    {if $listingAssignmentManage == true}                        
                         <tr>
                             <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
                             <td align="left" height="22"><a class="leftnav" href="#"><font color = "#f15a22">Daily Performance Report</font></a></td>
-                        </tr>
-                  
-                    {elseif $listingAssignmentAccess == true}                        
-                        <tr>
-                            <td class="blue_txt" nowrap align="left" width="2%" height="22"><img height="9" src="{$OFFLINE_PROJECT_POPUP_IMAGE_PATH}plus.gif" width="9">&nbsp;</td>
-                            <td align="left" height="22"><a class="leftnav" href="listing_assigned_list.php"><font color = "#f15a22">My Assigned Listings</font></a></td>
                         </tr>
                     {/if}
 

@@ -107,6 +107,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/admin_cms/offlineproject/");
 	$smarty->assign("proptiger_broker_id", '410');
+        define('LISTING_IMAGE_FOLDER_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 }
 else
 {
@@ -115,6 +116,7 @@ else
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT'].$dirName."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/admin_cms/offlineproject/");
 	$smarty->assign("proptiger_broker_id", '171');
+        define('LISTING_IMAGE_FOLDER_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 }
 
 define('OFFLINE_PROJECT_SERVER_PATH','');
@@ -792,6 +794,13 @@ $arrRoles = array(
     'contentTeamLead' => 'Team Lead'
 );
 $smarty->assign('arrRoles', $arrRoles);
+
+$arrResaleStatus = array(
+    '' => 'Unassigned',
+    'assignedToPhotoGrapher'=>'Assigned',
+    'readyToTouchUp'=>'Ready to Touchup',
+    'touchUpDone'=>'Touchup Done'  
+);
 
 
 /********config for project type of residential/nonresidential******************/

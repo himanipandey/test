@@ -9,19 +9,27 @@ include("../modelsConfig.php");
 $listing_id = $_POST['selected_rows'];
 $current_user = $_POST['current_user'];
 
-$listing_schdule_data = ListingSchedules::find('all', array('select' => 'id, key_person_name, key_person_contact, scheduled_date_time', 'conditions' => array('status' => 'Active', 'listing_id' => $listing_id)));
+$listing_schdule_data = ListingSchedules::find('all', array(
+            'joins' => 'left join cms_assignments ca on ca.id = listing_schedules.cms_assignment_id',
+            'select' => 'ca.status as assign_status, listing_schedules.cms_assignment_id, listing_schedules.id, listing_schedules.key_person_name, listing_schedules.key_person_contact, listing_schedules.scheduled_date_time',
+            'conditions' => array('status' => 'Active', 'listing_id' => $listing_id)));
 
 $key_person_name = '';
 $key_person_contact = '';
 $scheduled_time = '';
 $schduled_id = '';
+$cms_assignment_id = '';
 if ($listing_schdule_data) {
+
     $schedule_data = $listing_schdule_data[0];
-    $schduled_id = $schedule_data->id;
-    $key_person_name = $schedule_data->key_person_name;
-    $key_person_contact = $schedule_data->key_person_contact;
-    $scheduled_time = $schedule_data->scheduled_date_time->format('Y/m/d h:i a');
-    ;
+
+    if ($schedule_data->assign_status != 'touchUpDone') {
+        $schduled_id = $schedule_data->id;
+        $cms_assignment_id = $schedule_data->cms_assignment_id;
+        $key_person_name = $schedule_data->key_person_name;
+        $key_person_contact = $schedule_data->key_person_contact;
+        $scheduled_time = $schedule_data->scheduled_date_time->format('Y/m/d h:i a');
+    }
 }
 ?>
 <table cellpadding=7>
@@ -65,24 +73,24 @@ if ($listing_schdule_data) {
 </table>
 <script type="text/javascript">
     function save_scheduling() {
-        
-        if($('#key-person-name').val().trim() == ''){
+
+        if ($('#key-person-name').val().trim() == '') {
             alert("Key Person Name is required!");
             return;
         }
-        if($('#key-person-contact').val().trim() == ''){
+        if ($('#key-person-contact').val().trim() == '') {
             alert("Key Person contact is required!");
             return;
         }
-        if($('#meeting_date').val().trim() == ''){
+        if ($('#meeting_date').val().trim() == '') {
             alert("Date-Time is required!");
             return;
         }
-        
+
         $.ajax({
             url: 'ajax/schedule_listings_save.php',
             type: 'POST',
-            data: "schduled_id=" + "<?php echo $schduled_id ?>" + "&listing_id=" + "<?php echo $listing_id ?>" + "&key_person_name=" + $('#key-person-name').val().trim() + "&key_person_contact=" + $('#key-person-contact').val().trim() + "&meeting_date=" + $('#meeting_date').val().trim() + "&current_user=" + "<?php echo $current_user ?>",
+            data: "cms_assignment_id="+ "<?php echo $cms_assignment_id ?>" +"&schduled_id=" + "<?php echo $schduled_id ?>" + "&listing_id=" + "<?php echo $listing_id ?>" + "&key_person_name=" + $('#key-person-name').val().trim() + "&key_person_contact=" + $('#key-person-contact').val().trim() + "&meeting_date=" + $('#meeting_date').val().trim() + "&current_user=" + "<?php echo $current_user ?>",
             beforeSend: function () {
                 $("body").addClass("loading");
             },
