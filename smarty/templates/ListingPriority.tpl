@@ -252,6 +252,18 @@ function editListing(str){
         $("#prs5").val('1');
         var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
          price_value = price_value/100000;
+         if(price_value>=100){
+            price_value = price_value/100;
+            $("#crs1").val('y');
+            $("#crs1").attr('checked','checked');
+            $("#lkhs1").val('n');
+            $("#lkhs1").removeAttr('checked');
+         }else{
+            $("#lkhs1").val('y');
+            $("#lkhs1").attr('checked','checked');
+            $("#crs1").val('n');
+            $("#crs1").removeAttr('checked');
+         }
          price_value = price_value.toFixed(2).toString();
          $("#prs3").val(price_value);
          $('#pr').show();
