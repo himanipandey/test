@@ -50,7 +50,7 @@ if (!$filterArr) {
 }
 $filter = json_encode($filterArr);
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
-$fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
+$fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId","hasPricePerUnitArea"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -66,6 +66,9 @@ try {
             $row->sellerId->id = $row->sellerId;
             if ($row->sellerId) {
                 list($row->seller->brokerId, $row->seller->brokerName) = getBroker($row->sellerId);
+            }
+            if ($row->currentListingPrice->hasPricePerUnitArea == FALSE){
+                $row->currentListingPrice->pricePerUnitArea = 0;
             }
             if ($row->currentListingPrice->pricePerUnitArea != 0) {
                 $price = "Price Per Unit Area - " . $row->currentListingPrice->pricePerUnitArea;
