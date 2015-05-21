@@ -53,6 +53,11 @@ if (isset($search_range) && !empty($search_range) && ($search_range != "null") &
         $tempRange["range"][$search_range]["to"] = (int) $range_to;
     }
     $filterArr->and[] = $tempRange;
+    if($search_range == "listingPricesPricePerUnitArea"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => true));
+    }else if($search_range == "price"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => false));
+    }
 }
 $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
