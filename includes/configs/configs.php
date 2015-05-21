@@ -405,7 +405,7 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor');
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor','cityHeadpropertyAdvisor'=>'City Head Property Advisor','teamLeadpropertyAdvisors'=>'Team Lead Property Advisor');
 	$smarty->assign("designationArray", $designationArray);
 
 
@@ -413,7 +413,7 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT","RESALE"=>"RESALE");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/

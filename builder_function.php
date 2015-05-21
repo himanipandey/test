@@ -1205,7 +1205,7 @@ function changeLabel($pID, $val) {
 
 /* * ************City management********************* */
 
-function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
+function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc, $minLat, $maxLat, $minLong, $maxLong) {
 
     $Sql = "INSERT INTO " . CITY . " SET
 			LABEL 	   			= '" . d_($txtCityName) . "',
@@ -1215,6 +1215,18 @@ function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 			DESCRIPTION			= '" . d_($desc) . "',
                         created_at = now(),    
 			updated_by			= '" .$_SESSION['adminId']."'";
+    if($minLat){
+        $Sql = $Sql.", SOUTH_WEST_LATITUDE=".$minLat;
+    }
+    if($maxLat){
+        $Sql = $Sql.", NORTH_EAST_LATITUDE=".$maxLat;
+    }
+    if($minLong){
+        $Sql = $Sql.", SOUTH_WEST_LONGITUDE=".$minLong;
+    }
+    if($maxLong){
+        $Sql = $Sql.", NORTH_EAST_LONGITUDE=".$maxLong;
+    }
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
     $lastId = mysql_insert_id();
     return $lastId;
@@ -1240,6 +1252,10 @@ function ViewCityDetails($cityID) {
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
         $ResDetails['DESCRIPTION'] = stripslashes($Res['DESCRIPTION']);
+        $ResDetails['MIN_LAT'] = stripslashes($Res['SOUTH_WEST_LATITUDE']);
+        $ResDetails['MAX_LAT'] = stripslashes($Res['NORTH_EAST_LATITUDE']);
+        $ResDetails['MIN_LONG'] = stripslashes($Res['SOUTH_WEST_LONGITUDE']);
+        $ResDetails['MAX_LONG'] = stripslashes($Res['NORTH_EAST_LONGITUDE']);
         return $ResDetails;
     } else {
         return 0;

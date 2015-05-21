@@ -1,7 +1,9 @@
 <?php
-
+include("smartyConfig.php");
 include("appWideConfig.php");
 include("dbConfig.php");
+include("modelsConfig.php");
+include("includes/configs/configs.php");
 include("httpful.phar");
 
 $page = filter_input(INPUT_GET, "page");
@@ -15,22 +17,37 @@ $search_range = filter_input(INPUT_GET, "search_range");
 $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
+$bookingStatusId = filter_input(INPUT_GET, "bStatusId");
+$priceVerified = filter_input(INPUT_GET, "priceVerified");
 
-$filterArr = array();
+$filterArr = new stdClass();
 
 $start = $page * $size;
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
-    $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
+    $filterArr->and[] = array("equal" => array("cityId" => $cityId));
+}else if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
+    $cityArray = getUserCities($_SESSION["adminId"]);
+    $cityOr = array();
+    foreach ($cityArray as $id=>$label){
+        $cityOr[] = $id;
+    }
+    $filterArr->and[] = array("equal" => array("cityId" => $cityOr));
 }
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
-    $filterArr["and"][] = array("equal" => array("projectId" => $projectId));
+    $filterArr->and[] = array("equal" => array("projectId" => $projectId));
 }
 if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
-    $filterArr["and"][] = array("equal" => array("listingId" => $listingId));
+    $filterArr->and[] = array("equal" => array("listingId" => $listingId));
 }
 if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
-    $filterArr["and"][] = array("equal" => array($search_term => $search_value));
+    $filterArr->and[] = array("equal" => array($search_term => $search_value));
+}
+if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
+    $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
+}
+if (isset($priceVerified) && !empty($priceVerified) && ($priceVerified != "null") && ($priceVerified != "")) {
+    $filterArr->and[] = array("equal" => array("listingVerified" => $priceVerified));
 }
 if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
     if ($range_from != "" || $range_to != "") {
@@ -39,18 +56,21 @@ if (isset($search_range) && !empty($search_range) && ($search_range != "null") &
     if ($range_to != "") {
         $tempRange["range"][$search_range]["to"] = (int) $range_to;
     }
-    $filterArr["and"][] = $tempRange;
+    $filterArr->and[] = $tempRange;
+    if($search_range == "listingPricesPricePerUnitArea"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => true));
+    }else if($search_range == "price"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => false));
+    }
 }
 $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
     $gpidFilter = "gpid=" . $gpid . "&";
 }
-if (!$filterArr) {
-    $filterArr = array("and" => array(array("equal" => array("cityId" => 2))));
-}
+
 $filter = json_encode($filterArr);
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
-$fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId","hasPricePerUnitArea"]}';
+$fields = '"fields":["vendorId","brokerConsent","furnished","homeLoanBank","errorMessage","imageCount","verified","description","seller","id","fullName","currentListingPrice","hasPricePerUnitArea","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -59,7 +79,7 @@ try {
     if ($responseLists->body->statusCode == "2XX") {
         $data = $responseLists->body->data;
         $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Verified", "Save", "Delete");
+        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Price Verified","Error Messsage", "Save", "Delete");
         $tbsorterArr['rows'] = array();
         foreach ($data as $index => $row) {
             $brokerName = "";
@@ -78,10 +98,10 @@ try {
             if ($row->currentListingPrice->otherCharges != 0) {
                 $price .= "<br>Other Charges - " . $row->currentListingPrice->otherCharges;
             }
-            $v->property->project->description = '';
-            $v->property->project->locality->description = '';
-            $v->property->project->locality->suburb->description = '';
-            $v->property->project->locality->suburb->city->description = '';
+            $row->property->project->description = '';
+            $row->property->project->locality->description = '';
+            $row->property->project->locality->suburb->description = '';
+            $row->property->project->locality->suburb->city->description = '';
             $data_rows = array(
                 "Serial" => $start + $index + 1,
                 "City" => $row->property->project->locality->suburb->city->label,
@@ -93,7 +113,8 @@ try {
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
                 "Photo" => ($row->imageCount > 0) ? "Done" : "Not Done",
-                "Verified" => ($row->verified) ? "Yes" : "No",
+                "PriceVerified" => ($row->verified) ? "Yes" : "No",
+                "ErrorMesssage" => ($row->errorMessage)? $row->errorMessage : "",
                 "Delete" => ''
             );
             array_push($tbsorterArr['rows'], $data_rows);
@@ -115,5 +136,15 @@ function getBroker($seller_id) {
         return array(null, null);
     }
 }
-
+function getUserCities($admin_id){
+    $cities = array();
+    $query = "SELECT ct.CITY_ID, ct.LABEL FROM proptiger_admin_city act LEFT JOIN city ct ON act.CITY_ID=ct.CITY_ID WHERE act.ADMIN_ID={$admin_id}";
+    $result = mysql_query($query) or die(mysql_query()."(E-001)");
+    if(mysql_num_rows($result)>0){
+        while ($row = mysql_fetch_assoc($result)){
+            $cities[$row["CITY_ID"]] = $row["LABEL"];
+        }
+    }
+    return $cities;
+}
 ?>
