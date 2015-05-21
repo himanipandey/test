@@ -74,6 +74,9 @@ function submitButton(){
     if($("#bookingStatusId_search").val() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
     }
+    if($("#price_verified").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"priceVerified=" + $("#price_verified").val();
+    }
     queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
     window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
     return false;
@@ -106,6 +109,9 @@ function downloadClick(){
     }
     if($("#bookingStatusId_search").val() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
+    }
+    if($("#price_verified").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"priceVerified=" + $("#price_verified").val();
     }
     queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
     window.location.href="{$dirname}/ajax/downloadListing.php" + queryStrUrl;
@@ -426,6 +432,7 @@ $('#range_from').val(getParameterByName('range_from'));
 $('#range_to').val(getParameterByName('range_to'));
 $('#search_term').val(getParameterByName('search_term'));
 $('#bookingStatusId_search').val(getParameterByName('bStatusId'));
+$('#price_verified').val(getParameterByName('priceVerified'));
 
 
 if($('#search_term').val()=="gpid"){
@@ -510,6 +517,9 @@ selProject = $("#selProjId").val();*/
           }
           if($("#bookingStatusId_search").val()){
              url += '&bStatusId=' + $("#bookingStatusId_search").val();
+          }
+          if($("#price_verified").val()){
+             url += '&priceVerified=' + $("#price_verified").val();
           }
           if($("#search_term").val()){
               if($("#search_value").val()){
@@ -1582,7 +1592,7 @@ function getParameterByName(name) {
                                                 
                                                 <td>
                                                     <select name="search_range" id="search_range">
-                                                        <option value="">--Select--</option>
+                                                        <option value="">Select Budget</option>
                                                         <option value="price">Absolute Price</option>
                                                         <option value="listingPricesPricePerUnitArea">Price Per Unit Area</option>
                                                     </select>
@@ -1620,7 +1630,13 @@ function getParameterByName(name) {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2"></td>
+                                                <td>
+                                                    <select name="price_verified" id="price_verified">
+                                                        <option value="">Select Price Verified Status</option>
+                                                        <option value=true>Price Verified</option>
+                                                        <option value=false>Price Not Verified</option>
+                                                    </select>
+                                                </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
                                                     <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
