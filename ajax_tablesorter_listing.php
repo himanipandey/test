@@ -18,6 +18,7 @@ $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
 $bookingStatusId = filter_input(INPUT_GET, "bStatusId");
+$priceVerified = filter_input(INPUT_GET, "priceVerified");
 
 $filterArr = new stdClass();
 
@@ -44,6 +45,9 @@ if (isset($search_term) && !empty($search_term) && ($search_term != "null") && (
 }
 if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
     $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
+}
+if (isset($priceVerified) && !empty($priceVerified) && ($priceVerified != "null") && ($priceVerified != "")) {
+    $filterArr->and[] = array("equal" => array("listingVerified" => $priceVerified));
 }
 if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
     if ($range_from != "" || $range_to != "") {
@@ -75,7 +79,7 @@ try {
     if ($responseLists->body->statusCode == "2XX") {
         $data = $responseLists->body->data;
         $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Verified","Error Messsage", "Save", "Delete");
+        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Price Verified","Error Messsage", "Save", "Delete");
         $tbsorterArr['rows'] = array();
         foreach ($data as $index => $row) {
             $brokerName = "";
@@ -109,7 +113,7 @@ try {
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
                 "Photo" => ($row->imageCount > 0) ? "Done" : "Not Done",
-                "Verified" => ($row->verified) ? "Yes" : "No",
+                "PriceVerified" => ($row->verified) ? "Yes" : "No",
                 "ErrorMesssage" => ($row->errorMessage)? $row->errorMessage : "",
                 "Delete" => ''
             );

@@ -17,6 +17,7 @@ $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
 $bookingStatusId = filter_input(INPUT_GET, "bStatusId");
+$priceVerified = filter_input(INPUT_GET, "priceVerified");
 
 $filterArr = new stdClass();
 
@@ -41,6 +42,9 @@ if (isset($search_term) && !empty($search_term) && ($search_term != "null") && (
 }
 if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
     $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
+}
+if (isset($priceVerified) && !empty($priceVerified) && ($priceVerified != "null") && ($priceVerified != "")) {
+    $filterArr->and[] = array("equal" => array("listingVerified" => $priceVerified));
 }
 if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
     if ($range_from != "" || $range_to != "") {
