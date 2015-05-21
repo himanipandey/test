@@ -183,6 +183,32 @@
     </TD>
 </TR>
 <script type='text/javascript'>
+    function view_listing(listing_id){
+        var city = "";
+        var projectId = "";
+        var listingId = listing_id;
+        var admin_cities = '';
+        $.ajax({
+                type: "POST",
+                url: "ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=0&readOnly=1",               
+                beforeSend: function () {
+                    $("body").addClass("loading");
+                },
+                success: function (msg) {
+                    if (msg) {
+                        $("body").removeClass("loading");
+                        $.fancybox({
+                            'content': msg.trim(),
+                            'onCleanup': function () {
+                                //
+                            }
+
+                        });
+                    }
+                }
+            });
+        
+    }
     function downloadClick(){
         var city = "{$citydd}";
         var projectId = "{$selProjId}";
@@ -299,7 +325,7 @@
         close: function () {
             $(this).removeClass("ui-corner-top").addClass("ui-corner-all");
         },
-    });
+    });    
     
     function assign_listings(){
         var selected_rows = {};
@@ -315,8 +341,12 @@
                 type: "POST",
                 url: 'ajax/assign_listings_form.php',
                 data: { selected_rows: selected_rows, current_user: "{$current_user}" },
+                beforeSend: function () {
+                    $("body").addClass("loading");
+                },
                 success: function (msg) {
                     if (msg) {
+                        $("body").removeClass("loading");
                         $.fancybox({
                             'content': msg,
                             'onCleanup': function () {
@@ -338,7 +368,11 @@
                 type: "POST",
                 url: 'ajax/touchup_done_listing.php',
                 data: { listing_id: listing_id, current_user: "{$current_user}" },
+                beforeSend: function () {
+                    $("body").addClass("loading");
+                },
                 success: function (msg) {
+                    $("body").removeClass("loading");
                     if (msg.trim() == 1) {
                         alert('Touchup done for Listing!');
                         window.location = 'listing_assignment_list.php';
@@ -354,7 +388,11 @@
                 type: "POST",
                 url: 'ajax/verify_schedule_listings_form.php',
                 data: { listing_id: listing_id, current_user: "{$current_user}" },
+                beforeSend: function () {
+                    $("body").addClass("loading");
+                },
                 success: function (msg) {
+                    $("body").removeClass("loading");
                     if (msg) {
                         $.fancybox({
                             'content': msg,
@@ -382,8 +420,12 @@
                 type: "POST",
                 url: 'ajax/schedule_listings_form.php',
                 data: { selected_rows: selected_rows, current_user: "{$current_user}" },
-                success: function (msg) {
+                beforeSend: function () {
+                    $("body").addClass("loading");
+                },
+                success: function (msg) {                    
                     if (msg) {
+                        $("body").removeClass("loading");
                         $.fancybox({
                             'content': msg,
                             'onCleanup': function () {
