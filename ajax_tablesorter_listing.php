@@ -79,7 +79,7 @@ try {
     if ($responseLists->body->statusCode == "2XX") {
         $data = $responseLists->body->data;
         $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Verified","Error Messsage", "Save", "Delete");
+        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Price Verified","Error Messsage", "Save", "Delete");
         $tbsorterArr['rows'] = array();
         foreach ($data as $index => $row) {
             $brokerName = "";
@@ -113,7 +113,7 @@ try {
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
                 "Photo" => ($row->imageCount > 0) ? "Done" : "Not Done",
-                "Verified" => ($row->verified) ? "Yes" : "No",
+                "PriceVerified" => ($row->verified) ? "Yes" : "No",
                 "ErrorMesssage" => ($row->errorMessage)? $row->errorMessage : "",
                 "Delete" => ''
             );
