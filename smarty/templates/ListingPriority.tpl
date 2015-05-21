@@ -21,6 +21,7 @@
 <style>
     .hide-input{ display: none !important; }
     .tablesorter thead .disabled { display: none }
+    .tablesorter-bootstrap .tablesorter-header{ cursor: text }
 </style>
 <script language="javascript">
 var pid;
@@ -78,12 +79,36 @@ function submitButton(){
     return false;
 }
 function downloadClick(){
-    var cityId = $("#citydd :selected").val();
-    var subUrl = "";
-    if(cityId != "" && cityId != null){
-        subUrl = "cityId="+cityId;
+    var queryStrUrl = "";
+    if($('#citydd').val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"cityId=" + $('#citydd').val();
     }
-    window.location.href="{$dirname}/ajax/downloadListing.php?" + subUrl;
+   
+    if($('#project_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectName=" + $('#project_search').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectId=" + $('#selProjId').val();
+    }
+    if($('#listingId_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
+    }
+    if(($("#search_term option:selected").val() != "") && ($("#search_value").val().trim()!="" || $("#search_landmark").val().trim()!="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : $("#search_landmark").val().trim());
+    }
+    if($("#search_term option:selected").val() == "gpid"){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"gpid=" + $("#hidden_gpid").val();
+    }
+    
+    if(($("#search_range option:selected").val() != "") && ($("#range_from").val().trim() != "" || $("#range_to").val().trim() !="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_range=" + $("#search_range option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_from=" + $('#range_from').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_to=" + $('#range_to').val().trim();
+    }
+    if($("#bookingStatusId_search").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
+    }
+    queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
+    window.location.href="{$dirname}/ajax/downloadListing.php" + queryStrUrl;
     
     return false;
 }
@@ -1527,13 +1552,15 @@ function getParameterByName(name) {
 		    </TD>
 		</TR>
 		<TR>
-		<TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+		<TD vAlign=top align=middle class="backgorund-rt" height=450>
+                    <span id="peoject_search_msg" style="color:red"></span>
+                    <BR>
 		    <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                         <tr>
 		            <td>
                                 <div id="search-top">
                                     <form method = "get">
-                                        <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
+                                        <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">
 		            	            <tr>
 		                                <td height="25" align="left" valign="top">
                                                     <select id="citydd" name="citydd" >
@@ -2214,26 +2241,8 @@ function getParameterByName(name) {
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           
-                          <tfoot>
-                              <tr>
-                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
-                                <th>2</th>
-                                <th>3</th>
-                                <th>4</th>
-                                <th>5</th>
-                                <th>6</th>
-                                <th>7</th>
-                                <th>8</th>
-                                <th>9</th>
-                                <th>10</th>
-                                <th>11</th>
-                                <th>12</th>
-                                {if $listingDelAuth==true}
-                                    <th>13</th>
-                                {/if}
-                              </tr>
-                              <tr>
-                                <td class="pager" colspan="7">
+                          <tr>
+                                <td class="pager" colspan="13">
                                   <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
                                   <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
                                   <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -2246,8 +2255,6 @@ function getParameterByName(name) {
                                   </select>
                                 </td>
                               </tr>
-                          </tfoot>
-
                         </form>
                     </TABLE>
 
@@ -2347,10 +2354,14 @@ $(document).ready(function(){
     });
     
     $("#project_search").keypress(function(event){
-        if($("#citydd").val() == "" && (event.which >47 && event.which<123)){
-            event.preventDefault();
-            alert("Please select city");
+        if($("#citydd").val() == ""){
+            $("#peoject_search_msg").text("Please select city first for better project search experience");
+        }else{
+            $("#peoject_search_msg").text('');
         }
+    });
+    $("#project_search").focusout(function(){
+        $("#peoject_search_msg").text('');
     });
     
 });
