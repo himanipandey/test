@@ -49,10 +49,12 @@ class ImageServiceUpload{
             "project_image" => "main",
             "elevation"=> "main",
             "amenities"=>"amenities", 
-            "main_other"=>"mainOther"
+            "main_other"=>"mainOther",
+            "projectBrouchure"=>"projectBrouchure"
         ),
         "option" => array("floor_plan" => "floorPlan",
-                           "3d_floor_plan" => "3DFloorPlan" ),
+                           "3d_floor_plan" => "3DFloorPlan",
+                           "panorama" => "Panoramic" ),
         "builder" => array("builder_image" => "logo"),
         "locality" => array(
             "heroshot" => "heroShot",
@@ -120,7 +122,9 @@ class ImageServiceUpload{
             "sportscomplex" => "sportsComplex"
         ),
         "bank" => array("logo" => "logo"),
-        "company" => array("logo" => "logo"),
+        "company" => array("logo" => "logo",
+                "companysignupform" => "companySignupForm"
+            ),
         "listing" => array(
             "bedroom"=> "Bedroom",
             "bathroom"=>"Bathroom",
@@ -131,6 +135,11 @@ class ImageServiceUpload{
             "other"=> "Other",
             ),
     );
+
+
+    static $document_types = array("3d_floor_plan", "companysignupform", "panorama", "projectBrouchure");
+
+
 
     function __construct($image, $object, $object_id, $image_type, $extra_params, $method, $image_id = NULL){
         $this->image = $image;
@@ -148,8 +157,8 @@ class ImageServiceUpload{
     }
 
     function upload(){
-
-        if($this->image_type == '3d_floor_plan'){
+        
+        if(in_array($this->image_type,  static::$document_types)){
             if(!isset($this->image))
                 $params = array('file'=>$this->image,'objectType'=>static::$object_types[$this->object],
                 'objectId' => $this->object_id, 'documentType' => static::$image_types[$this->object][$this->image_type]);
@@ -267,7 +276,7 @@ class ImageServiceUpload{
          //print("<pre>");     
 //print_r($post);
         //die("here1");
-        if($post['dtype']=="3D"){
+        if($post['dtype']=="Document"){
                 //echo "3d del";
                 $url = static::join_urls(self::$doc_upload_url, $id); //die($url);
         }

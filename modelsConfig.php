@@ -8,7 +8,9 @@ ActiveRecord\Config::initialize(function($cfg)
   $cfg->set_connections(array('development' =>
     'mysql://root:root@localhost/cms'));
 });
-ActiveRecord\DateTime::$DEFAULT_FORMAT = 'Y-m-d H-i-s';
+ActiveRecord\DateTime::$DEFAULT_FORMAT = 'Y-m-d';
+$ar_adapter = ActiveRecord\ConnectionManager::get_connection();
+$ar_adapter->connection->query("SET time_zone = '+05:30'");
 #ActiveRecord\DateTime::$DEFAULT_FORMAT = 'Y-m-d H-i-s';
 
 // Includes whole model directory

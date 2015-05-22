@@ -82,7 +82,7 @@
 		$locality = $_REQUEST['locality'];
 		if(!isset($_REQUEST['builder']))
 			$_REQUEST['builder'] = '';
-		$builder = $_REQUEST['builder'];
+		$builder = ($_REQUEST['builder'] != '' && trim($_REQUEST['builderName']) != '')?$_REQUEST['builder'] : '';
 		if(!isset($_REQUEST['phase']))
 			$_REQUEST['phase'] = '';
 		$phase = $_REQUEST['phase'];
@@ -115,10 +115,11 @@
                 
                 if(!isset($_REQUEST['townshipId']))
                     $_REQUEST['townshipId'] = '';
+                $township = ($_REQUEST['townshipId'] != ''  && trim($_REQUEST['townshipName']) != '')?$_REQUEST['townshipId'] : '';
                 if(!isset($_REQUEST['authorityId']))
                     $_REQUEST['authorityId'] = '';
 		
-		$smarty->assign("townshipId", $_REQUEST['townshipId']);
+		$smarty->assign("townshipId", $township);
 		$smarty->assign("authorityId", $_REQUEST['authorityId']);
                 $smarty->assign("phase", $phase);
 		$smarty->assign("stage", $stage);
@@ -220,11 +221,11 @@
                         $arrSearchFields['status'] = $_REQUEST['Active'];
                     if($StatusValue != '')
                         $arrSearchFields['project_status_id'] = $_REQUEST['Status'];
-                    if( $_REQUEST['builder'] != '' ) 
+                    if($_REQUEST['builder'] != '' && trim($_REQUEST['builderName']) != '') 
                         $arrSearchFields['builder_id'] = $_REQUEST['builder'];
                     if($_REQUEST['phase'] != '')
                         $arrSearchFields['project_phase_id'] = $_REQUEST['phase'];
-                    if($_REQUEST['townshipId'] != '')
+                    if($_REQUEST['townshipId'] != ''  && trim($_REQUEST['townshipName']) != '')
                         $arrSearchFields['township_id'] = $_REQUEST['townshipId'];
                     if($_REQUEST['authorityId'] != '')
                         $arrSearchFields['authorityId'] = $_REQUEST['authorityId'];

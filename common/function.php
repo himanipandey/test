@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: swapnil
  * Date: 7/19/13
@@ -178,7 +179,7 @@ function writeToImageService($imageParams){
     $postArr = array();;
     $result = array();
     //print("<pre>");
-    //print_r($imageParams);//die();
+    //print_r($imageParams);die();
     foreach ($imageParams as $k => $v) {
 
         # code...
@@ -226,8 +227,8 @@ function writeToImageService($imageParams){
                    // print_r($service_extra_paramsArr);//die();
 
             if($params['delete']=="yes"){
-                if($params['dtype']=="3D"){
-                    $extra_paramsArr = array("dtype" => "3D");
+                if($params['dtype']=="Document"){
+                    $extra_paramsArr = array("dtype" => $params['dtype']);
                     $s3upload = new ImageUpload(NULL, array("object" => $objectType,"object_id" => $objectId, "service_image_id" => $params['service_image_id'],  "service_extra_params" => $extra_paramsArr));
                     $postArr[$k] = $s3upload->delete();
                 }
@@ -268,11 +269,11 @@ function writeToImageService($imageParams){
                 else {
                     //  unknown format !!
                 }
-                if ( $imgType == "" ) {
+                /*if ( $imgType == "" ) {
                     //die("here1");
                     $returnValue['error'] = "format not supported";
                 }
-                else {
+                else {*/
                     //  no error
                     if($params['image']){
                         //die("here2");
@@ -309,13 +310,14 @@ function writeToImageService($imageParams){
                     
                     
                     
-                }
+                //}
             }
 
         }
     }
      
-  // print'<pre>';   print_r($postArr);die();
+  // print'<pre>';   print_r($postArr);die(); 
+
   // array of curl handles
     $curly = array();
   // data to be returned
@@ -329,8 +331,8 @@ function writeToImageService($imageParams){
 Logger::configure( dirname(__FILE__) . '/../log4php.xml');
 $logger = Logger::getLogger("main");
 //die();
-/*print'<pre>';
-print_r($postArr); die();*/
+//print'<pre>';
+//print_r($postArr); die();
 
 //if(count($postArr)>1){
   foreach ($postArr as $id => $d) {
@@ -342,11 +344,17 @@ print_r($postArr); die();*/
             $url = DOC_SERVICE_URL;
         }
     }
+ 
     /*if(array_key_exists("dtype", $imageParams[$id]['params'])) {
         if($imageParams[$id]['params']['dtype']=="3D"){
             $url = DOC_SERVICE_URL;
         }
     }*/
+
+
+//print'<pre>';
+//print_r($d); die();
+
     $curly[$id] = curl_init();
  
     //$url = (is_array($d) && !empty($url) ? $url : "");
@@ -552,4 +560,22 @@ function replaceSpaces($string){
 	return $output;
 }
 
-
+/*
+ * Author : Jitendra pathak
+ * Purpose : debugging and formatted output
+ */
+function pr($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+}
+/*
+ * Author : Jitendra pathak
+ * Purpose : debug and die and formatted output
+ */
+function prd($data){
+    echo "<pre>";
+    print_r($data);
+    echo "<pre>";
+    die;
+}

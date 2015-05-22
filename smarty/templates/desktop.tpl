@@ -63,3 +63,6 @@
     </TBODY></TABLE>
   </TD>
 </TR>
+<script type="">
+    document.cookie = "time_spent" + "=" + 0;
+</script>

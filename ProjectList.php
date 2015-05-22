@@ -14,6 +14,7 @@
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
 
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."manageProject.tpl");
+        include("builder_suggest_auto.php");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 
 	

@@ -1,4 +1,4 @@
-
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
@@ -129,6 +129,13 @@ function towerSelect(towerId)
 		var flatAvailChk = $("#flatAvailChk").val();
 		var val = $('input:radio[name=validationChk]:checked').val();
 		var flgChk = 0;	
+                
+                var skipValidationFlag = 0; //if = 1 then all validation will be skip
+                /*******check if validation will be skip********/
+                if("{$projectDetails[0].SKIP_B2B}" == 1 || "{$projectDetails[0].STATUS}" == 'Inactive'){
+                    skipValidationFlag = 1;
+                }                
+                
                 /*******code for check user have access to move project or not******/
                 if(dir != 'backward' && projectMoveValidation <=0 && projectMoveValidation != -999 
                     && ((phase == 'DataCollection' && (stg == 'UpdationCycle' || stg == 'SecondaryPriceCycle')) || phase == 'DcCallCenter')){
@@ -137,7 +144,8 @@ function towerSelect(towerId)
                     
                 }
                 /*******end code for check user have access to move project or not******/
-		if(dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
+                console.log("Phase: "+phase, "Stage: "+stg, "SkipFlag:"+skipValidationFlag);
+		if(skipValidationFlag == 0 && dir != 'backward' && val == 'Y' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')))
 		{
 			if(phaseId != '')
 			{
@@ -184,17 +192,17 @@ function towerSelect(towerId)
 			flgChk = 1;
 		}
 		      //alert(configSizeFlag + phase);
-				if(dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
+				if(skipValidationFlag == 0 && dir != 'backward' && ((phase == 'DataCollection' && stg == 'UpdationCycle') || (phase == 'DcCallCenter' && stg == 'NewProject')) && configSizeFlag == 1 && (projectStatus == 'UnderConstruction' || projectStatus == ' Launch' || projectStatus == 'PreLaunch')) {
                     alert("Config sizes are required!");
                     return false;
                 }
 				isVerifedSupplyMovFlag = "{$isSupplyLaunchVerified}";				
-				if(dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
+				if(skipValidationFlag == 0 && dir != 'backward' && phase == 'Audit1' && !isVerifedSupplyMovFlag) {
                     alert("Supply is not verified!");
                     return false;
                 }
                 
-                if(dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
+                if(skipValidationFlag == 0 && dir != 'backward' && phase == 'Audit1' && availabilityOrderChk == 'false') {
                     alert("Supply order should be in descending order!\nCurrent order is "+availOrder+" for bedroom "+bedRoomOrder);
                     return false;
                 }
@@ -205,7 +213,7 @@ function towerSelect(towerId)
 			remarkTxt = "{$projectComments['audit2Remark']->comment_text}";
 			remarkId = "{$projectComments['audit2Remark']->comment_id}";
 			if(dir=='forward'){
-				if(isNewRemark == 'New' && phase == "Audit1"){
+				if(skipValidationFlag == 0 && isNewRemark == 'New' && phase == "Audit1"){
 					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
 					{
 						$('#newRemarkId').val(remarkId);
@@ -239,7 +247,7 @@ function towerSelect(towerId)
 			}
 			else if(dir=='updation')
 			{
-				if(isNewRemark == 'New' && phase == "Audit1"){
+				if(skipValidationFlag == 0 && isNewRemark == 'New' && phase == "Audit1"){
 					if (confirm("New Remark : '" + remarkTxt + "'\n\n Have you read the Above Remark ? (if yes then press OK and proceed)"))
 					{   
 						$('#newRemarkId').val(remarkId);
@@ -473,9 +481,78 @@ function broker_call_edit(callId, brokerId)
 		
 	});
 });
+function fetchPlanImages(objectType, objectId, contentArea){
+    $.ajax({
+        type: "post",
+        url: "fetch_plan_images.php",
+        data: "objectId=" + objectId + "&objectType=" + objectType,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $('#'+contentArea).html(dt);
+            $("body").removeClass("loading");    
+            if(dt.trim() != '<td>Data not found!</td>' && objectType == 'property'){
+                $('#edit-floor-images').show();
+            }else if(dt.trim() != '<td>Data not found!</td>' && objectType == 'project'){
+                $('#edit-plan-images').show();
+            }
+
+        }
+    });
+}
+
+function download_project_brochure(pid){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_brochure.php",
+        data: "objectId=" + pid,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty')
+                alert('Project Brochure not available!');
+            else
+                window.location = dt;
+        }
+    });
+}
+
+function show_calling_links(pid, type){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_calling_links.php",
+        data: "projectId=" + pid + "&projectType=" + type,
+        beforeSend: function(){
+            console.log('in ajax beforeSend');
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project '+ type +' calling links not available!');
+            }else{
+                
+                if(type == 'primary'){
+                    $('#primary-links').html(dt);
+                }else{
+                    $('#update-secodary-price').show();
+                    $('#secondary-links').html(dt);
+                }
+            }
+        }
+    });
+}
+    
 </script>
 
-
+<div class="modal">Please Wait..............</div>
 <form  action="show_project_details.php?projectId={$projectId}" method="POST" id="changePhaseForm">
   <input type="hidden" id="forwardFlag" name="forwardFlag" value=""/>
   <input type="hidden" id="currentPhase" name="currentPhase" value=""/>
@@ -1159,7 +1236,7 @@ function broker_call_edit(callId, brokerId)
 								<b>Project URL:</b>
 							</td>
 							<td>
-								<a href = "http://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
+								<a href = "https://www.proptiger.com/{$projectDetails[0].PROJECT_URL}">{$projectDetails[0].PROJECT_URL}</a>
 							</td>
 						</tr>
 						<tr height="25px;">
@@ -1303,6 +1380,7 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                
                                                  <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b>Application Form:</b>
@@ -1317,7 +1395,7 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
-                                                <tr height="25px;">
+                                                <!--<tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Skip Updation Cycle: </b>
                                                     </td>
@@ -1328,7 +1406,7 @@ function broker_call_edit(callId, brokerId)
                                                                No
                                                         {/if}
                                                     </td>
-						</tr>
+						</tr>-->
                                                 
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
@@ -1355,6 +1433,46 @@ function broker_call_edit(callId, brokerId)
                                                         {/if}
                                                     </td>
 						</tr>
+                                                <!-- @Jitendra pathak -->
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Construction Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].cons_comp != ''}
+                                                               {$projectDetails[0].cons_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Maintenace Contractor: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].maint_comp != ''}
+                                                               {$projectDetails[0].maint_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> Landscape Architect: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].lands_arch_comp != ''}
+                                                               {$projectDetails[0].lands_arch_comp}
+                                                        {else}
+                                                              --
+                                                        {/if}
+                                                    </td>
+						</tr>
+                                                
+                                                
+                                                
                                                 <tr height="25px;">
                                                     <td nowrap="nowrap" width="6%" align="left">
                                                             <b> Power backup: </b>
@@ -1387,10 +1505,33 @@ function broker_call_edit(callId, brokerId)
                                                         {$redevelopment_flag}
                                                     </td>
 						</tr>
+                                                <tr height="25px;">
+                                                    <td nowrap="nowrap" width="6%" align="left">
+                                                            <b> IS Smoothed ?: </b>
+                                                    </td>
+                                                    <td>
+                                                        {if $projectDetails[0].IS_SMOOTHED == 0}
+                                                               No
+                                                        {else}
+                                                               Yes
+                                                        {/if}
+                                                    </td>
+						</tr>
                                                 
 					</table>
 				</td>
 			</tr>
+                        <tr>
+                            <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+                                <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
+                                    <tr>
+                                        <td>
+                                            <button onclick="download_project_brochure('{$projectId}');">Download Project Brochure</button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
                         <tr>
                             <td width = "100%" align = "left" colspan = "16" style="padding-left: 30px;">
                                 <button class="clickbutton" onclick="$(this).trigger('event18');">Show All Comments History</button>
@@ -1580,59 +1721,18 @@ function broker_call_edit(callId, brokerId)
                             </td>
                         </tr>
 			{*code start for calling records primry*}
-			{if count($arrCalingPrimary)>0}
-			<tr>
+                        <tr>
                             <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
                                 <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-
-                                    <tr class="headingrowcolor" height="30px;">
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
-                                             <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Contact No</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
-                                             <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Campaign Name</td>
-                                             <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
+                                    <tr>
+                                        <td>
+                                            <button onclick="show_calling_links('{$projectId}', 'primary');">Show Primary Calling Links</button>
+                                            <div id="primary-links"></div>
+                                        </td>
                                     </tr>
-
-                                    {foreach from = $arrCalingPrimary key = key item = item}
-                                            {if ($key+1)%2 == 0}
-                                                            {$color = "bgcolor='#F7F8E0'"}
-                                            {else}
-                                                    {$color = "bgcolor='#f2f2f2'"}
-                                            {/if}
-                                    <tr {$color} height="25px;">
-                                            <td nowrap="nowrap" width="5%" align="center">
-                                                    {$key+1}
-                                            </td>
-                                            <td width ="10%">
-                                                    {$item['FNAME']}
-                                            </td>
-                                            <td width ="15%">
-                                                    {$item['StartTime']}
-                                            </td>
-                                            <td width ="15%">
-                                                    {$item['EndTime']}
-                                            </td>
-                                            <td width ="10%" nowrap>
-                                                    {$item['ContactNumber']}
-                                            </td>
-                                            <td width ="30%" nowrap>
-                                                    <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
-                                            </td>
-                                            <td width ="90%">
-                                                    {$item['CampaignName']}
-                                            </td>
-                                            <td width ="90%">
-                                                    {$item['Remark']}
-                                            </td>
-                                    </tr>
-                                    {/foreach}
                                 </table>
                             </td>
-			</tr>
-			{/if}
+                        </tr>                         			
 			{*end code start for calling records primary*}
 
 			<tr>
@@ -1654,16 +1754,24 @@ function broker_call_edit(callId, brokerId)
 							  
 							</tr>
 						{/if}
+                                                {array_search('Club House Area',$AmenitiesArr)}
 						{foreach from=$AmenitiesArr key=k item=v} 
 						{if $k != 99}
 						{if array_key_exists($k,$arrNotninty)}
 						<tr height="25px;">
+                                                    
 							<td nowrap="nowrap" align="left"><b>{$v} :</b></td>
 								 <td align ="left" nowrap>
 								 
 								  {if !in_array($arrNotninty[$k],$AmenitiesArr)}
 									 {if count($arrNotninty[$k]) >0} {$arrNotninty[$k]} {else} -- {/if}  
 								  {/if}
+                                                                  {if $v=='Club House'}
+                                                                      <label style="margin-left:20px"><b>Club House Area </b> : </label>
+                                                                      {if $clubHouseArea}
+									 {if $clubHouseArea >0} {$clubHouseArea} {else} -- {/if}  
+                                                                       {/if}
+                                                                  {/if}
 								  </td>	
 							 {/if}
 						</tr>
@@ -1913,11 +2021,16 @@ function broker_call_edit(callId, brokerId)
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 						  	<tr>
-							  <td width="20%" align="left"><b>Project Plans {$path}</b><button class="clickbutton" onclick="$(this).trigger('event4');">Edit</button></td>
+							  <td width="20%" align="left">
+                                                                <a href="javascript:void(0)" onclick="fetchPlanImages('project','{$projectId}', 'projectPlanImages')"><b>Project Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                                                                <button style="display:none" id="edit-plan-images" class="clickbutton" onclick="$(this).trigger('event4');">Edit</button>
+                                                                {/if}
+                                                            </td>
 							</tr>
-						{/if}
+						
 						{if count($lastUpdatedDetail['project_plan_images'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
@@ -1928,61 +2041,27 @@ function broker_call_edit(callId, brokerId)
 							  
 						  </tr>
 						{/if}
+                                                <tr bgcolor='#ffffff' id="projectPlanImages"></tr>
 					
-						  <tr bgcolor='#ffffff'>
-											
-								{$cnt = 0}
-								{section name=data loop=$ImageDataListingArr}
-								
-								{if $cnt != 0 && $cnt%4 == 0}</tr><tr bgcolor='#ffffff'>{/if}
-								
-								<td class = "tdcls_{$cnt}" >
-								
-									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
-										
-											<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].PLAN_IMAGE}" target="_blank">
-                                                                                            {$parts = explode('.', $ImageDataListingArr[data].PLAN_IMAGE)}
-                                                                                            {$last = array_pop($parts)}
-                                                                                            {$str1 = implode('.', $parts)}
-                                                                                            {$str1 = $str1|cat:'-thumb'}
-                                                                                            {$str2 = $str1|cat:'.'}
-                                                                                            {$finalStrWithThumb = $str2|cat:$last}
-                                                                                            <img src="{$ImageDataListingArr[data].thumb_path}" height="70px" width="70px" title="{$ImageDataListingArr[data].PLAN_IMAGE}" alt="{$ImageDataListingArr[data].alt_text}" />
-												</a>
-												<br>
-											<b>Image Type</b> :{$ImageDataListingArr[data].PLAN_TYPE}
-											<br><br>
-										<b>Image Title </b>:{$ImageDataListingArr[data].TITLE}<br><br>
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Construction Status'}
-											<b>Tagged Date </b>:{$ImageDataListingArr[data].tagged_month|strtotime|date_format:"%B %Y"}<br><br>
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
-										{/if}
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Project Image'}
-											<b>Display Order </b>:{$ImageDataListingArr[data].display_order}<br><br>
-										{/if}
-										{if $ImageDataListingArr[data].PLAN_TYPE == 'Cluster Plan'}
-											<b>Tagged Tower </b>:{if $ImageDataListingArr[data].tower_id>=0}{$ImageDataListingArr[data].TOWER_NAME}{/if}<br><br>
-										{/if}
-
-									</div>
-								</td>
-								{$cnt = $cnt+1} 		
-								{/section}
-							</tr>
 					</table>
 				</td>
 		   </tr>
 
 		  <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
-						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+						
 							<tr>
-						  		<td align="left"  nowrap colspan ="4"><b>Floor Plans</b><button class="clickbutton" onclick="$(this).trigger('event11');">Edit</button></td>
-							</tr>
-						{/if}
+                                                            <td align="left"  nowrap colspan ="4">
+                                                                <a href="javascript:void(0)" onclick="fetchPlanImages('property','{$projectId}', 'floorPlanImages')"><b>Floor Plans</b></a>
+                                                                {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
+                                                                <button  style="display:none" id="edit-floor-images"  class="clickbutton" onclick="$(this).trigger('event11');">Edit</button>
+                                                                {/if}
+                                                            </td>
+                                                        </tr>
+						
 						{if count($lastUpdatedDetail['resi_floor_plans'])>0}
 						  <tr bgcolor = "#c2c2c2">
 							  <td nowrap="nowrap"  align="left" colspan = "4"><b>Last Updated Detail</b><br></br>
@@ -1994,42 +2073,15 @@ function broker_call_edit(callId, brokerId)
 							  
 						  </tr>
 						{/if}
-						  <tr bgcolor='#ffffff'>
-											
-								{$cnt = 0}
-								{section name=data loop=$ImageDataListingArrFloor}
-								
-								{if $cnt != 0 && $cnt%4 == 0}</tr><tr bgcolor='#ffffff'>{/if}
-								
-								<td class = "tdcls_{$cnt}" >
-									<div  style="border:1px solid #c2c2c2;padding:4px;margin:4px;">
-										
-											<a class="pt_reqflrplan" href="{$ImageDataListingArrFloor[data].IMAGE_URL}
-														" target="_blank">
-                                                                                            {$partsFloor = explode('.', $ImageDataListingArrFloor[data].IMAGE_URL)}
-                                                                                            {$lastFloor = array_pop($partsFloor)}
-                                                                                            {$strFloor1 = implode('.', $partsFloor)}
-                                                                                            {$strFloor1 = $strFloor1|cat:'-thumb'}
-                                                                                            {$strFloor2 = $strFloor1|cat:'.'}
-                                                                                            {$finalStrWithThumbFloor = $strFloor2|cat:$last}
-												<img src="{$ImageDataListingArrFloor[data].thumb_path}" height="70px" width="70px" title = "{$ImageDataListingArrFloor[data].IMAGE_URL}" alt ="{$ImageDataListingArrFloor[data].alt_text}" />
-											</a>
-											<br>
-										<b>	Image Title : </b>{$ImageDataListingArrFloor[data].NAME}<br><br>
-                                        <b> Unit :</b> {$ImageDataListingArrFloor[data].UNIT_NAME} ({if $ImageDataListingArrFloor[data].SIZE != ''}{$ImageDataListingArrFloor[data].SIZE}{/if} {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE != ''} , {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if}  {if $ImageDataListingArrFloor[data].CARPET_AREA != '' && $ImageDataListingArrFloor[data].SIZE == ''} {$ImageDataListingArrFloor[data].CARPET_AREA}(Carpet) {/if} {$ImageDataListingArrFloor[data].MEASURE}, {$ImageDataListingArrFloor[data].UNIT_TYPE})
-									</div>
-								</td>
-								{$cnt = $cnt+1} 		
-								{/section}
-							</tr>
+                                                <tr bgcolor='#ffffff' id="floorPlanImages"></tr>						 
 					</table>
-				{/if}
+				
 				</td>
 		   </tr>
 		   		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 					
 						{if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
@@ -2085,7 +2137,7 @@ function broker_call_edit(callId, brokerId)
 				</td>
 			</tr>
 						
-                {/if}
+                {*{/if}*}
                     <tr class="headingrowcolor" height="30px;">
 						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
                          <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
@@ -2155,62 +2207,27 @@ function broker_call_edit(callId, brokerId)
                     {/foreach}
                    {/foreach}
                    {*code start for calling records secondary*}
-                    {if count($arrCalingSecondary)>0}
-                        {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
-                            <tr>
-                                <td width = "100%" align = "Left" colspan = "16" style="padding-left: 30px;">
-                                    <b>Secondary Price Broker Calling Detail&nbsp&nbsp:</b><button class="clickbutton" onclick="$(this).trigger('event14');">Update Project Secondary Price</button>&nbsp;&nbsp;
-                                </td>
-                            </tr>
-                        {/if}
-                    <tr>
+                   <tr>
                         <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
                             <table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-
-                                <tr class="headingrowcolor" height="30px;">
-                                         <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >SNo.</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Caller Name</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >Start Time</td>
-                                         <td  nowrap="nowrap" width="10%" align="left" class=whiteTxt >End Time</td>
-                                         <td  nowrap="nowrap" width="10%" align="center" class=whiteTxt >Audio Link</td>
-                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Remark</td>
-                                         <td nowrap="nowrap" width="90%" align="left" class=whiteTxt>Action</td>
-                                </tr>
-
-                                {foreach from = $arrCalingSecondary key = key item = item}
-                                        {if ($key+1)%2 == 0}
-                                                        {$color = "bgcolor='#F7F8E0'"}
-                                        {else}
-                                                {$color = "bgcolor='#f2f2f2'"}
+                                <tr>
+                                    <td>
+                                        <button onclick="show_calling_links('{$projectId}', 'secondary');">Show Secondary Price Broker Calling Detail</button>
+                                        {if $projectDetails[0].PROJECT_STAGE == 'secondaryPriceCycle'}
+                                            <div id="update-secodary-price" style="display:none">
+                                                <br/>
+                                                <b>Secondary Price Broker Calling Detail&nbsp&nbsp:</b><button class="clickbutton" onclick="$(this).trigger('event14');">Update Project Secondary Price</button>&nbsp;&nbsp;
+                                                <br/>
+                                            </div>
+                                            
                                         {/if}
-                                <tr {$color} height="25px;">
-                                        <td nowrap="nowrap" width="10%" align="center">
-                                                {$key+1}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['FNAME']}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['StartTime']}
-                                        </td>
-                                        <td width ="15%">
-                                                {$item['EndTime']}
-                                        </td>
-                                        <td width ="30%" nowrap>
-                                                <a href = "{$item['AudioLink']}" target=_blank>{$item['AudioLink']}</a>
-                                        </td>
-                                        <td width ="90%">
-                                                {$item['Remark']}
-                                        </td>
-                                        <td width ="90%">
-											<a href="javascript:void(0);" name="call_edit" value="Edit" onclick="return broker_call_edit({$item['CallId']},{$item['BROKER_ID']});" >Edit</a>
-                                        </td>
+                                        <div id="secondary-links"></div>                                    
+                                    </td>
                                 </tr>
-                                {/foreach}
                             </table>
                         </td>
-                    </tr>
-                    {/if}
+                    </tr>                     
+                    
                 {*end code start for calling records secondary*}
 
                 <!--code start for all brokers secondary price display-->
@@ -2305,7 +2322,7 @@ function broker_call_edit(callId, brokerId)
 			
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
@@ -2404,13 +2421,13 @@ function broker_call_edit(callId, brokerId)
 						{/if}
 						  
 					</table>
-				{/if}
+				{*{/if}*}
 				</td>
 		   </tr>
 		   
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($ImageDataListingArrFloor)}
+				{*{if is_array($ImageDataListingArrFloor)}*}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
 							<tr>
@@ -2714,7 +2731,7 @@ function broker_call_edit(callId, brokerId)
 								
 							</tr>
 						</table>
-				{/if}
+				{*{/if}*}
 				</td>
 		   </tr>
 		   <tr>

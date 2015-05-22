@@ -89,7 +89,7 @@ function check()
 	}	
 }
 
-function onSelectOption(c){
+/*function onSelectOption(c){
 
       	$("#floor_name_"+c+" option").each(function() {
 		    $(this).remove();
@@ -128,7 +128,7 @@ function onSelectOption(c){
       	
       	//$('<option>').val(imgName1).text(imgName1).appendTo('#floor_name_'+c);
       	//$('<option>').val(imgName2).text(imgName2).appendTo('#floor_name_'+c);
-    }
+    }*/
 
 
 $(".pt_reqflrplan").fancybox();
@@ -189,6 +189,7 @@ $(".pt_reqflrplan").fancybox();
 									
 												{$cnt = 0}
 												{section name=data loop=$ImageDataListingArr}
+                                                                                                    {$imgType=($ImageDataListingArr[data].DOCUMENT_TYPE == 'yes')?"3D":"2D"}
 						
 												<td class = "tdcls_{$cnt}" >
 													
@@ -196,12 +197,19 @@ $(".pt_reqflrplan").fancybox();
 
 															<b>{$ImageDataListingArr[data].UNIT_NAME}( {$ImageDataListingArr[data].SIZE} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE != ''} , {$ImageDataListingArr[data].CARPET_AREA}(Carpet Area){/if} {if $ImageDataListingArr[data].CARPET_AREA != '' && $ImageDataListingArr[data].SIZE == ''} {$ImageDataListingArr[data].CARPET_AREA}(Carpet Area){/if} /{$ImageDataListingArr[data].MEASURE} )</b>
 															<br><br>
+															{if $ImageDataListingArr[data].DOCUMENT_TYPE == 'yes'}
+																<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].IMAGE_URL}														
 															
-															<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].IMAGE_URL}														
-															
-															" target="_blank">
-																<img src="{$ImageDataListingArr[data].IMAGE_URL}?width=130&height=100" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].alt_text}" />
+															" target="_blank"> Download document
+																
 															</a>
+															{else}
+																<a class="pt_reqflrplan" href="{$ImageDataListingArr[data].IMAGE_URL}														
+																
+																" target="_blank">
+																	<img src="{$ImageDataListingArr[data].IMAGE_URL}?width=130&height=100" height="70px" width="70px" title = "{$ImageDataListingArr[data].IMAGE_URL}" alt ="{$ImageDataListingArr[data].alt_text}" />
+																</a>
+															{/if}
 															
 															
 															<br>
@@ -215,8 +223,9 @@ $(".pt_reqflrplan").fancybox();
 
                                                         <input type="hidden" value="{$ImageDataListingArr[data].PLAN_TYPE}" name="plan_type[{$cnt}]" />
 
-														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br><br>
+														<input type="hidden" value="{$imgDisplayPath}{$ImageDataListingArr[data].IMAGE_URL}" name="property_image_path[{$cnt}]" /><br>
 														
+                                                                                                                <b>Image Type: <font color = "blue">{$imgType}</font></b><br><br>
 														<b>Image Title:<font color = "red">*</font></b><input type="text" name="title[{$cnt}]" value = "{$ImageDataListingArr[data].NAME}" readonly="readonly" STYLE="width: 165px;border:1px solid #c3c3c3;"/><br><br>
 														
 														<b>Delete:</b><input type="checkbox" name="chk_name[{$cnt}]" id = "chk_{$cnt}" ><br><br>

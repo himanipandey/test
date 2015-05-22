@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Drawing tools</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+
+  </head>
+  <body onload="initialize()">
+  
+   <script src="drag.js?v=1" >  </script> 
+   <script src="freeHandDrawingLogic.js?v=1" > </script>
+     <div id="map" style="width: 100%; height: 95%">
+          
+    </div>
+    <script type="text/javascript">
+      var closeWin = function () {
+        self.close();
+    }
+
+    </script>
+    <div> 
+    <input type="button" value="Exit" onclick="closeWin()">
+    </div>
+    <style>
+          #map{
+
+          }
+          .svg_on_map{
+               position: absolute;
+               top:0px;
+               left:0px;
+               width: 1288px;
+               height: 672px;
+               z-index: 999999;
+               background-color: transparent;
+               /* display: none; */
+          }
+          .polygon{
+               stroke:red;
+               stroke-width:1px;
+               fill:transparent;
+          }
+    </style>
+  </body>
+</html>

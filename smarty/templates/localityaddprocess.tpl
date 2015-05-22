@@ -1,13 +1,17 @@
-<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+{*<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">*}
 <link rel="stylesheet" type="text/css" href="js/bootstrap-tagsinput/bootstrap-tagsinput.css">
 <link rel="stylesheet" type="text/css" href="fancybox/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="js/jquery/jquery-ui.css">
+<link rel="stylesheet" type="text/css" href="csss.css"> 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-1.8.3.min.js"></script>
 <script type="text/javascript" src="js/jquery/jquery-ui.js"></script>
 <script type="text/javascript" src="js/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="tiny_mce/tiny_mce.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script src="http://maps.google.com/maps/api/js?sensor=false&key={$googleMapKey}"></script>
+
 <script type="text/javascript">
     tinyMCE.init({
         //mode : "textareas",
@@ -16,6 +20,7 @@
         theme : "advanced"
     });
 </script>
+<div class="modal">Please Wait..............</div>
 </TD>
   </TR>
   <TR>
@@ -204,7 +209,7 @@
                                 <tr class="save_row">
 				  <td >&nbsp;</td>
 				  <td align="left" style="padding-left:50px;" >
-				  <input type="submit" name="btnSave" id="btnSave" value="Save" style="cursor:pointer">
+				  <input type="button" name="btnSave" id="btnSave" value="Save" style="cursor:pointer" onclick="find_errors('frmcity','{$errorUrl}');">
 				  &nbsp;&nbsp;<input type="submit" name="btnExit" id="btnExit" value="Exit" style="cursor:pointer">
 				  </td>
 				</tr>
@@ -515,20 +520,20 @@ var options, d, selectedItem;
 
 
 function cleanedLocality(localityId) {
+
 $.ajax({
          type: "POST",
-         url: 'ajax/cleanedLocality.php',
-         data: { localityId:localityId },
+         url: 'ajax/cleanedLocalityMap.php',
+         data: { localityId:localityId, current_user:"{$current_user}" },
          success:function(msg){
            if(msg){
-             if(msg.length > 823) {
-                alert("New locality boundaries have been saved");
-             }
-             else{
-                alert("No valid record in project table");
-             }
-              $(".latLong").remove();
-              $(msg).insertBefore($('.save_row'));
+             $.fancybox({
+                    'content': msg,
+                    'onCleanup': function () {
+                        //	$("#row_"+rowId).remove();
+                    }
+
+                });
             }
          }
      })

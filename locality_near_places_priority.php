@@ -1,6 +1,7 @@
+
 <?php
 
-	error_reporting(1);
+error_reporting(1);
 ini_set('display_errors','1');
 include("smartyConfig.php");
 include("appWideConfig.php");
@@ -16,14 +17,26 @@ include("builder_function.php");
 include("function/functions_priority.php");
 //die("here");
 
+//echo TEST;
+$BaseURL = MAPURL;
+$serverName = str_replace("http://", "", $BaseURL);
+$serverName = str_replace(".com", "", $serverName);
+$smarty->assign('MapURL', MAPURL);
+$smarty->assign('MAPURLDRAW', MAPURL."/boundaryTracing/googleMapDrawing.html");
+$smarty->assign('sessionID', $_SESSION["adminId"]);
+$smarty->assign('mapServer', $serverName);
+//die;
 AdminAuthentication();
 //die("here");
 
     include('LocalityNearPlacesPriorityProcess.php');
     //die("here");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
+
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."localityNearPlacesPriority.tpl");
-	
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 	
 ?>
+
+<!--<script type="text/javascript">var BaseUrl = "<?= $BaseURL ?>";</script>
+<script type="text/javascript" src="boundaryTracing/drag.js"></script> -->

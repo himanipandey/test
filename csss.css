@@ -1,195 +1,262 @@
+
 #city{
 	position: absolute;
+	/*display: none;*/
 	width: 1200px;
 	top:200px;
-	left:300px;
+	/*left:300px;*/
 }
 #city1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
 }
 #cityddEdit{
 	position: relative;
-	margin-left:20px;
+	margin-left:0px;
 }
 
 #bkn{
 	position: absolute;
+	/*display: none;*/
 	width: 1200px;
-	top:250px;
+	top:270px;
 	left:300px;
+	/*background-color: gold;*/
 }
 #bkn1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
 #bkn2{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
+}
+#trv{
+    position: absolute;
+    width: 1200px;
+    top:330px;
+    left:300px;
 }
 
 #seller1{
 	position: relative;
 	padding-left: 0px;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 #seller3{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
 }
 
+#line1{
+	position: absolute;
+	top:350px;
+	left:0px;
+	width: 100%;
+	/*border-top: 1px solid gold;*/
+}
 
-#name_number{
+#name_number1{
 position: absolute;
 width:1200px;
 left: 300px;
-top: 300px;
+top: 390px;
+/*background-color: gold;*/
 }
 #name1{
 position: relative;
 width: 100px;
-text-align: center;
+text-align: left;
+/*background-color: yellow;*/
 }
+
 #name{
 position: relative;
 padding-left: 0px;
-margin-left: 20px;
+margin-left: 0px;
+}
+#name_number2{
+position: absolute;
+width:1200px;
+left: 300px;
+top: 460px;
+/*background-color: gold;*/
 }
 #email1{
 position: relative;
-width: 80px;
-padding-left: 10px;
-text-align: center;
+width: 100px;
+padding-left: 0px;
+text-align: left;
+/*background-color: yellow;*/
 }
 #email{
 position: relative;
+margin-left: 0px;
 }
 #number1{
 position: relative;
-padding-left: 20px;
+padding-left: 160px;
 width: 110px;
-text-align: center;
+text-align: right;
+/*background-color: yellow;*/
 }
 #number{
 position: relative;
-margin-left: 20px;
+margin-left: 0px;
+
 }
 
 
+#line2{
+	position: absolute;
+	top:520px;
+	left:0px;
+	width: 100%;
+	/*border-top: 1px solid gold;*/
+}
 
 #prj{
 	position: absolute;
+	/*display: none;*/
 	width:1200px;
 	left: 300px;
-	top: 350px;
+	top:580px;
+	/*background-color: gold;*/
 }
 #project1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 #project{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
 }
 #proj1{
 	position: relative;
 	padding-left: 0px;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 #proj{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
 }
 
 #bhk{
-	/*display: none;*/
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
-	top: 400px;
+	top: 650px;
 	width: 1200px;
+	/*background-color: gold;*/
 }
 #bh1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 #bh3{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
 }
-
-#facing1{
+#appartment1{
 	position: relative;
-	padding-left: 100px;
+	display: none;
 	width: 100px;
-	text-align: center;
+	padding-left: 110px;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
-#facing2{
+#appartment2{
 	position: relative;
-	margin-left: 32px;
+	display: none;
+	width: 80px;
 }
+
+#appartment3{
+	position: relative;
+	margin-left: 0px;
+	height: 15px;
+	width: 120px;
+}
+
+
 
 #othr{
-	display: none;
 	position: absolute;
+	display: none;
 	left: 300px;
-	top: 450px;
-	width: 1800px;
-	
+	top: 700px;
+	width: 1200px;
+	/*background-color: gold;*/
 
 }
 #othr1{
 	position: relative;
-	padding-left: 100px;
-	width: 40px;
-	text-align: center;
+	width: 105px;
+	padding-left: 0px;
+	text-align: right;
+	/*background-color: yellow;*/
 }
 
 #other_input{
 	position: relative;
 	height: 15px;
 	width: 60px;
+	margin-left: 0px;
 }
 
 #othr2{
 	position: relative;
-	width: 100px;
+	width: 80px;
+
+
 }
 
 #bath{
 	position: relative;
-	margin-left: 50px;
-	width: 60px;
-	text-align: center;
+	padding-left: 0px;
+	width: 70px;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
 #bath1{
 	position: relative;
-	width: 60px;
+	width: 70px;
+	padding-left: 0px;
+	
 }
 
 #bath2{
 	position: relative;
 	height: 15px;
-	width: 60px;
+	width: 70px;
 }
 
 #tol1{
 	position: relative;
-	width: 60px;
-	text-align: center;
+	width: 140px;
+	text-align: right;
+	padding-left: 40px;
+	/*background-color: yellow;*/
 }
 
 #tol2{
 	position: relative;
 	width: 80px;
+	padding-left: 30px;
 }
 
 #tol3{
@@ -198,100 +265,218 @@ margin-left: 20px;
 	width: 60px;
 }
 
-#appartment1{
-	position: relative;
-	width: 100px;
-	text-align: center;
+
+
+#study_servant{
+	position: absolute;
+	display: none;
+	left: 300px;
+	top: 740px;
+	width: 1200px;
+	/*background-color: gold;*/
 }
 
-#appartment2{
+#study1{
+	position: relative;
+	padding-left: 0px;
+	width: 105px;
+	text-align: right;
+	/*background-color: yellow;*/
+}
+
+#study{
+	position: relative;
+	width: 50px;
+}
+
+
+#servant1{
+	position: relative;
+	width: 70px;
+	padding-left: 0px;
+	/*background-color: yellow;*/
+}
+
+#servant{
+	position: relative;
+	margin-left: 120px;
+	margin-top: 0px;
+}
+
+#penthouse_td1{
+	position: relative;
+	padding-left: 40px;
+	width: 95px;
+	text-align: right;
+	/*background-color: yellow;*/
+}
+
+#penthouse_td2{
 	position: relative;
 	width: 80px;
 }
 
-#appartment3{
+#penthouse_sel{
 	position: relative;
 	height: 15px;
 	width: 120px;
+	margin-left: 15px;
+}
+
+#line3{
+	position: absolute;
+	top:770px;
+	left:0px;
+	width: 100%;
+	/*border-top: 1px solid gold;*/
 }
 
 #tower_floor{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
-	top: 500px;
+	top: 830px;
 	width: 1200px;
+	/*background-color: gold;*/
+}
+
+#phase_id1{
+	position: relative;
+}
+
+#phase_id2{
+	position: relative;
+	width: 330px;
+}
+#phase_id3{
+	position: relative;
+	margin-left: 0px;
 }
 
 #tower1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	margin-left: 0px;
+	/*background-color: yellow;*/
 }	
 
 #tower2{
 	position: relative;
-	margin-left: 20px;
+	margin-left: 0px;
 }
-
-#floor1{
-	position: relative;
-	padding-left: 200px;
-	width: 100px;
-	text-align: center;
-}
-
-#floor2{
-	position: relative;
-	margin-left: 32px;
-}
-
-#flat_park{
+#tower_floor2{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
-	top: 550px;
+	top: 900px;
 	width: 1200px;
+	/*background-color: gold;*/
 }
 
 #flt1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
 #flt2{
 	position: relative;
-	margin-left: 20px;
+}
+
+#flt3{
+	position: relative;
+	margin-left: 0px;
+	width: 330px;
+}
+
+#floor1{
+	position: relative;
+	padding-left: 0px;
+	width: 100px;
+	text-align: left;
+	/*background-color: yellow;*/
+}
+
+#floor2{
+	position: relative;
+	margin-left: 0px;
+}
+
+#flat_park{
+	position: absolute;
+	/*display: none;*/
+	left: 300px;
+	top: 970px;
+	width: 1200px;
+	/*background-color: gold;*/
 }
 
 #park1{
 	position: relative;
-	padding-left: 200px;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
 #park2{
 	position: relative;
-	margin-left: 32px;
+	margin-left: 0px;
+}
+
+#facing_project{
+	position: absolute;
+	left: 300px;
+	top: 1040px;
+	/*background-color: gold;*/
+}
+
+#facing1{
+	position: relative;	
+	width: 100px;
+	text-align: left;
+	/*background-color: yellow;*/
+}
+
+#facing2{
+	position: relative;
+	margin-left: 0px;
+} 
+
+#line4{
+	position: absolute;
+	top:1100px;
+	left:0px;
+	width: 100%;
+	/*border-top: 1px solid gold;*/
 }
 
 #prs_trf{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
-	top: 600px;
+	top: 1160px;
 	width: 1200px;
+	/*background-color: gold;*/
 }
 
 
 #prs1{
 	position: relative;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
 #prs5{
 	position: relative;
-	margin-left: 20px; 
+	margin-left: 0px; 
+}
+
+#prs2{
+	position: relative;
+	width: 220px;
 }
 
 #prs3{
@@ -299,29 +484,32 @@ margin-left: 20px;
 	position: relative;
 }
 
-#tfr1{
+
+
+
+#other_charges{
 	position: relative;
-	padding-left: 100px;
+	padding-left: 0px;
 	width: 100px;
-	text-align: center;
+	text-align: left;
+	/*background-color: yellow;*/
 }
 
-
-#tfr2{
+#othr_prs2{
 	position: relative;
-	margin-left: 32px;
+	margin-left: 0px;
 }
+
 
 #prs_typ{
-	position: absolute;
+	position: absolute;	
 	left: 300px;
-	top: 650px;
+	top: 1190px;
 	width: 1200px;
 }
 
 #pr{
 	position: relative;
-
 }
 
 #oth1{
@@ -330,7 +518,7 @@ margin-left: 20px;
 
 #oth2{
 	position: relative;
-	margin-left: -200px;
+	margin-left: -180px;
 }
 #tr{
 	position: relative;
@@ -339,105 +527,98 @@ margin-left: 20px;
 #hln{
 	position: absolute;
 	left: 300px;
-	top: 700px;
+	top: 1310px;
 	width: 1200px;
+	/*background-color: gold;*/
 }
 
 #hln1{
 	position: relative;
-	width: 120px;
-	margin-left: 10px;
-	text-align: center;
+	width: 100px;
+	margin-left: 0px;
+	text-align: left;
+	/*background-color: yellow;*/
+	
 }
 
 #hln2{
 	position: relative;
-	margin-left: 20px; 	
-	width: 100px;
+	margin-left: 0px; 	
+	width: 240px;
 }
 
-#bank_list1{
+#bnk_lst{
 	position: relative;
-	width: 250px;
-	margin-left: 40px;
-} 
-#bank_list2{
-	display: none;
-	position: relative;
+	
 }
 
 #plc1{
 	position: relative;
-	text-align: center;
-	width: 100px;
+	text-align: left;
+	padding-left: 0px;
+	width: 40px;
+	/*background-color: yellow;*/
+	
 }
 
-#plc2{
-	position: relative;
-	width: 130px;
-}
-
-#plc3{
-	display: none;
+#plc4{
 	position: relative;
 	width: 100px;
+}
+
+#plc5{
+	
+	position: relative;
+	margin-left: 0px;
+	width: 80px;
 
 }
 
+#tfr1{
+	position: relative;
+	padding-left: 0px;
+	width: 100px;
+	text-align: left;
+	/*background-color: gold;*/
+}
 
-#study_servant{
+#tfr2{
+	position: relative;
+	margin-left: 0px;
+} 
+
+#line5{
 	position: absolute;
-	left: 300px;
-	top: 770px;
-	width: 1200px;
-
+	top:1370px;
+	left:0px;
+	width: 100%;
+	/*border-top: 1px solid gold;*/
 }
-
-#study1{
-	position: relative;
-	width: 120px;
-	text-align: center;
-}
-
-#study{
-	position: relative;
-	width: 330px;
-}
-
-
-#servant1{
-	position: relative;
-	width: 130px;
-}
-
-#servant{
-	position: relative;
-	margin-left: 750px;
-	margin-top: 0px;
-}
-
 
 #discription1{
 	position: absolute;
+	/*display: none;*/
 	left: 300px;
-	top: 850px;
+	top: 1430px;
 	width: 1200px;
 	height: 120px;
 	/*background-color: gold;*/
 }
 #discription4{
 	position: relative;
-	padding-left: 30px;
+	padding-left: 0px;
 
 }
 #discription2{
 	position: relative;
-	width: 300px;
+	width: 370px;
 	height: 100px;
+	/*background-color: yellow;*/
 	/*background-color: red;*/
 }
 #description3{
 	position: relative;
+	margin-left: 30px;
 	width: 200px;
 	height: 100px;
 }
@@ -446,6 +627,7 @@ margin-left: 20px;
 	position: relative;
 	width: 100px;
 	height: 100px;
+	
 }
 
 #review2{
@@ -515,6 +697,11 @@ margin-left: 20px;
    speak for themselves. Background we set to 80% white with
    our animation centered, and no-repeating */
 .modal {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.3);
+    margin-left: -280px;
+    outline: 0 none;
     display:    none;
     position:   fixed;
     z-index:    1000;
@@ -540,3 +727,4 @@ body.loading {
 body.loading .modal {
     display: block;
 }
+

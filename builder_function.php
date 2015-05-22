@@ -965,7 +965,7 @@ function costructionDetail($projectId,$phaseId='',$include=true) {
 
 /* * *********Builder management************* */
 
-function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr) {
+function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $DisplayOrder, $address, $city, $pincode, $ceo, $employee, $date, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $listed) {
   $Sql = "INSERT INTO " . RESI_BUILDER . " SET
         BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
         ENTITY  	   	     = '" . d_($legalEntity) . "',
@@ -983,6 +983,7 @@ function InsertBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $D
         REVENUE			     ='" . $revenue . "',
         DEBT			     ='" . $debt . "',
         ESTABLISHED_DATE	     = '" . $date . "',
+        listed	     = '" . $listed . "',
         updated_by                   = ".$_SESSION['adminId'].",
         created_at                   = now()";
 
@@ -1048,7 +1049,7 @@ function AuditTblDataByTblName($tblName, $projectId) {
 
 /* * ******update builder if already exists************** */
 
-function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL')
+function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $txtBuilderUrl, $DisplayOrder, $imgname, $builderid, $address, $city, $pincode, $ceo, $employee, $established, $delivered_project, $area_delivered, $ongoing_project, $website, $revenue, $debt, $contactArr, $oldbuilder, $image_id = 'NULL', $listed='No')
  {
 	$Sql = "UPDATE " . RESI_BUILDER . " SET
 				BUILDER_NAME  	   	     = '" . d_($txtBuilderName) . "',
@@ -1067,6 +1068,8 @@ function UpdateBuilder($txtBuilderName, $legalEntity, $txtBuilderDescription, $t
 				WEBSITE			     ='" . $website . "',
 				REVENUE			     ='" . $revenue . "',
 				DEBT			     ='" . $debt . "',
+				listed			     ='" . $listed . "',
+                                updated_by                   = ".$_SESSION['adminId'].",
 				TOTAL_NO_OF_EMPL	     = '" . d_($employee) . "'
 				" . (($image_id == 'NULL') ? "" : ",SERVICE_IMAGE_ID                 = $image_id") . "
 			WHERE	
@@ -1202,7 +1205,7 @@ function changeLabel($pID, $val) {
 
 /* * ************City management********************* */
 
-function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
+function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc, $minLat, $maxLat, $minLong, $maxLong) {
 
     $Sql = "INSERT INTO " . CITY . " SET
 			LABEL 	   			= '" . d_($txtCityName) . "',
@@ -1212,6 +1215,18 @@ function InsertCity($txtCityName, $txtCityUrl, $DisplayOrder, $status, $desc) {
 			DESCRIPTION			= '" . d_($desc) . "',
                         created_at = now(),    
 			updated_by			= '" .$_SESSION['adminId']."'";
+    if($minLat){
+        $Sql = $Sql.", SOUTH_WEST_LATITUDE=".$minLat;
+    }
+    if($maxLat){
+        $Sql = $Sql.", NORTH_EAST_LATITUDE=".$maxLat;
+    }
+    if($minLong){
+        $Sql = $Sql.", SOUTH_WEST_LONGITUDE=".$minLong;
+    }
+    if($maxLong){
+        $Sql = $Sql.", NORTH_EAST_LONGITUDE=".$maxLong;
+    }
     $ExecSql = mysql_query($Sql) or die(mysql_error() . ' Error in function InsertCity()');
     $lastId = mysql_insert_id();
     return $lastId;
@@ -1237,6 +1252,10 @@ function ViewCityDetails($cityID) {
         $ResDetails['URL'] = $Res['URL'];
         $ResDetails['DISPLAY_ORDER'] = $Res['DISPLAY_ORDER'];
         $ResDetails['DESCRIPTION'] = stripslashes($Res['DESCRIPTION']);
+        $ResDetails['MIN_LAT'] = stripslashes($Res['SOUTH_WEST_LATITUDE']);
+        $ResDetails['MAX_LAT'] = stripslashes($Res['NORTH_EAST_LATITUDE']);
+        $ResDetails['MIN_LONG'] = stripslashes($Res['SOUTH_WEST_LONGITUDE']);
+        $ResDetails['MAX_LONG'] = stripslashes($Res['NORTH_EAST_LONGITUDE']);
         return $ResDetails;
     } else {
         return 0;
@@ -1245,7 +1264,7 @@ function ViewCityDetails($cityID) {
 
 function getAllCities() {
 
-    $allCities = "SELECT * FROM " . CITY . " WHERE 1 ORDER BY LABEL";
+    $allCities = "SELECT * FROM " . CITY . " WHERE status='Active' ORDER BY LABEL";
     $execQry = mysql_query($allCities);
     while ($cityArr = mysql_fetch_assoc($execQry)) {
         $allCityArr[] = $cityArr;
@@ -2343,7 +2362,7 @@ function updateD_Availablitiy($projectId){
 								left join project_supplies ps on lst.id = ps.listing_id and ps.version = 'Cms'
 								left join project_availabilities pa on ps.id = pa.project_supply_id
 								inner join resi_project_phase on lst.phase_id = resi_project_phase.phase_id and resi_project_phase.version = 'Cms'
-								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId 
+								where lst.status = 'Active' and lst.listing_category='Primary' and rpo.project_id = '$projectId' 
 								and rpo.option_category = 'Actual'
 								".$condition."  
 								group by option_type,bedrooms");
@@ -2394,9 +2413,9 @@ function updateD_Availablitiy($projectId){
 	
 	//update availability
 	if(!is_null($total_av)){		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = '$total_av' WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}else{		
-		mysql_query("UPDATE `resi_project` SET `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
+		mysql_query("UPDATE `resi_project` SET updated_by = " . $_SESSION['adminId'] . ", `resi_project`.`D_AVAILABILITY` = null WHERE `resi_project`.`version` = 'Cms' AND `resi_project`.`PROJECT_ID` = '$projectId'");
 	}
     
     #fetch resi_project project_status_id 3/4
@@ -2408,7 +2427,7 @@ function updateD_Availablitiy($projectId){
 	else
 	  $booking_status = 1;	
 	  
-	 mysql_query("UPDATE resi_project_phase SET BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
+	 mysql_query("UPDATE resi_project_phase SET updated_by = " . $_SESSION['adminId'] . ", BOOKING_STATUS_ID =".$booking_status." WHERE project_id = ".$projectId." and phase_type = 'Logical' and `version` = 'Cms'"); 
 	 
 	 //updating phase booking status
 	 updatePhaseBookingStatus($projectId);
@@ -2483,7 +2502,7 @@ function updatePhaseBookingStatus($projectId){
 			else
 			  $booking_status = 1;	
 	
-			mysql_query("update resi_project_phase set booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
+			mysql_query("update resi_project_phase set updated_by = " . $_SESSION['adminId'] . ", booking_status_id = '$booking_status' where phase_id = '$row_phase->PHASE_ID' and phase_type = 'Actual' and version = 'Cms'") or die (mysql_error());
 			###################			
 			
 		}
@@ -2506,7 +2525,7 @@ function project_aliases_detail($projectID){
 function ViewUserDetails($ID){
 	$Sql = "SELECT ADMINID,EMP_CODE,FNAME,LNAME,USERNAME,ADMINPASSWORD,ADMINEMAIL
                 ,MOBILE,ADMINADDDATE,ADMINLASTLOGIN,REGION,STATUS,DEPARTMENT
-                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
+                ,ROLE,JOINING_DATE,RESIGNATION_DATE,CLOUDAGENT_ID, MANAGER_ID FROM ".ADMIN." WHERE ADMINID ='".$ID."'";
 	$ExecSql = mysql_query($Sql);
 
 	if(mysql_num_rows($ExecSql)==1)	{
@@ -2529,6 +2548,7 @@ function ViewUserDetails($ID){
 		$ResDetails['JOINING_DATE'] 	=  $Res['JOINING_DATE'];
 		$ResDetails['RESIGNATION_DATE']	=  $Res['RESIGNATION_DATE'];
                 $ResDetails['CLOUDAGENT_ID'] = $Res['CLOUDAGENT_ID'];
+                $ResDetails['MANAGER_ID'] = $Res['MANAGER_ID'];
 		return $ResDetails;
 	}
 	else
@@ -2553,6 +2573,15 @@ function fetch_project_BSP($projectId){
 		$bspArr['max'] = $bsp->max_price_per_unit;		
 	}
 	return $bspArr;
+}
+function fetch_room_categories(){
+    $room_cats_sql = mysql_query("select * from room_category");
+    $room_cats = array();
+    while($row = mysql_fetch_object($room_cats_sql)){
+        $room_cats[$row->ROOM_CATEGORY_ID] = $row->CATEGORY_NAME;//str_replace(' ','', strtolower($row->CATEGORY_NAME));
+        
+    }
+    return $room_cats;
 }
 
 ?>

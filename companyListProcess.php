@@ -8,6 +8,13 @@ $smarty->assign("comptype", $typeArr);
 $cityArray = City::CityArr();
 $smarty->assign("cityArray", $cityArray);
 
+$res = City::find('all', array('conditions'=>array("IS_SERVING = '1' and status = 'Active'" ) ));
+$ptBranchArray = array();
+foreach($res as $value) {
+    $ptBranchArray[$value->city_id] = $value->label;
+}
+$smarty->assign("ptBranchArray", $ptBranchArray);
+
 if($compid){
 	$compArr = Company::getAllCompany($arr=array('id'=>$compid));
 }
@@ -23,6 +30,24 @@ $smarty->assign('transactionType', $transactionType);
 
 $devices = Devices::getAllDevices();
 $smarty->assign('devices', $devices);
+
+$bankArray = BankList::arrBank();
+$smarty->assign("bankArray",$bankArray);
+
+$sql = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'bank_details' AND COLUMN_NAME = 'account_type'";
+$res = mysql_query($sql);
+$bankAccountType = array();
+while($data = mysql_fetch_assoc($res)){
+    preg_match_all("/'([\w ]*)'/", $data['COLUMN_TYPE'], $values);
+}
+$smarty->assign('bankAccountType', $values[1]);
+
+
+
+
+
+
+
 
 //print_r($transactionType);
 

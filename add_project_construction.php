@@ -5,6 +5,7 @@
 	include("dbConfig.php");
         include("modelsConfig.php");
 	include("includes/configs/configs.php");
+        include("function/projectPhase.php");
 	include("builder_function.php");
 	AdminAuthentication();
 	include('add_project_construction_Process.php');

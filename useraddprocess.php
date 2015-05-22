@@ -8,6 +8,9 @@ $userid = $_REQUEST['userid'];
 $smarty->assign("userid", $userid);
 $smarty->assign("arrOtherCities", $arrOtherCities);
 
+$allUsers = ProptigerAdmin::getAllUsers();
+$smarty->assign('allUsers', $allUsers);
+
 /****active city list********/
 $qry = "select city_id,label from city where status = 'Active' order by label";
 $res = mysql_query($qry) or die(mysql_error());
@@ -34,6 +37,7 @@ if ($_POST['btnSave'] == "Save") {
 	$resignationdate = $_POST['resignationdate'];
         $cloudAgentId = $_POST['cloudAgentId'];
         $city = $_POST['city'];
+        $manager_id = $_POST['manager_id'];
 	$smarty->assign("txtadminid", $userid);
 	$smarty->assign("txtempcode", $txt_empcode);	
 	$smarty->assign("txtfname", $txt_name);
@@ -50,6 +54,7 @@ if ($_POST['btnSave'] == "Save") {
 	$smarty->assign("resignationdate",$resignationdate);
         $smarty->assign("cloudAgentId",$cloudAgentId);
         $smarty->assign("arrExistingCity",$city);
+        $smarty->assign("txtmanagerid",$manager_id);
 	
 	if($txt_empcode == '') 	{
 		$ErrorMsg["EmpCodeErr"] = "Please enter employee code.";
@@ -118,9 +123,10 @@ if ($_POST['btnSave'] == "Save") {
                         DEPARTMENT = '".$department."',
                         ROLE = '".$designation."',
                         JOINING_DATE = '".$joiningdate."',
-                        CLOUDAGENT_ID =  '".$cloudAgentId."',    
+                        CLOUDAGENT_ID =  '".$cloudAgentId."',  
+                        manager_id =  '".$manager_id."',
                         RESIGNATION_DATE = '".$resignationdate."'";
-		$DataInsert = mysql_query($sql) or die(mysql_error());
+		$DataInsert = mysql_query($sql) or die(mysql_error()."E-001");
                 $lastId = mysql_insert_id();
                 //code for insert data in proptiger admin city
                 //echo "<pre>";
@@ -155,8 +161,9 @@ if ($_POST['btnSave'] == "Save") {
                                $cnt++;
                            }
                     }
+                    $cityData = rtrim($cityData, ",");
                     $finalStr = $cityQry.$cityData;
-                    $resCity = mysql_query($finalStr) or die(mysql_error());
+                    $resCity = mysql_query($finalStr) or die(mysql_error()."E-002");
                 }
                 if($DataInsert)
                     header("Location:userList.php");
@@ -184,6 +191,7 @@ if ($_POST['btnSave'] == "Save") {
                     ROLE = '".$designation."',
                     JOINING_DATE = '".$joiningdate."',
                     CLOUDAGENT_ID =  '".$cloudAgentId."',    
+                    manager_id =  '".$manager_id."',
                     RESIGNATION_DATE = '".$resignationdate."'";
 
             $sql .= " WHERE ADMINID='".$userid."'";
@@ -201,7 +209,7 @@ if ($_POST['btnSave'] == "Save") {
                 $arrCityList[$cityDataFetch['city_id']] = $cityDataFetch;
             }
                        
-            if(count($_REQUEST['city'])>0 && $department == 'SURVEY') {
+            if(count($_REQUEST['city'])>0 && ($department == 'SURVEY' || $department == 'RESALE')) {
                   //delete data if deselect
                     foreach($arrCityList as $k=>$v) {
                         if(!in_array($k,$_REQUEST['city'])) {
@@ -270,6 +278,7 @@ else if ($_GET['userid']!='') {
 	 $smarty->assign("joiningdate",stripslashes($UserDetail['JOINING_DATE']));
 	 $smarty->assign("resignationdate",stripslashes($UserDetail['RESIGNATION_DATE']));
          $smarty->assign("cloudAgentId", stripslashes($UserDetail['CLOUDAGENT_ID']));
+         $smarty->assign("txtmanagerid", stripslashes($UserDetail['MANAGER_ID']));
          
          /********fetch data from proptiger_admin_city***********/
          $qryCityAdmin = "select city_id from proptiger_admin_city where admin_id = $userid";

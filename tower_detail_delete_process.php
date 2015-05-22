@@ -10,12 +10,14 @@
     $projectDetail1     =   array($projectDetail1);
 	$towerDetail_object	=	ResiProjectTowerDetails::find("all", array("conditions" => "project_id = {$projectId}"));//fetch_towerDetails($projectId); //fetch all tower details
     $towerDetail        =   array();
+    $towerIdArr = array();
     foreach($towerDetail_object as $s){
         $s = $s->to_array();
         foreach($s as $key=>$value){
             $s[strtoupper($key)] = $value;
             unset($s[$key]);
         }
+        $towerIdArr[] = $s["TOWER_ID"];
             array_push($towerDetail, $s);
     }
 
@@ -39,10 +41,11 @@
 		//default display rows
 		$totRow			=	5;
 
-	}			
+	}
+        
 	$smarty->assign("TotRow", $totRow);
-
 	$smarty->assign("towerDetail", $towerDetail);
+	$smarty->assign("towersInResale", getTowerMappedInResale($towerIdArr));
 	$smarty->assign("projectDetail", $projectDetail1);
 	$smarty->assign("projectId", $projectId);
 	
@@ -152,4 +155,18 @@
     $smarty->assign("ErrorMsg1", $ErrorMsg1);
     $smarty->assign("projecteror", $projecteror);
 
+    function getTowerMappedInResale($towerIdArr){
+        $result = array();
+        $towerIds = implode(",", $towerIdArr);
+        if($towerIdArr){
+            $sqlStr = "SELECT id,tower_id FROM listings WHERE tower_id in({$towerIds}) AND status='Active'";
+            $sqlRes = mysql_query($sqlStr) or die("Some error occured(E-002)");
+            if(mysql_num_rows($sqlRes)>0){
+                while ($row = mysql_fetch_assoc($sqlRes)){
+                    $result[] = $row["tower_id"];
+                }
+            }
+        }
+        return $result;
+    }
 ?>

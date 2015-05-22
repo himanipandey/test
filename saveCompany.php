@@ -13,6 +13,7 @@ include("builder_function.php");
 include("function/functions_priority.php");
 include("common/function.php");
 include("imageService/image_upload.php");
+include_once("includes/send_mail_amazon.php");
 
 AdminAuthentication();
 
@@ -29,7 +30,6 @@ if($_POST['task']=='office_locations'){
     while ($data = mysql_fetch_assoc($res)) {
         $html .= "<option value='".$data['locality_id']."' >".$data['label']."</option>";
      }
-
                                       
     echo $html;
 }
@@ -120,8 +120,41 @@ if($_POST['task']=='find_project_builder'){
     //echo $data['locality_id'];
 }
 
-if($_POST['task']=='createComp'){ 
+if($_POST['task']=='getCompanyLogo'){
+    $objectId = $_POST['compId'];
+    $arr = array('logo'=> array(), 'signUpForm'=>array());
+    $objectType = "company";
+    //$url = readFromImageService($objectType, $objectId);
+    //print ""
+    $url = ImageServiceUpload::$image_upload_url."?objectType=$objectType&objectId=".$objectId;
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        if($k1==0){
+            $arr['logo']['service_image_path'] = $v1->absolutePath;
+            $arr['logo']['alt_text'] = $v1->altText;
+            $arr['logo']['service_image_id'] = $v1->id;
+        }
+    }
+    $url = ImageServiceUpload::$doc_upload_url."?objectType=$objectType&objectId=".$objectId."&documentType=companySignupForm";
+    $content = file_get_contents($url);
+    $imgPath = json_decode($content);
+    $data = array();
+    foreach($imgPath->data as $k1=>$v1){
+        if($k1==0){
+            $arr['signUpForm']['service_image_path'] = $v1->absoluteUrl;
+            //$arr['signUpForm']['alt_text'] = $v1->altText;
+            $arr['signUpForm']['service_image_id'] = $v1->id;
+        }
+    }
 
+
+
+    echo json_encode($arr);
+}
+
+if($_POST['task']=='createComp'){ 
 
 
     $id = $_POST['id'];
@@ -143,10 +176,12 @@ if($_POST['task']=='createComp'){
     $compfax   = $_POST['compfax'];
     $email   = $_POST['email'];
     $image = $_POST['image'];
+    $signUpForm = $_POST['signUpForm'];
 //echo $image;
     $ipArr = $_POST['ipArr'];
     
     $pan   = $_POST['pan'];
+    $isVerified = $_POST['isVerified'];
     $status   = $_POST['status'];
     $mode =  $_POST['mode'];
     $altText = "company ".$name;
@@ -158,10 +193,11 @@ if($_POST['task']=='createComp'){
     $contact_person_data = $_POST['contact_person_data'];
     $cust_care_data = $_POST['cust_care_data'];
     $bef = $_POST['broker_extra_fields'];
+    $bank_details = $_POST['bank_details'];
 
 
 
-    //var_dump($bef); die();
+    //prepare params for image service
     if(isset($_POST['image']) && $image!=""){
         //print_r($_FILES[]);
         //$file = $_FILES
@@ -201,11 +237,50 @@ if($_POST['task']=='createComp'){
 
     }
 
+    if(isset($_POST['signUpForm']) && $signUpForm!=""){
+        //print_r($_FILES[]);
+        //$file = $_FILES
+
+        $file =  $newImagePath."company/".$signUpForm;
+      //var_dump($file);
+      
+
+        $finfo = finfo_open();
+         
+        $fileinfo = finfo_file($finfo, $file, FILEINFO_MIME);
+         
+        finfo_close($finfo);
+        //var_dump($fileinfo);
+        $imgtype = explode(";", $fileinfo);
+        $imgParams = array();
+        $imgParams['name'] = $signUpForm;
+        $imgParams['type'] = $imgtype[0];
+
+        $params = array(
+                        "image_type" => "companySignupForm",
+                        "folder" => "company/",
+                        "image" => $signUpForm,
+                        "title" => $name,
+                        //"altText" => $altText,
+                        
+        );
+
+        $dest       =   $newImagePath."company/".$signUpForm;
+        $postArr = array();
+        $signUpArr = array();
+        $signUpArr['img'] = $imgParams;
+        $signUpArr['objectType'] = "company";
+        $signUpArr['newImagePath'] = $newImagePath;
+        $signUpArr['params'] = $params;  
+            
+
+    }
+
            
     
-    if($mode=='update' && $id!==null){
-        
+    if($mode=='update' && $id!==null){      
         $imageId = $_POST['imageId'];
+        $signupformId = $_POST['formId'];
         
         $sql_comp = mysql_query("select * from company where id='{$id}'") or die (mysql_error());
             
@@ -221,7 +296,7 @@ if($_POST['task']=='createComp'){
                 }
             }
 
-            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
+            $sql = "UPDATE company set type='{$type}', status='{$status}', name='{$name}', description='{$des}', primary_email='{$email}', pan='{$pan}', verified='{$isVerified}', website='{$web}', company_info_type='{$broker_info_type}', updated_by='{$_SESSION['adminId']}', updated_at=NOW() where id='{$id}'";
             
             $res_sql = mysql_query($sql) or die(mysql_error());
 
@@ -381,12 +456,20 @@ if($_POST['task']=='createComp'){
                 $res = mysql_query($query) or die(mysql_error());
                 $data=mysql_fetch_assoc($res);
                 if($data){
-                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", primary_device_used=".($bef['device'] == '' ? 'NULL' : $bef['device']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
+                    if ($bef['formSignUpDate']=='') 
+                        $signup = "form_signup_date=null";
+                    else 
+                        $signup = "form_signup_date='{$bef['formSignUpDate']}'";
+                    $query = "Update broker_details set legal_type='{$bef['legalType']}', rating= '{$bef['frating']}', service_tax_no='{$bef['stn']}', office_size= '{$bef['officeSize']}', employee_no='{$bef['employeeNo']}', pt_manager_id= '{$bef['ptManager']}', pt_relative_id= ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.",form_signup_branch=".($bef['ptRelative'] == '' ? 'NULL' : $bef['signUpBranch']).", updated_by= {$_SESSION['adminId']} where broker_id={$id}";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error());
                 }
                 else{
-                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).",  {$_SESSION['adminId']}, NOW())";
+                    if ($bef['formSignUpDate']=='') 
+                        $signup = "null";
+                    else 
+                        $signup = "'{$bef['formSignUpDate']}'";
+                    $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).",  {$_SESSION['adminId']}, NOW())";
                     //die($query);
                     $res = mysql_query($query) or die(mysql_error()); //die("hello");
                 }
@@ -417,16 +500,62 @@ if($_POST['task']=='createComp'){
                     $query = "insert into transaction_type_mappings(table_name, table_id, transaction_type_id, updated_by, created_at) value". $transacStr;
                     $res = mysql_query($query) or die(mysql_error());
                 }
+
+                $query = "delete from device_mappings where (table_name='company' and  table_id={$id})"; //echo $query; die();
+                $res = mysql_query($query) or die(mysql_error());
+                if($bef['device']){
+                    $transacStr = '';
+                    foreach ($bef['device'] as $k => $v) {
+                        $transacStr .= " ('company',  '{$id}', '{$v}', '{$_SESSION['adminId']}', NOW()), ";
+                    }
+                    $transacStr = rtrim($transacStr,', ');
+                    $query = "insert into device_mappings(table_name, table_id, device_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+
+                //update bank details
+                if($bank_details!=''){
+                    //$bankStr = '';
+                    $query_to_check = "select * from bank_details where table_name='company' and table_id={$id}";
+                    $res = mysql_query($query_to_check) or die(mysql_error());
+                    $data=mysql_fetch_assoc($res);
+                    if($data){
+                        $query = "update bank_details set bank_id='{$bank_details['bankId']}' , account_no='{$bank_details['accountNo']}', account_type='{$bank_details['accountType']}', ifsc_code='{$bank_details['ifscCode']}' where table_name='company' and table_id={$id}";
+                        $res = mysql_query($query) or die(mysql_error());
+                    }
+                    else{
+                        $bankStr = " ('company',  '{$comp_id}', '{$bank_details['bankId']}', '{$bank_details['accountNo']}', '{$bank_details['accountType']}', '{$bank_details['ifscCode']}', {$_SESSION['adminId']}, NOW()) ";
+                    
+                        //$bankStr = rtrim($bankStr,', ');
+                        $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
+                        $res = mysql_query($query) or die(mysql_error());
+
+                    }
+
+                    
+                }
+                
             }
 
 /****************** save images to Image Service ************************************************/
 
                
-                if(isset($_POST['image']) && $image!=""){                   
+                                  
                     $unitImageArr['objectId'] = $id;
                     $unitImageArr['params']['service_image_id'] = $imageId;
                     $unitImageArr['params']['update'] = "update";
-                    $postArr[] = $unitImageArr;         
+                     
+                if(isset($_POST['image']) && $image!=""){ 
+                    array_push($postArr, $unitImageArr);
+                }
+                    $signUpArr['objectId'] = $id;
+                    $signUpArr['params']['service_image_id'] = $signupformId;
+                    $signUpArr['params']['update'] = "update";
+                if(isset($_POST['signUpForm']) && $signUpForm!=""){ 
+                    array_push($postArr, $signUpArr);
+                }
+                
+                if(!empty($postArr)){         
                     $response   = writeToImageService($postArr);
                     //print_r($response); die;
                     foreach ($response as $k => $v) {            
@@ -440,6 +569,8 @@ if($_POST['task']=='createComp'){
                             echo $Error;
                         }
                     }
+
+
                 }
             //}
 
@@ -450,8 +581,8 @@ if($_POST['task']=='createComp'){
 
     }
     if ($mode=='create'){
-        
-        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, website, company_info_type, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$web}', '{$broker_info_type}', NOW(), {$_SESSION['adminId']})";
+                
+        $query = "INSERT INTO company(type, status, name, description, primary_email, pan, verified, website, company_info_type, created_at, updated_by) values ('{$type}', '{$status}','{$name}','{$des}', '{$email}', '{$pan}', '{$isVerified}', '{$web}', '{$broker_info_type}', NOW(), {$_SESSION['adminId']})";
         
         $res = mysql_query($query) or mysql_error();
         if(mysql_affected_rows()>0){
@@ -560,11 +691,30 @@ if($_POST['task']=='createComp'){
                     $bef['device']=='NULL';
                 if($bef['ptRelative']=='') 
                     $bef['ptRelative']=='NULL';
-                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, primary_device_used, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".($bef['device'] == '' ? 'NULL' : $bef['device']).", {$_SESSION['adminId']}, NOW())";
-                //die($query);
-                $res = mysql_query($query) or die(mysql_error());
+                if ($bef['formSignUpDate']=='') 
+                    $signup = "null";
+                else 
+                    $signup = "'{$bef['formSignUpDate']}'";
 
-                $query = "update company set active_since='{$bef['since_op']}' where id='{$comp_id}'";
+                $query = "INSERT INTO broker_details (broker_id, legal_type, rating, service_tax_no, office_size, employee_no, pt_manager_id, pt_relative_id, form_signup_date, form_signup_branch, updated_by, created_at) values('{$comp_id}', '{$bef['legalType']}', '{$bef['frating']}', '{$bef['stn']}', '{$bef['officeSize']}', '{$bef['employeeNo']}', '{$bef['ptManager']}', ".($bef['ptRelative'] == '' ? 'NULL' : $bef['ptRelative']).", ".$signup.", ".($bef['signUpBranch'] == '' ? 'NULL' : $bef['signUpBranch']).", {$_SESSION['adminId']}, NOW())";
+                $res = mysql_query($query) or die(mysql_error());
+                
+                $sqlCompCode = "SELECT id FROM company_code ORDER BY id DESC LIMIT 1";
+                $resCompCode = mysql_query($sqlCompCode) or die(mysql_error());
+                $dataCompCode= mysql_fetch_assoc($resCompCode);
+                $compCodeId = $dataCompCode['id']+1;
+                
+                $insertCompCodeSqlStr = "INSERT INTO company_code(ID,COMPANY_ID) VALUES({$compCodeId},{$comp_id})";
+                $resInsert = mysql_query($insertCompCodeSqlStr) or die(mysql_error());
+                $channel_partner_id = mysql_insert_id();
+                $channel_partner_id = str_pad($channel_partner_id, 4, '0', STR_PAD_LEFT);
+                
+                $sqlCity = "SELECT ABBREVIATION FROM city WHERE CITY_ID={$bef['signUpBranch']}";
+                $resCity = mysql_query($sqlCity) or die(mysql_error());
+                $dataCity= mysql_fetch_assoc($resCity);
+                $channel_partner_code = $dataCity["ABBREVIATION"]."CP".$channel_partner_id."".date("my");
+
+                $query = "update company set active_since='{$bef['since_op']}', unique_code='{$channel_partner_code}' where id='{$comp_id}'";
                 $res = mysql_query($query) or die(mysql_error());
 
                 if($bef['projectType']){
@@ -586,10 +736,39 @@ if($_POST['task']=='createComp'){
                     $query = "insert into transaction_type_mappings(table_name, table_id, transaction_type_id, updated_by, created_at) value". $transacStr;
                     $res = mysql_query($query) or die(mysql_error());
                 }
+
+
+                if($bef['device']){
+                    $transacStr = '';
+                    foreach ($bef['device'] as $k => $v) {
+                        $transacStr .= " ('company',  '{$comp_id}', '{$v}', '{$_SESSION['adminId']}', NOW()), ";
+                    }
+                    $transacStr = rtrim($transacStr,', ');
+                    $query = "insert into device_mappings(table_name, table_id, device_id, updated_by, created_at) value". $transacStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+                //save bank details
+
+                if($bank_details!=''){
+                    //$bankStr = '';
+                    
+                    $bankStr = " ('company',  '{$comp_id}', '{$bank_details['bankId']}', '{$bank_details['accountNo']}', '{$bank_details['accountType']}', '{$bank_details['ifscCode']}', {$_SESSION['adminId']}, NOW()) ";
+                    
+                    //$bankStr = rtrim($bankStr,', ');
+                    $query = "insert into bank_details(table_name, table_id, bank_id, account_no, account_type, ifsc_code, updated_by, created_at) value". $bankStr;
+                    $res = mysql_query($query) or die(mysql_error());
+                }
+                
+                $sqlPtManager = "SELECT pa.ADMINEMAIL as pt_manager_email FROM proptiger.PROPTIGER_ADMIN pa WHERE pa.ADMINID={$bef['ptManager']}";
+                $resPtManager = mysql_query($sqlPtManager) or die(mysql_error());
+                $dataPtManager=mysql_fetch_assoc($resPtManager);
+                $options = array('to'=>$email,'agent_id'=>$channel_partner_code, 'agent_name'=>$name, 'cc'=>$dataPtManager['pt_manager_email'], 'bcc'=>'channel-registration@proptiger.com');
+                send_mail($options);
+                
             }
 
 /****************** save images to Image Service ************************************************/
-            if(isset($_POST['image']) && $image!=""){
+            /*if(isset($_POST['image']) && $image!=""){
                 $unitImageArr['objectId'] = $comp_id;
                 $postArr[] = $unitImageArr;         
                 $response   = writeToImageService($postArr);
@@ -608,13 +787,81 @@ if($_POST['task']=='createComp'){
                         echo $Error;
                     }
                 }
+            }*/
+
+        $unitImageArr['objectId'] = $comp_id;
+        //$unitImageArr['params']['service_image_id'] = $imageId;
+        //$unitImageArr['params']['update'] = "update";
+             
+        if(isset($_POST['image']) && $image!=""){ 
+            array_push($postArr, $unitImageArr);
+        }
+            $signUpArr['objectId'] = $comp_id;
+            //$signUpArr['params']['service_image_id'] = $signupformId;
+            //$signUpArr['params']['update'] = "update";
+        if(isset($_POST['signUpForm']) && $signUpForm!=""){ 
+            array_push($postArr, $signUpArr);
+        }
+        
+        if(!empty($postArr)){         
+            $response   = writeToImageService($postArr);
+            //print_r($response); die;
+            foreach ($response as $k => $v) {            
+                if(empty($v->error->msg)){                           
+                    $image_id = $v->data->id;
+                    //echo $image_id;//$image_id = $image_id->id;
+                }
+                else {
+                    
+                    $Error = $v->error->msg;
+                    echo $Error;
+                }
             }
+
+
+        }
+
+
+
+
+
             echo "1";
         }
         else
             echo "3";
     }
        
+}
+
+function send_mail($options){
+    $agent_name = ucwords($options['agent_name']);
+    $options['subject'] = 'Welcome to PropTiger.com! Your Channel Partner Code Confirmation';
+    $options['sender'] = 'no-reply@proptiger.com';
+    $options['message'] = "<table width='938' border='1' style='width:562.5pt;border:solid #333333 1.0pt'>"
+            . "<tr><td style='border:none;background:whitesmoke;padding:0in 0in 0in 0in'> "
+            . "<table width='938' style='width:562.5pt'>"
+            . "<tr><td width='656' style='width:393.75pt;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "<p style='line-height:105%'><img width='190' height='65' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_logo.jpg'></p></td>"            
+            . "<td width='281' style='width:168.75pt;padding:0in 0in 0in 0in'><p style='line-height:105%'>"
+            . "<img width='218' height='35' src='".FORUM_INTERNET_IMAGE_PATH."agent_email_url.jpg'></p></td></tr>"
+            . "</://plus.google.com/u/0/?tab=mXtable></td></tr><tr><td style='border:none;padding:7.5pt 7.5pt 7.5pt 7.5pt'>"
+            . "To, <br>"
+            . "{$agent_name} <br>"
+            . "<p>We would like to thank you for choosing PropTiger.com. "
+            . "We have received your signed channel partner signup form and "
+            . "we are delighted to inform that you have been successfully empanelled with us. </p>"
+            . "<p><b>Your Unique Channel Partner Code is “{$options['agent_id']}” </b> <br><br>"
+            . "Please use this Unique Code for all future communications with PropTiger.com <br><br>"
+            . "Our customer service team is there to assist you for any further query / support you need in this regard. "
+            . "Feel free to contact us at +91 92788 92788 or email to customer.service@proptiger.com for any query / support.<br> </p>"
+            . "Thanking you,<br>"
+            . "Customer Service Team <br>"
+            . "PropTiger.com<br>"
+            . "<small>Note : This is system generated email, therefore; please do not reply <small>"
+            . "</td></tr></table>";
+    
+    
+    sendMailFromAmazon($options['to'], $options['subject'], $options['message'], $options['sender'], $options['cc'], $options['bcc'], false);
 }
 
     

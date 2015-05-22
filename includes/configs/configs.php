@@ -80,7 +80,7 @@ $smarty->assign("FORUM_PATH", FORUM_PATH);
 /*Forum paths ends*/
 /*ends*/
 
-$smarty->assign("proptiger_broker_id", '410');
+
 
 /*Added by siddharth for Forum Module Tables on 12th Jan 2012*/
 DEFINE("FUSER",FORUM_TABLE_PREFIX."USER");
@@ -106,6 +106,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 	define('OFFLINE_PROJECT_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/images/");
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/admin_cms/offlineproject/");
+	$smarty->assign("proptiger_broker_id", '410');
 }
 else
 {
@@ -113,6 +114,7 @@ else
 	define('OFFLINE_PROJECT_INTERNET_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/images/");
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT'].$dirName."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/admin_cms/offlineproject/");
+	$smarty->assign("proptiger_broker_id", '171');
 }
 
 define('OFFLINE_PROJECT_SERVER_PATH','');
@@ -188,6 +190,11 @@ DEFINE("CALLDETAILS","CallDetails");
 DEFINE("CALLPROJECT","CallProject");
 DEFINE("PROJECT_BANKS","project_banks");
 DEFINE("VIDEO_LINKS","video_links");
+DEFINE("CONTENT_LOTS","content_lots");
+DEFINE("CONTENT_LOT_DETAILS","content_lot_details");
+DEFINE("CONTENT_LOT_COMMENTS","content_lot_comments");
+DEFINE("CMS_ASSIGNMENTS","cms_assignments");
+DEFINE("CONTENT_LOT_APPROVED_PROJECTS","content_lot_approved_projects");
 
 
 /**************This always put at the end of define tables*******************/
@@ -398,7 +405,7 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader");
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor','cityHeadpropertyAdvisor'=>'City Head Property Advisor','teamLeadpropertyAdvisors'=>'Team Lead Property Advisor');
 	$smarty->assign("designationArray", $designationArray);
 
 
@@ -406,7 +413,7 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT","RESALE"=>"RESALE");
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
@@ -462,6 +469,9 @@ define("DEF_PAGE_SIZE",10);
 
 define("SUBJECT_CREATE_ACCOUNT",'You have an account with PropTiger.com');
 define("FORGOT_PASSWORD_SUBJECT_CREATE_ACCOUNT",'You account detail of PropTiger.com');
+
+//define("proptiger_broker_id",'100');
+//$smarty->assign("proptiger_broker_id", "100");
 
 
 //define('SERVER_PATH','/opt/lampp/htdocs/proptiger');
@@ -675,7 +685,8 @@ $smarty->assign("imgDisplayPath", $imgDisplayPath);
 
 $analytics_credential=array("username"=>"cms","password"=>"Cms123!");
 
-include("authConstents.php");
+if($_SESSION['adminId'] != '')
+    include("authConstents.php");
 include("phaseStageConfig.php");
 
 define("MAX_PRIORITY",100);
@@ -734,6 +745,54 @@ $smarty->assign("arrResidentialType",$arrResidentialType);
 $smarty->assign("arrCommercialType",$arrCommercialType);
 $arrAllType = array("Shop","Office",'Other','Commercial');
 $smarty->assign("arrAllType",$arrAllType);
+
+
+$bankAccountType = array(
+	"1" => "Saving",
+	"2" => "Current",
+	);
+$smarty->assign("bankAccountType",$bankAccountType);
+
+/********config for crawling automation and youtube upload******************/
+$smarty->assign("lookup_table_update_url","http://crawling-youtube.proptiger-ws.com:8000/lookup/");
+$smarty->assign("resale_prices_update_url","http://crawling-youtube.proptiger-ws.com:8000/cms/");
+$smarty->assign("youtube_upload_url","http://crawling-youtube.proptiger-ws.com:8000/youtube/");
+
+$smarty->assign("arrAllType",$arrAllType);
+
+$smarty->assign('errorUrl', FIND_ERRORS_URL);
+
+//gooogle map api key
+$smarty->assign('googleMapKey', "AIzaSyBTrqqnHWF8jIxxi0XP7DHtkJAMOgGOw3E");
+
+$arrLotTypes = array(
+    "project" => "Project",
+    "locality" => "Locality",
+    "builder" => "Builder",
+    "city" => "City"
+);
+$smarty->assign('arrLotTypes', $arrLotTypes);
+
+$arrLotStatus = array(
+    'unassigned'=>'Unassigned',
+    'assigned'=>'Assigned',
+    'completedByVendor'=>'Completed By Vendor',
+    'waitingApproval'=>'Waiting Approval',
+    'approved'=>'Approved',
+    'reverted'=>'Reverted',
+    'revertedToVendor'=>'Reverted to Vendor',
+    'canceled'=>'Canceled'
+);
+$smarty->assign('arrLotStatus', $arrLotStatus);
+
+$arrRoles = array(
+    'contentVendor' => 'Vendor',
+    'contentEditor' => 'Editor',
+    'contentTeamLead' => 'Team Lead'
+);
+$smarty->assign('arrRoles', $arrRoles);
+
+
 /********config for project type of residential/nonresidential******************/
 
 

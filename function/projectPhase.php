@@ -91,10 +91,10 @@ function projectStatusUpdate($projectId){
                 $project_status = 6;
         }
             
-	 mysql_query("update resi_project set project_status_id = '$project_status' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
+	 mysql_query("update resi_project set updated_by = " . $_SESSION['adminId'] . ", project_status_id = '$project_status' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
 	    
   }else{
-     mysql_query("update resi_project set project_status_id = (select construction_status from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
+     mysql_query("update resi_project set updated_by = " . $_SESSION['adminId'] . ", project_status_id = (select construction_status from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
   }
 	
 }
@@ -161,10 +161,10 @@ function projectPreLaunchDateUpdate($projectId){
 	  $pre_launch_date = $preDate_sql->PRE_LAUNCH_DATE;
 	}
 	  
-	mysql_query("update resi_project set PRE_LAUNCH_DATE = '$pre_launch_date' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
+	mysql_query("update resi_project set updated_by = " . $_SESSION['adminId'] . ", PRE_LAUNCH_DATE = '$pre_launch_date' where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());   
 	    
   }else{
-     mysql_query("update resi_project set PRE_LAUNCH_DATE = (select PRE_LAUNCH_DATE from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
+     mysql_query("update resi_project set updated_by = " . $_SESSION['adminId'] . ", PRE_LAUNCH_DATE = (select PRE_LAUNCH_DATE from resi_project_phase where phase_type = 'Logical' and project_id = '$projectId'and version = 'Cms') where project_id = '$projectId' and version = 'Cms'") or die(mysql_error());
   }
 	
 }

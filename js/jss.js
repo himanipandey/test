@@ -1,5 +1,6 @@
 $('document').ready(function(){
 
+
 	$("#bkn2").click(function(){
 		var broker_id = $("#bkn2 :selected").val();
 	    var pt_broker_id =  $("#pt_broker_id").val();
@@ -20,27 +21,42 @@ $('document').ready(function(){
 	var bh3 = '#bh3';
 	$(bh3).click(function(){
 		if($(bh3).val() === 'other'){	
-			$('#othr').show(1);	
+			/*$('#othr').show(1);*/	
+			$('#appartment1').show(1);
+			$('#appartment2').show(1);
 		} else {
 			$('#othr').hide(1);
+			$('#study_servant').hide(1);
 			$('#othr2').val('');
 			$('#bed2').val('');
 			$('#tol3').val('');
 			$('#appartment3').val('');
+			$('#appartment1').hide(1);
+			$('#appartment2').hide(1);
+
 
 		}
 	});
 
 //option type change event handler
-	$('#appartment3').click(function(){
-		if($('#appartment3 :selected').val() == '1'  || $('#appartment3 :selected').val() == '2'){	
+
+
+	var appartment3 = '#appartment3';
+	$(appartment3).click(function(){
+		if($(appartment3).val() === '1' || $(appartment3).val() === '2'){	
+			$('#study_servant').show(1);
+			$('#othr').show();	
 			$('#bath').show();
 			$('#bath1').show();
 			$('#tol1').show();
 			$('#tol2').show();
-		}
-		
-		 else {
+			$('#tol3').show();
+			
+			
+
+		} else {
+			$('#study_servant').hide(1);
+			$('#othr').show();
 			$('#bath').hide();
 			$('#bath1').hide();
 			$('#tol1').hide();
@@ -48,27 +64,31 @@ $('document').ready(function(){
 
 			$('#bed2').val('');
 			$('#tol3').val('');
+
+			$('#othr1').show();
+			$('#othr2').show();
 		}
 	});
 
 
 //price change event handler
+
 	$('#prs5').click(function(){
-		$('#prs3').show(1);
+//		$('#prs3').show(1);
 		if($('#prs5 :selected').val() == '2'){	
+			//$('#other_charges').show();
+			$('#othr_prs2').show();
 			$('#other_charges').show();
 			$('#pr').hide();
 		}
-		else if($('#prs5 :selected').val() == '1'){	
+		else {
+			//$('#pr').hide();
+			$('#other_charges').hide();
+			$('#othr_prs2').hide();
 			$('#pr').show();
-			$('#other_charges').hide();
-			$('#othr_prs2').val('');
-		} else {
-			$('#pr').hide();
-			$('#other_charges').hide();
-			$('#othr_prs2').val('');
+                        $('#othr_prs2').val('');
 		}
-	});
+	}); 
 
 	
 
@@ -88,6 +108,12 @@ $('document').ready(function(){
 		$('#proj1').hide(1);
 	});
 
+	$('#lkhs_tfr').click(function(){
+		$('#crs_tfr').removeAttr('checked');
+	});
+	$('#crs_tfr').click(function(){
+		$('#lkhs_tfr').removeAttr('checked');
+	});
 
 
 	$('#crs1').click(function(){
@@ -111,11 +137,11 @@ $('document').ready(function(){
 
 	$('#no').click(function(){
 		$('#yes').removeAttr('checked');
-		$('#bank_list2').hide(1);
+		$('#bank_list2').show(1);
 		$('#bank_list2').val("");
 	});
 
-	$('#plcy').click(function(){
+	/*$('#plcy').click(function(){
 		$('#plcn').removeAttr('checked');
 		$('#plc3').show(1);
 	});
@@ -124,9 +150,7 @@ $('document').ready(function(){
 		$('#plcy').removeAttr('checked');
 		$('#plc3').hide(1);
 		$('#plc3').val("");
-	});
-
-
+	});*/
 
 	$('#yes_study').click(function(){
 		$('#no_study').removeAttr('checked');
@@ -142,6 +166,14 @@ $('document').ready(function(){
 
 	$('#no_servant').click(function(){
 		$('#yes_servant').removeAttr('checked');
+	});
+
+
+	$('#negotiable_yes').click(function(){
+		$('#negotiable_no').removeAttr('checked');
+	});
+	$('#negotiable_no').click(function(){
+		$('#negotiable_yes').removeAttr('checked');
 	});
 
 // ajax loader
@@ -161,11 +193,12 @@ $('document').ready(function(){
 	$body = $("body");
 	
 	$(document).on({
-	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);},
-	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);}  
+	    ajaxStart: function() { $body.addClass("loading");   $("#lmkSave").attr('disabled', true); $("#exit_button").attr('disabled', true); $("#create_button").attr('disabled', true);
+	},
+	     ajaxStop: function() { $body.removeClass("loading"); $("#lmkSave").attr('disabled', false); $("#exit_button").attr('disabled', false); $("#create_button").attr('disabled', false);
+	 	}  
 
 	   
 	});
-
 
 });
