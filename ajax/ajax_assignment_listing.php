@@ -40,6 +40,9 @@ $empty_flag = false; //decide if api request required or not
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
     $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
+}elseif(!empty($_REQUEST['admin_cities'])){
+    $admin_city_array = json_decode($_REQUEST['admin_cities']);
+    $filterArr = array("and" => array(array("equal" => array("cityId" => $admin_city_array))));
 }
 if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
     $filterArr["and"][] = array("equal" => array("projectId" => $projectId));
@@ -72,20 +75,22 @@ $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
     $gpidFilter = "gpid=" . $gpid . "&";
 }
-if (!$filterArr) {
-    $admin_city_array = json_decode($_REQUEST['admin_cities']);
-    $filterArr = array("and" => array(array("equal" => array("cityId" => $admin_city_array))));
-}
+//if (!$filterArr) {
+//    $admin_city_array = json_decode($_REQUEST['admin_cities']);
+//    $filterArr = array("and" => array(array("equal" => array("cityId" => $admin_city_array))));
+//}
 
 $filter = json_encode($filterArr);
 //if (in_array($current_user_role, array('photoGrapher', 'reToucher'))) {
 //    $filter = '{}';
 //}
 
+//print_r($admin_city_array);
 
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
+
 //die($uriListing);
 
 if ($readOnly == 1) { //show specific listing
@@ -94,8 +99,8 @@ if ($readOnly == 1) { //show specific listing
         if ($responseLists->body->statusCode == "2XX") {
             $data = $responseLists->body->data;
             view_listing($data[0], phase_detail);
-        } else {
-            echo "Some Error occurred!";
+        } else {           
+            echo $responseLists->body->error->msg;
         }
     } catch (Exception $ex) {
         die($ex->getMessage());

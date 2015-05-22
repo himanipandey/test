@@ -13,7 +13,8 @@ if(in_array($_SESSION['ROLE'], array('photoGrapher', 'reToucher' ))){
     $smarty->assign("cityArray", $cityArray);
     
     $admin_city_ids = ProptigerAdminCity::get_admin_city_ids($_SESSION['adminId']);
-    $smarty->assign("admin_city_ids", json_encode($admin_city_ids));
+    $smarty->assign("admin_city_ids", json_encode($admin_city_ids));    
+   
 }
 
 //filters

@@ -811,10 +811,11 @@ function getting_listingIds_to_fetch($current_user, $current_user_role) {
     $list_array = array();
     $sql_list_sql = '';
     if ($current_user_role == 'fieldManager') {
-        $sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch "
+        /*$sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch "
                 . " inner join proptiger_admin pa on (pa.adminid = lstch.created_by OR pa.adminid = lstch.updated_by)"
                 . " inner join proptiger_admin fm on fm.manager_id = pa.adminid "
-                . " and fm.adminid = '".$current_user."' where lstch.status = 'Active'";
+                . " and fm.adminid = '".$current_user."' where lstch.status = 'Active'";*/
+        $sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch where lstch.status = 'Active'";
     }elseif ($current_user_role == 'photoGrapher') {
         $sql_list_sql = "SELECT entity_id FROM  cms_assignments where "
                 . " assigned_to = '" . $current_user . "' "
