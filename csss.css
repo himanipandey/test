@@ -35,6 +35,12 @@
 	position: relative;
 	margin-left: 0px;
 }
+#trv{
+    position: absolute;
+    width: 1200px;
+    top:330px;
+    left:300px;
+}
 
 #seller1{
 	position: relative;
@@ -50,7 +56,7 @@
 
 #line1{
 	position: absolute;
-	top:330px;
+	top:350px;
 	left:0px;
 	width: 100%;
 	/*border-top: 1px solid gold;*/
@@ -538,7 +544,7 @@ margin-left: 0px;
 #hln2{
 	position: relative;
 	margin-left: 0px; 	
-	width: 340px;
+	width: 240px;
 }
 
 #bnk_lst{
@@ -550,7 +556,7 @@ margin-left: 0px;
 	position: relative;
 	text-align: left;
 	padding-left: 0px;
-	width: 100px;
+	width: 40px;
 	/*background-color: yellow;*/
 	
 }

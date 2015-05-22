@@ -83,6 +83,7 @@ else{
 	$gblData['prodServer'] = false;
 	$t = $_SERVER['SERVER_NAME'];
 	define("MAPURL", "http://cms.proptiger-ws.com");
+	//define("MAPURL", "http://cms.localhost.com");
 	define("IMG_SERVER",'http://www.proptiger.com/');
 	define("JS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);
 	define("CSS_SERVER","http://$t" . $gblData['beyondServerDocRoot']);

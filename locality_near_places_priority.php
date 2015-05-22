@@ -19,8 +19,12 @@ include("function/functions_priority.php");
 
 //echo TEST;
 $BaseURL = MAPURL;
+$serverName = str_replace("http://", "", $BaseURL);
+$serverName = str_replace(".com", "", $serverName);
 $smarty->assign('MapURL', MAPURL);
 $smarty->assign('MAPURLDRAW', MAPURL."/boundaryTracing/googleMapDrawing.html");
+$smarty->assign('sessionID', $_SESSION["adminId"]);
+$smarty->assign('mapServer', $serverName);
 //die;
 AdminAuthentication();
 //die("here");
@@ -28,8 +32,8 @@ AdminAuthentication();
     include('LocalityNearPlacesPriorityProcess.php');
     //die("here");
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."header.tpl");
+
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."localityNearPlacesPriority.tpl");
-	
 	$smarty->display(PROJECT_ADD_TEMPLATE_PATH."footer.tpl");
 	
 ?>
