@@ -289,4 +289,26 @@ $weeklyEmail = array(
         'sendifnodata' => 0
     )
 );
+
+$monthlyEmail = array(
+    array(
+        'sql' => "select 
+    rp.project_id, rb.builder_name, rp.project_name, l.label as locality_name, c.label as city_name, rp.PROMISED_COMPLETION_DATE 
+ from
+    resi_project rp join resi_builder rb on rp.builder_id = rb.builder_id join locality l on l.locality_id = rp.locality_id 
+    join suburb s on s.suburb_id = l.suburb_id join city c on c.city_id = s.city_id
+WHERE
+    rp.PROMISED_COMPLETION_DATE  
+        BETWEEN  
+        DATE_SUB(DATE_ADD(NOW(), INTERVAL 1 MONTH), INTERVAL (DAY(NOW())) DAY) 
+        AND DATE_SUB(DATE_ADD(NOW(), INTERVAL 2 MONTH), INTERVAL (DAY(NOW())) DAY) 
+ AND rp.version = 'Cms' AND rp.status != 'Inactive';",
+        'subject' => 'Projects Completing next month',
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com', 'kapil.chadha@proptiger.com'),
+        'attachmentname' => 'projects_completing_next_month',
+        'sendifnodata' => 0
+    )
+);
+
+
 ?>
