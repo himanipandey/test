@@ -756,8 +756,8 @@ function view_listing($listing_data, $phase_api_url) {
     $content .= '<tr>
                     <td><b>Flat Number :</b></td>
                     <td>' . $listing_data->flatNumber . '</td>
-                    <td><b>Floor:</b></td>
-                    <td>' . $listing_data->floor . ' &nbsp;&nbsp;<b>Total Floor: </b>'.$jsonDump['total_floor'].'</td>
+                    <td><b>Floor:</b>' . $listing_data->floor . '</td>
+                    <td><b>Total Floor: </b>'.$jsonDump['total_floor'].'</td>
                 </tr>';
     $content .= '<tr>
                     <td><b>Car Parks :</b></td>

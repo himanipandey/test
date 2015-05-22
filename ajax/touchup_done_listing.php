@@ -18,6 +18,7 @@ try {
     if ($cmsAssign) {
         $cmsAssign = CmsAssignment::find($cmsAssign[0]->id);
         $cmsAssign->status = 'touchUpDone';
+        $cmsAssign->checked_by = $current_user;
         $cmsAssign->save();
     }
 } catch (Exception $e) {
