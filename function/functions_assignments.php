@@ -706,97 +706,97 @@ function view_listing($listing_data, $phase_api_url) {
                     <td colspan="4"></th>
                 </tr>';
     $content .= '<tr>
-                    <td>City:</td>
+                    <td><b>City:</b></td>
                     <td>' . $listing_data->property->project->locality->suburb->city->label . '</td>
                     <td></td>
                     <td></td> 
                 </tr>';
 
     $content .= '<tr>
-                    <td>Broker Name:</td>
+                    <td><b>Broker Name:</b></td>
                     <td>' . $listing_data->seller->brokerName . '</td>                     
-                    <td>Seller Name:</td>
+                    <td><b>Seller Name:</b></td>
                     <td>' . $listing_data->seller->fullName . '</td>
                 </tr>';
 
     $content .= '<tr style="border-top: 1px solid rgb(204, 204, 204);">
-                    <td>Owner Name:</td>
+                    <td><b>Owner Name:</b></td>
                     <td>' . $jsonDump['owner_name'] . '</td>
-                    <td>Contact Number:</td>
+                    <td><b>Contact Number:</b></td>
                     <td>' . $jsonDump['owner_number'] . '</td> 
                 </tr>';
 
     $content .= '<tr>
-                    <td>Email:</td>
+                    <td><b>Email:</b></td>
                     <td>' . $jsonDump['owner_email'] . '</td>
-                    <td>Alternate Contact Number:</td>
+                    <td><b>Alternate Contact Number:</b></td>
                     <td>' . $jsonDump['alt_owner_number'] . '</td> 
                 </tr>';
 
     $content .= '<tr style="border-top: 1px solid rgb(204, 204, 204);">
-                    <td>Project:</td>
+                    <td><b>Project:</b></td>
                     <td>' . $listing_data->property->project->name . '</td>
-                    <td>Project ID:</td>
+                    <td><b>Project ID:</b></td>
                     <td>' . $listing_data->property->project->projectId . '</td> 
                 </tr>';
 
     $content .= '<tr>
-                    <td>BHK:</td>
+                    <td><b>BHK:</b></td>
                     <td>' . $listing_data->property->unitName . "-" . $listing_data->property->size . "-" . $listing_data->property->unitType . '</td>
                     <td></td>
                     <td></td> 
                 </tr>';
 
     $content .= '<tr style="border-top: 1px solid rgb(204, 204, 204);">
-                    <td>Phase:</td>
+                    <td><b>Phase:</b></td>
                     <td>' . $phase_name . '</td>
-                    <td>Tower:</td>
+                    <td><b>Tower:</b></td>
                     <td>' . $tower . '</td>
                 </tr>';
     $content .= '<tr>
-                    <td>Flat Number :</td>
+                    <td><b>Flat Number :</b></td>
                     <td>' . $listing_data->flatNumber . '</td>
-                    <td>Floor:</td>
-                    <td>' . $listing_data->floor . '</td>
+                    <td><b>Floor:</b></td>
+                    <td>' . $listing_data->floor . ' &nbsp;&nbsp;<b>Total Floor: </b>'.$jsonDump['total_floor'].'</td>
                 </tr>';
     $content .= '<tr>
-                    <td>Car Parks :</td>
+                    <td><b>Car Parks :</b></td>
                     <td>' . $listing_data->noOfCarParks . '</td>
-                    <td>Negotiable:</td>
+                    <td><b>Negotiable:</b></td>
                     <td>' . $negotiable . '</td>
                 </tr>';
     $content .= '<tr>
-                    <td>Facing:</td>
+                    <td><b>Facing:</b></td>
                     <td>' . $direction . '</td>
                     <td></td>
                     <td></td>
                 </tr>';
     $content .= '<tr style="border-top: 1px solid rgb(204, 204, 204);">
-                    <td>Price:</td>
+                    <td><b>Price:</b></td>
                     <td>' . $price . '</td>
-                    <td>Other Charges:</td>
+                    <td><b>Other Charges:</b></td>
                     <td>' . $other_price . '</td>
                 </tr>';
     $content .= '<tr>
-                    <td>Transfer Rate:</td>
+                    <td><b>Transfer Rate:</b></td>
                     <td>' . $listing_data->transferCharges . '</td>
                     <td></td>
                     <td></td>
                 </tr>';
     $content .= '<tr>
-                    <td>Home Loan Bank:</td>
+                    <td><b>Home Loan Bank:</b></td>
                     <td>' . $bank . '</td>
-                    <td> PLC :</td>
+                    <td><b>PLC :</b></td>
                     <td>' . $listing_data->plc . '</td>
                 </tr>';
     $content .= '<tr style="border-top: 1px solid rgb(204, 204, 204);">
-                    <td>Description :</td>
+                    <td><b>Description :</b></td>
                     <td>' . $listing_data->description . '</td>
-                    <td>Remark:</td>
+                    <td><b>Remark:</b></td>
                     <td>' . $listing_data->remark . '</td>
                 </tr>';
     $content .= '<tr>
-                    <td>Booking Status:</td>
+                    <td><b>Booking Status:</b></td>
                     <td>' . $booking_status . '</td>
                     <td></td>
                     <td></td>
