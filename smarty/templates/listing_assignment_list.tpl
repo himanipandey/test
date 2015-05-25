@@ -301,6 +301,16 @@
                 });
             });
         }
+        
+        //assignemnt-status filter
+        $('#resaleStatus').on('change', function(){
+            if($(this).val() == 'touchUpDone'){
+                $('#schedStatus').val('');
+                $('#schedStatus').attr('disabled', true);
+            }else{
+                $('#schedStatus').attr('disabled', false);
+            }        
+        });
 
     });
 
