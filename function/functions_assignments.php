@@ -560,7 +560,7 @@ function append_listing_assignment_data($listings, $listings_ids, $current_user_
                     $listings_appended[$key][0] = '<input type="checkbox" disabled="true" title="Ready to Touchup">';
                 }
 
-                $listings_appended[$key][8] = $lst_assignment_arr[$rows[2]]['verified_status'];
+                $listings_appended[$key][8] = $arrResaleStatus[$lst_assignment_arr[$rows[2]]['assignment_status']];
 
                 if ($lst_assignment_arr[$rows[2]]['assignment_status'] != 'touchUpDone') {
                     $listings_appended[$key][9] = $lst_assignment_arr[$rows[2]]['schedule_status'];
