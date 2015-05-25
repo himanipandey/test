@@ -56,45 +56,73 @@
                                                     <fieldset>
                                                         <legend>Filters</legend>                                                        
                                                         
-                                                            <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">
+                                                            <table width="80%" border="0" cellpadding="5" cellspacing="0" align="center">
                                                                 {if $current_user_role == 'rm' || $current_user_role == 'crm'}
-                                                                <tr>
-                                                                    <td height="25" align="left" valign="top">
-                                                                        <select id="citydd" name="citydd" >
-                                                                            <option value=''>Select City</option>
-                                                                            {foreach from=$cityArray key=k item=v}
-                                                                                <option value="{$k}" {if $k==$citydd} selected  {/if}>{$v}</option>
-                                                                            {/foreach}
-                                                                        </select>
-                                                                    </td>
-                                                                    <td height="25" align="left" valign="top" style="padding-left: 10px;">
-                                                                        <input type=text name="project_search" id="project_search" value="{$project_search}"  placeholder="Project"  style="width:210px;">
-                                                                        <input type=hidden name="selProjId" id="selProjId" value="{$selProjId}">
-                                                                    </td>
-                                                                    <td height="25" align="left" valign="top" style="padding-left: 10px;">
-                                                                        <input type=text name="listingId_serach" id="listingId_search" value="{$listingId_serach}" placeholder="Listing ID"  style="width:210px;">
-                                                                    </td>
+                                                                    <tr>
+                                                                        <td height="25" align="left" valign="top">
+                                                                            <select id="citydd" name="citydd" >
+                                                                                <option value=''>Select City</option>
+                                                                                {foreach from=$cityArray key=k item=v}
+                                                                                    <option value="{$k}" {if $k==$citydd} selected  {/if}>{$v}</option>
+                                                                                {/foreach}
+                                                                            </select>
+                                                                        </td>
+                                                                        <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                                            <input type=text name="project_search" id="project_search" value="{$project_search}"  placeholder="Project"  style="width:210px;">
+                                                                            <input type=hidden name="selProjId" id="selProjId" value="{$selProjId}">
+                                                                        </td>
+                                                                        <td height="25" align="left" valign="top" style="padding-left: 10px;">
+                                                                            <input type=text name="listingId_serach" id="listingId_search" value="{$listingId_serach}" placeholder="Listing ID"  style="width:210px;">
+                                                                        </td>
+
+                                                                    </tr> 
+                                                                    <tr>
+                                                                        <td height="25" align="left" valign="top">
+                                                                            <select id="resaleStatus" name="resaleStatus" >
+                                                                                <option value=''>Select Assignment Status</option>
+                                                                                {foreach from=$arrResaleStatus key=k item=v}
+                                                                                    <option value="{$k}" {if $k==$resaleStatus} selected  {/if}>{$v}</option>
+                                                                                {/foreach}
+                                                                            </select>
+                                                                        </td>
+                                                                        <td height="25" align="left" valign="top">
+                                                                            <select id="schedStatus" name="schedStatus" >
+                                                                                <option value=''>Select Scheduling Status</option>
+                                                                                <option value="done" {if 'done'==$schedStatus} selected  {/if}>Done</option>  
+                                                                                <option value="not_done" {if 'not_done'==$schedStatus} selected  {/if}>Not Done</option>  
+                                                                            </select>
+                                                                        </td>
+                                                                    </tr>
                                                                     
-                                                                </tr> 
                                                                 {/if}
                                                                 {if $current_user_role == 'fieldManager'}
                                                                     
-                                                                 {if count($errorMsg)>0}
-                                                                    <tr><td colspan="3" align = "left">{$errorMsg['dateDiff']}</td></tr>
-                                                                {/if}
-                                                                <tr>
-                                                                    <td colspan="3">
-                                                                        <select style="width:150px" name="date_filter">   
-                                                                            <option value="">-Select Date Type-</option>
-                                                                            <option  value = "assigned-date" {if $date_filter == 'assigned-date'} selected  {else}{/if}>Assigned Date</option>
-                                                                            <option  value = "visit-date" {if $date_filter == 'visit-date'} selected  {else}{/if}>Visit Date</option>
-                                                                        </select>
-                                                                         &nbsp;&nbsp&nbsp;&nbsp;
-                                                                        <input placeholder="From Date" readonly="true" style="width:80px" name="from_date_filter" value="{$frmdate}" type="text" class="formstyle2" id="from_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_from_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                                                         &nbsp;&nbsp&nbsp;&nbsp;
-                                                                        <input placeholder="To Date" readonly="true" style="width:80px" name="to_date_filter" value="{$todate}" type="text" class="formstyle2" id="to_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_to_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
-                                                                    </td>
-                                                                </tr>                                                                   
+                                                                    {if count($errorMsg)>0}
+                                                                       <tr><td colspan="3" align = "left">{$errorMsg['dateDiff']}</td></tr>
+                                                                   {/if}
+                                                                   <tr>
+                                                                       <td colspan="3">
+                                                                           <select style="width:150px" name="date_filter">   
+                                                                               <option value="">-Select Date Type-</option>
+                                                                               <option  value = "assigned-date" {if $date_filter == 'assigned-date'} selected  {else}{/if}>Assigned Date</option>
+                                                                               <option  value = "visit-date" {if $date_filter == 'visit-date'} selected  {else}{/if}>Visit Date</option>
+                                                                           </select>
+                                                                            &nbsp;&nbsp&nbsp;&nbsp;
+                                                                           <input placeholder="From Date" readonly="true" style="width:80px" name="from_date_filter" value="{$frmdate}" type="text" class="formstyle2" id="from_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_from_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                                            &nbsp;&nbsp&nbsp;&nbsp;
+                                                                           <input placeholder="To Date" readonly="true" style="width:80px" name="to_date_filter" value="{$todate}" type="text" class="formstyle2" id="to_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_to_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                                       </td>
+                                                                   </tr>  
+                                                                   <tr>
+                                                                       <td height="25" align="left" valign="top">
+                                                                            <select id="resaleStatus" name="resaleStatus" >
+                                                                                <option value=''>Select Assignment Status</option>
+                                                                                {foreach from=$arrResaleStatus key=k item=v}
+                                                                                    <option value="{$k}" {if $k==$resaleStatus} selected  {/if}>{$v}</option>
+                                                                                {/foreach}
+                                                                            </select>
+                                                                        </td>
+                                                                   </tr>
                                                                 {/if}
                                                                 <tr>
                                                                     <td colspan=3 style="padding-left: 10px;text-align:right">
@@ -116,34 +144,34 @@
                                                     <thead>
                                                         <TR class = "headingrowcolor">
                                                             <TH align="center" class="no-sort">&nbsp;</TH>
-                                                            <th align="center">Serial</th>
+                                                            <th align="center" class="no-sort">Serial</th>
                                                             <TH align="center">Listing Id</TH>
-                                                            <th align="center">City</th>
-                                                            <th align="center">Locality</th>
+                                                            <th align="center" class="no-sort" >City</th>
+                                                            <th align="center" class="no-sort">Locality</th>
                                                             
                                                             {if $current_user_role == 'fieldManager'}
-                                                                <TH align="center">Assignment Status</TH>
-                                                                <TH align="center">Assigned To</TH> 
-                                                                <TH align="center">Assigned Date</TH>                                                                
+                                                                <TH align="center" class="no-sort">Assignment Status</TH>
+                                                                <TH align="center" class="no-sort">Assigned To</TH> 
+                                                                <TH align="center" class="no-sort">Assigned Date</TH>                                                                
                                                             {/if}
                                                             {if $current_user_role == 'crm' || $current_user_role == 'rm'}
-                                                                <TH align="center">Broker Name</TH>
-                                                                <TH align="center">Project</TH>
-                                                                <TH align="center">Listing</TH> 
-                                                                <TH align="center">Touch Up</TH>
-                                                                <TH align="center">Scheduling</TH>
+                                                                <TH align="center" class="no-sort">Broker Name</TH>
+                                                                <TH align="center" class="no-sort">Project</TH>
+                                                                <TH align="center" class="no-sort">Listing</TH> 
+                                                                <TH align="center" class="no-sort">Assignment Status</TH>
+                                                                <TH align="center" class="no-sort">Scheduling</TH>
                                                             {/if}                                                                                                                        
                                                             
-                                                            <TH align="center">Key Person Name</TH>
-                                                            <TH align="center">Key Person Contact</TH>
-                                                            <TH align="center">Date & Time of Visit</TH>
+                                                            <TH align="center" class="no-sort">Key Person Name</TH>
+                                                            <TH align="center" class="no-sort">Key Person Contact</TH>
+                                                            <TH align="center" class="no-sort">Date & Time of Visit</TH>
                                                             {if $current_user_role == 'photoGrapher'}
-                                                                <TH align="center">Remark</TH>
-                                                                <TH align="center">&nbsp;</TH>
+                                                                <TH align="center" class="no-sort">Remark</TH>
+                                                                <TH align="center" class="no-sort">&nbsp;</TH>
                                                             {/if}
                                                             {if $current_user_role == 'reToucher'}
-                                                                <TH align="center">Photo Path</TH>
-                                                                <TH align="center">&nbsp;</TH>
+                                                                <TH align="center" class="no-sort">Photo Path</TH>
+                                                                <TH align="center" class="no-sort">&nbsp;</TH>
                                                             {/if}
                                                             
                                                         </TR>
@@ -214,7 +242,9 @@
         var projectId = "{$selProjId}";
         var listingId = "{$listingId_serach}";
         var admin_cities = '{$admin_city_ids}';
-        window.location.href="ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=1";
+        var resaleStatus = '{$resaleStatus}';
+        var schedStatus = '{$schedStatus}';
+        window.location.href="ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=1&resaleAssignStatus="+resaleStatus+"&schedStatus="+schedStatus;
 
         return false;
     }
@@ -223,14 +253,18 @@
         var projectId = "{$selProjId}";
         var listingId = "{$listingId_serach}";
         var admin_cities = '{$admin_city_ids}';
+        var resaleStatus = '{$resaleStatus}';
+        var schedStatus = '{$schedStatus}';
         $('#listing_table').dataTable({
-            /*"processing": true,
-             "serverSide": true,*/
+            "processing": true,
+             "serverSide": true,
             columnDefs: [{
                     targets: "no-sort",
                     orderable: false
                 }],
-            "ajax": "ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=0"
+            filter:false,
+            "order": [[ 2, "desc" ]],
+            "ajax": "ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=0&resaleAssignStatus="+resaleStatus+"&schedStatus="+schedStatus
         });
 
 

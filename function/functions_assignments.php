@@ -471,7 +471,7 @@ function getBroker($seller_id) {
 /**
  * get_listing_assignment_data
  */
-function append_listing_assignment_data($listings, $listings_ids, $current_user_role, $date_filter, $current_user, $arrResaleStatus) {
+function append_listing_assignment_data($start, $listings, $listings_ids, $current_user_role, $date_filter, $current_user, $arrResaleStatus) {
 
     $listings_appended = array();
     $lst_assignment_arr = array();
@@ -514,7 +514,7 @@ function append_listing_assignment_data($listings, $listings_ids, $current_user_
             $lst_assignment_arr[$row->listing_id]['assigned_by'] = $row->assigned_by;
             $lst_assignment_arr[$row->listing_id]['assigned_date'] = ($row->assigned_date) ? date("d-M'y", strtotime($row->assigned_date)) : '';
 
-            $lst_assignment_arr[$row->listing_id]['assignment_status'] = $row->assignment_status;
+            $lst_assignment_arr[$row->listing_id]['assignment_status'] = ($row->assignment_status)?$row->assignment_status:"unassigned";
             $lst_assignment_arr[$row->listing_id]['verified_status'] = ($row->assignment_status == 'touchUpDone') ? 'Done' : 'Not Done';
             $lst_assignment_arr[$row->listing_id]['schedule_status'] = ($row->schedule_status) ? 'Done' : 'Not Done';
             $lst_assignment_arr[$row->listing_id]['key_person_name'] = $row->key_person_name;
@@ -575,7 +575,7 @@ function append_listing_assignment_data($listings, $listings_ids, $current_user_
         //resetiing the rows index
         if (isset($listings_appended[$key][2])) {
             $listings_appended[$key][2] = "<a href='javascript:void(0)' onclick='view_listing(" . $rows[2] . ")'>" . $rows[2] . "</a>";
-            $listings_appended[$key][1] = $count++;
+            $listings_appended[$key][1] = ++$start;
         }
     }
 
@@ -807,15 +807,28 @@ function view_listing($listing_data, $phase_api_url) {
     print $content;
 }
 
-function getting_listingIds_to_fetch($current_user, $current_user_role) {
+function getting_listingIds_to_fetch($current_user, $current_user_role, $resaleAssignStatus, $schedStatus) {
+    
+    $misc_filters = '';
+    if($resaleAssignStatus){
+        if($resaleAssignStatus == 'unassigned'){
+            $misc_filters = ' AND lstch.cms_assignment_id is null';
+        }else{
+            $misc_filters = ' AND ca.status = "'.$resaleAssignStatus.'"';
+        }
+    }
+    if($schedStatus){
+        $misc_filters .= ' AND lstch.status = "Active" and (ca.status <> "touchUpDone" OR ca.status is null)';         
+    }
+    
     $list_array = array();
     $sql_list_sql = '';
-    if ($current_user_role == 'fieldManager') {
-        /*$sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch "
-                . " inner join proptiger_admin pa on (pa.adminid = lstch.created_by OR pa.adminid = lstch.updated_by)"
-                . " inner join proptiger_admin fm on fm.manager_id = pa.adminid "
-                . " and fm.adminid = '".$current_user."' where lstch.status = 'Active'";*/
-        $sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch where lstch.status = 'Active'";
+    if ($current_user_role == 'fieldManager') {        
+        $sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch"
+                . " left join cms_assignments ca on ca.id = lstch.cms_assignment_id"
+                . " where lstch.status = 'Active' "
+                . " and (ca.status is null OR ca.status <> 'touchUpDone')"
+                . " $misc_filters";
     }elseif ($current_user_role == 'photoGrapher') {
         $sql_list_sql = "SELECT entity_id FROM  cms_assignments where "
                 . " assigned_to = '" . $current_user . "' "
@@ -823,6 +836,11 @@ function getting_listingIds_to_fetch($current_user, $current_user_role) {
     } elseif ($current_user_role == 'reToucher') {
         $sql_list_sql = "SELECT entity_id FROM  cms_assignments where "               
                 ." status = 'readyToTouchUp'";
+    } elseif($misc_filters){
+       $sql_list_sql = "select lstch.listing_id as entity_id from listing_schedules lstch"
+                . " left join cms_assignments ca on ca.id = lstch.cms_assignment_id"
+                . " where lstch.status = 'Active' ".$misc_filters;
+                
     }
     if ($sql_list_sql) {
         $sql_list = mysql_query($sql_list_sql) or die(mysql_error());
@@ -833,7 +851,7 @@ function getting_listingIds_to_fetch($current_user, $current_user_role) {
         }
     }
     
-    if(in_array($current_user_role, array('rm', 'crm'))){
+    if(in_array($current_user_role, array('rm', 'crm')) && !$misc_filters){
         return 1;
     }
 

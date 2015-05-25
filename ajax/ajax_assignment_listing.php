@@ -8,8 +8,10 @@ include("../httpful.phar");
 include("../includes/configs/configs.php");
 include("../function/functions_assignments.php");
 
-$page = filter_input(INPUT_GET, "page");
-$size = filter_input(INPUT_GET, "size");
+$draw = (filter_input(INPUT_GET, "draw"))?filter_input(INPUT_GET, "draw"):1;
+$start = (filter_input(INPUT_GET, "start"))?filter_input(INPUT_GET, "start"):0;
+$length = (filter_input(INPUT_GET, "length"))?filter_input(INPUT_GET, "length"):10;
+
 $projectId = filter_input(INPUT_GET, "project");
 $listingId = filter_input(INPUT_GET, "listingId");
 $phaseId = filter_input(INPUT_GET, "phaseId");
@@ -28,13 +30,25 @@ $date_filter['date_type'] = filter_input(INPUT_GET, "date_type");
 $current_user = filter_input(INPUT_GET, "current_user");
 $download = filter_input(INPUT_GET, "download");
 $readOnly = filter_input(INPUT_GET, "readOnly");
+$resaleAssignStatus = filter_input(INPUT_GET, "resaleAssignStatus");
+$schedStatus = filter_input(INPUT_GET, "schedStatus");
+$order = $_GET["order"];
+
+//order columns
+$order_column_arr = array(
+    0 => 'listingId', 2 => 'listingId', 3 => 'city', 4 => 'locality', 4 => 'project'
+);
+$order_column = ($order[0]['column'])?$order_column_arr[$order[0]['column']]:$order_column_arr[0];
+$order_dir = ($order[0]['dir'])?strtoupper($order[0]['dir']):'DESC';
+
+
+//if $download true the length would be full :)
+if($download){
+    $length = 200000; //maximum
+}
 
 
 $filterArr = array();
-
-$start = $page * $size;
-
-$size = 200000; //default maximum
 
 $empty_flag = false; //decide if api request required or not
 
@@ -50,12 +64,16 @@ if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($proje
 if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
     $filterArr["and"][] = array("equal" => array("listingId" => $listingId));
 }else{
-    $listing_ids = getting_listingIds_to_fetch($current_user, $current_user_role);
+    $listing_ids = getting_listingIds_to_fetch($current_user, $current_user_role, $resaleAssignStatus, $schedStatus);
     
     if(empty($listing_ids)){
         $empty_flag = true;
     }elseif($listing_ids != 1){
-        $filterArr["and"][] = array("equal" => array("listingId" => $listing_ids));
+        if($schedStatus == 'not_done'){
+            $filterArr["and"][] = array("notEqual" => array("listingId" => $listing_ids));
+        }else{
+            $filterArr["and"][] = array("equal" => array("listingId" => $listing_ids));
+        }        
     }    
     
 }
@@ -75,21 +93,13 @@ $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
     $gpidFilter = "gpid=" . $gpid . "&";
 }
-//if (!$filterArr) {
-//    $admin_city_array = json_decode($_REQUEST['admin_cities']);
-//    $filterArr = array("and" => array(array("equal" => array("cityId" => $admin_city_array))));
-//}
 
 $filter = json_encode($filterArr);
-//if (in_array($current_user_role, array('photoGrapher', 'reToucher'))) {
-//    $filter = '{}';
-//}
 
-//print_r($admin_city_array);
+$sort = '"sort":{"field":"'.$order_column.'","sortOrder":"'.$order_dir.'"}';
 
-$sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
-$uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
+$uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $length . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 //die($uriListing);
 
@@ -176,7 +186,7 @@ if ($readOnly == 1) { //show specific listing
                         $row->seller->brokerName,
                         $row->property->project->name . ", " . $row->property->project->builder->name,
                         $row->property->unitName . "-" . $row->property->size . "-" . $row->property->unitType,
-                        "Not Done",
+                        "",
                         "",
                         "",
                         "",
@@ -194,17 +204,17 @@ if ($readOnly == 1) { //show specific listing
 //print_r($tbsorterArr['rows']);
 //print_r($listings_ids);
     if ($listings_ids) {
-        $all_records = append_listing_assignment_data($tbsorterArr['rows'], $listings_ids, $current_user_role, $date_filter, $current_user, $arrResaleStatus);
+        $all_records = append_listing_assignment_data($start, $tbsorterArr['rows'], $listings_ids, $current_user_role, $date_filter, $current_user, $arrResaleStatus);
         // print_r($all_records);
         $arr = array(
-            "draw" => 10,
-            "recordsTotal" => count($all_records),
-            "recordsFiltered" => count($all_records),
+            "draw" => $draw,
+            "recordsTotal" => $tbsorterArr['total_rows'],//count($all_records),
+            "recordsFiltered" => $tbsorterArr['total_rows'],//count($all_records),
             "data" => $all_records
         );
     } else {
         $arr = array(
-            "draw" => 10,
+            "draw" => $draw,
             "recordsTotal" => 0,
             "recordsFiltered" => 0,
             "data" => ''

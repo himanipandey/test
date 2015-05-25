@@ -17,6 +17,7 @@ if(in_array($_SESSION['ROLE'], array('photoGrapher', 'reToucher' ))){
    
 }
 
+
 //filters
 $selected_city = '';
 if (isset($_GET['citydd'])) {
@@ -41,6 +42,20 @@ if (isset($_GET['listingId_serach'])) {
     $listingId_serach = $_GET['listingId_serach'];
 }
 $smarty->assign('listingId_serach', $listingId_serach);
+
+//Resale status
+$resaleStatus = '';
+if(isset($_GET['resaleStatus'])){
+    $resaleStatus = $_GET['resaleStatus'];
+}
+$smarty->assign('resaleStatus', $resaleStatus);
+
+//schedule status
+$schedStatus = '';
+if(isset($_GET['schedStatus'])){
+    $schedStatus = $_GET['schedStatus'];
+}
+$smarty->assign('schedStatus', $schedStatus);
 
 //date filter
 $date_filter = $_GET['date_filter'];

@@ -799,12 +799,12 @@ $arrRoles = array(
 $smarty->assign('arrRoles', $arrRoles);
 
 $arrResaleStatus = array(
-    '' => 'Unassigned',
+    'unassigned' => 'Unassigned',
     'assignedToPhotoGrapher'=>'Assigned',
     'readyToTouchUp'=>'Ready to Touchup',
     'touchUpDone'=>'Touchup Done'  
 );
-
+$smarty->assign('arrResaleStatus', $arrResaleStatus);
 
 /********config for project type of residential/nonresidential******************/
 
