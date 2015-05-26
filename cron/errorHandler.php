@@ -8,7 +8,7 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
     $email_recipient = getenv("FAILURE_EMAIL_RECEIPIENT"); 
     if(in_array($errno, array(E_WARNING, E_ERROR))){
-      sendRawEmailFromAmazon($email_recipient, '', '', 'Just Checking. Error in cron on ' . exec('hostname'), "Error[$errno] in cron on server: " . exec('hostname') . " on line  $errline in file $errfile. Error message: $errstr. Aborting....", '', '', array($email_recipient, "azitabh.ajit@proptiger.com"));
+      sendRawEmailFromAmazon($email_recipient, '', '', 'Error in cron on ' . exec('hostname'), "Error[$errno] in cron on server: " . exec('hostname') . " on line  $errline in file $errfile. Error message: $errstr. Aborting....", '', '', array($email_recipient));
       exit(1);
     }
     else{
