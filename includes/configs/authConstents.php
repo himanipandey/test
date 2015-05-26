@@ -464,13 +464,36 @@ if (isset($_SESSION['contentDeliveryAccess'])) {
 }
 $smarty->assign("contentDeliveryAccess", $contentDeliveryAccess);
 
-    $mapVarifyAuth = isUserPermitted('map-varification', 'manage');
-    $smarty->assign("mapVarifyAuth", $mapVarifyAuth );
+if (isset($_SESSION['projectManageAuth'])) {
+    $projectManageAuth = $_SESSION['projectManageAuth'];
+} else {
+    $projectManageAuth = isUserPermitted('project-management', 'access');    
+    $_SESSION['projectManageAuth'] = $projectManageAuth;
+}
+$smarty->assign("projectManageAuth", $projectManageAuth);
+
+if (isset($_SESSION['townshipManageAuth'])) {
+    $townshipManageAuth = $_SESSION['townshipManageAuth'];
+} else {
+    $mapVarifyAuth = isUserPermitted('township-managemen', 'access');    
+    $_SESSION['townshipManageAuth'] = $townshipManageAuth;
+}
+$smarty->assign("townshipManageAuth", $townshipManageAuth);
     
-    $projectManageAuth = isUserPermitted('project-management', 'access'); 
-    $smarty->assign("projectManageAuth", $projectManageAuth);
-    
-    $townshipManageAuth = isUserPermitted('township-management', 'access');
-    $smarty->assign("townshipManageAuth", $townshipManageAuth);    
+if (isset($_SESSION['listingAssignmentManage'])) {
+    $listingAssignmentManage = $_SESSION['listingAssignmentManage'];
+} else {
+    $listingAssignmentManage = isUserPermitted('listing-assignment', 'manage');    
+    $_SESSION['listingAssignmentManage'] = $listingAssignmentManage;
+}
+$smarty->assign("listingAssignmentManage", $listingAssignmentManage);
+
+if (isset($_SESSION['listingAssignmentAccess'])) {
+    $listingAssignmentAccess = $_SESSION['listingAssignmentAccess'];
+} else {
+    $listingAssignmentAccess = isUserPermitted('listing-assignment', 'access');    
+    $_SESSION['listingAssignmentAccess'] = $listingAssignmentAccess;
+}
+$smarty->assign("listingAssignmentAccess", $listingAssignmentAccess);
     
 ?>

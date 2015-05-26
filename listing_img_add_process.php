@@ -416,8 +416,12 @@ if($_POST['listing_edit']=='yes'){
 
 	else if(isset($_POST['btnExit']))
 	{
-        
-           header("Location:listing_list.php");
+            if(isset($_GET['lf'])){
+                 header("Location:listing_assignment_list.php"); //redirect to listing assignment page
+            }else{
+                 header("Location:listing_list.php");
+            }
+          
 
 	}
 
@@ -609,7 +613,11 @@ else{
 	}*/
 	else if(isset($_POST['exit']))
 	{
-		 header("Location:listing_list.php");
+             if(isset($_GET['lf'])){
+                 header("Location:listing_assignment_list.php"); //redirect to listing assignment page
+            }else{
+                 header("Location:listing_list.php");
+            }
 	}
 
 
