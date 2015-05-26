@@ -103,7 +103,6 @@ $__params_array = array();
 $__max_overall_area = 0;
 $__max_val = array();
 foreach($__trend_data_array as $__builder_id => $__status_array){
-	//print_r($__status_array);
     $__total_size_sum = 0;
     $__params = array();
     $__sqrf_sold_area = 0;
@@ -128,7 +127,6 @@ foreach($__trend_data_array as $__builder_id => $__status_array){
 		
 		$__total_delay_unit_per_builder += $__value[0]['extraAttributes']['sumInventory'];
 		if($__status === 'Under Construction' or $__status === 'Pre Launch'){
-			//echo "Under Construction or Pre Launch";
 			if ($_Under_Construction_And_Pre_Launch_Flag){
 				$__params[$__status_map['Under Construction And Pre Launch']] = 0;
 				$_Under_Construction_And_Pre_Launch_Flag = FALSE;		
@@ -271,7 +269,6 @@ foreach($__params_array as $__builder_id => $__final_params) {
 	}
 	$__id_score_map[$__builder_id] = 10* ($__builder_score*(1-$__min_livability_score) + $__min_livability_score);
 }
-//print_r($__id_score_map)
 foreach ($__id_score_map as $__builder_id => $__builder_score) {
 	$__update_query = "update cms.resi_builder set builder_score =". ($__builder_score) . " where builder_id =".$__builder_id;
 	if(mysql_query($__update_query)){
@@ -283,5 +280,4 @@ foreach ($__id_score_map as $__builder_id => $__builder_score) {
 		exit(1);
 	}
 }
-//print("finished bye");
 ?>
