@@ -158,11 +158,13 @@
     function getTowerMappedInResale($towerIdArr){
         $result = array();
         $towerIds = implode(",", $towerIdArr);
-        $sqlStr = "SELECT id,tower_id FROM listings WHERE tower_id in({$towerIds}) AND status='Active'";
-        $sqlRes = mysql_query($sqlStr) or die("Some error occured(E-002)");
-        if(mysql_num_rows($sqlRes)>0){
-            while ($row = mysql_fetch_assoc($sqlRes)){
-                $result[] = $row["tower_id"];
+        if($towerIdArr){
+            $sqlStr = "SELECT id,tower_id FROM listings WHERE tower_id in({$towerIds}) AND status='Active'";
+            $sqlRes = mysql_query($sqlStr) or die("Some error occured(E-002)");
+            if(mysql_num_rows($sqlRes)>0){
+                while ($row = mysql_fetch_assoc($sqlRes)){
+                    $result[] = $row["tower_id"];
+                }
             }
         }
         return $result;
