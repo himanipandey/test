@@ -13,7 +13,7 @@ require_once ($currentDir . '/../log4php/Logger.php');
 require_once ($currentDir . '/../cron/cronFunctions.php');
 
 
-define('B2B_SUCCESS_EMAIL_RECIPIENT', 'azitabh.ajit@proptiger.com');
+define('B2B_SUCCESS_EMAIL_RECIPIENT', 'ankur.dhawan@proptiger.com');
 /*
 |  1 | UnderConstruction | Under Construction |
 |  2 | Cancelled         | Cancelled          |
