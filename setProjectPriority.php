@@ -71,7 +71,7 @@ jQuery(document).ready(function(){
 function show_loc_inst(){
     var w = window.open("Surprise", "_blank",'width=300,height=120,top=350,left=500');
     var d = w.document.open();
-    d.write("<!DOCTYPE html><html><body>Check the checkbox to auto shift the projects, if desired.If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want)</body></html>");
+    d.write('<!DOCTYPE html><html><' + 'body' + '>Check the checkbox to auto shift the projects, if desired.If this is not selected, then multiple projects could be at the same priority(which is fine, if that is what you want)</' + 'body' + '></html>');
     d.close();
 }
 </script>

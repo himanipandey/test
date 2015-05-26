@@ -161,9 +161,11 @@ if ($_POST['btnSave'] == "Save") {
                                $cnt++;
                            }
                     }
+
                     $cityData = rtrim($cityData, ",");
                     $finalStr = $cityQry.$cityData;
                     $resCity = mysql_query($finalStr) or die(mysql_error()."E-002");
+
                 }
                 if($DataInsert)
                     header("Location:userList.php");
