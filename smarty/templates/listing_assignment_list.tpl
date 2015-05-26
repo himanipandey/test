@@ -139,7 +139,7 @@
 
                                             <div id='listing-assignment-list' align="left" style="padding-left:10px">
 
-                                                <table class="row-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4   border=0 id="listing_table" class="tablesorter">
+                                                <table class="row-border cell-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4   border=0 id="listing_table" class="tablesorter">
 
                                                     <thead>
                                                         <TR class = "headingrowcolor">

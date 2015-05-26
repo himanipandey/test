@@ -138,7 +138,7 @@ if ($readOnly == 1) { //show specific listing
 
                 if ($current_user_role == 'reToucher') { //ReToucher
                     $data_rows = array(
-                        "<a href='http://cms.localhost.com/listing_img_add.php?listing_id=" . $row->id . "' ><img src='../images/upload_image.png' title='Upload Images' width=25/></a>",
+                        "<a href='listing_img_add.php?listing_id=" . $row->id . "&lf=1' ><img src='../images/upload_image.png' title='Upload Images' width=25/></a>",
                         $start + $index + 1,
                         $row->id,
                         $row->property->project->locality->suburb->city->label,
