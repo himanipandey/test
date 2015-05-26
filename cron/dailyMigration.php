@@ -5,7 +5,10 @@ Authored by: Azitabh Ajit
 Date: 19/12/2013
  */
 
+error_reporting(E_ALL);
+
 $docroot = dirname(__FILE__) . "/../";
+require_once $docroot.'/cron/errorHandler.php';
 require_once $docroot.'modelsConfig.php';
 
 ResiProject::delete_website_version();

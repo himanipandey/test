@@ -21,6 +21,7 @@
 <style>
     .hide-input{ display: none !important; }
     .tablesorter thead .disabled { display: none }
+    .tablesorter-bootstrap .tablesorter-header{ cursor: text }
 </style>
 <script language="javascript">
 var pid;
@@ -73,17 +74,47 @@ function submitButton(){
     if($("#bookingStatusId_search").val() !=""){
         queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
     }
+    if($("#price_verified").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"priceVerified=" + $("#price_verified").val();
+    }
     queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
     window.location.href="{$dirname}/listing_list.php" + queryStrUrl;
     return false;
 }
 function downloadClick(){
-    var cityId = $("#citydd :selected").val();
-    var subUrl = "";
-    if(cityId != "" && cityId != null){
-        subUrl = "cityId="+cityId;
+    var queryStrUrl = "";
+    if($('#citydd').val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"cityId=" + $('#citydd').val();
     }
-    window.location.href="{$dirname}/ajax/downloadListing.php?" + subUrl;
+   
+    if($('#project_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectName=" + $('#project_search').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"projectId=" + $('#selProjId').val();
+    }
+    if($('#listingId_search').val().trim() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"listingId=" + $('#listingId_search').val().trim();
+    }
+    if(($("#search_term option:selected").val() != "") && ($("#search_value").val().trim()!="" || $("#search_landmark").val().trim()!="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_term=" + $("#search_term option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_value=" + ($('#search_value').val().trim()? $('#search_value').val().trim() : $("#search_landmark").val().trim());
+    }
+    if($("#search_term option:selected").val() == "gpid"){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"gpid=" + $("#hidden_gpid").val();
+    }
+    
+    if(($("#search_range option:selected").val() != "") && ($("#range_from").val().trim() != "" || $("#range_to").val().trim() !="")){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"search_range=" + $("#search_range option:selected").val();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_from=" + $('#range_from').val().trim();
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"range_to=" + $('#range_to').val().trim();
+    }
+    if($("#bookingStatusId_search").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"bStatusId=" + $("#bookingStatusId_search").val();
+    }
+    if($("#price_verified").val() !=""){
+        queryStrUrl += ((queryStrUrl)? "&" :"") +"priceVerified=" + $("#price_verified").val();
+    }
+    queryStrUrl = ((queryStrUrl)? "?" :"") + queryStrUrl;
+    window.location.href="{$dirname}/ajax/downloadListing.php" + queryStrUrl;
     
     return false;
 }
@@ -153,7 +184,9 @@ function editListing(str){
     $("#phaseIdHidden").val(str.phaseId);
     
     $("#vendor_classified").val(str.vendorId);
-    $("#broker_check").val(str.brokerConsent);
+    if(str.brokerConsent !=undefined){
+        $("#broker_check").val(str.brokerConsent.toString());
+    }
     if(str.homeLoanBank !=undefined){
         $("#home_loan").val(str.homeLoanBank.toString());
     }
@@ -233,6 +266,18 @@ function editListing(str){
         $("#prs5").val('1');
         var price_value = parseFloat(str.currentListingPrice.price).toFixed(2);
          price_value = price_value/100000;
+         if(price_value>=100){
+            price_value = price_value/100;
+            $("#crs1").val('y');
+            $("#crs1").attr('checked','checked');
+            $("#lkhs1").val('n');
+            $("#lkhs1").removeAttr('checked');
+         }else{
+            $("#lkhs1").val('y');
+            $("#lkhs1").attr('checked','checked');
+            $("#crs1").val('n');
+            $("#crs1").removeAttr('checked');
+         }
          price_value = price_value.toFixed(2).toString();
          $("#prs3").val(price_value);
          $('#pr').show();
@@ -387,6 +432,7 @@ $('#range_from').val(getParameterByName('range_from'));
 $('#range_to').val(getParameterByName('range_to'));
 $('#search_term').val(getParameterByName('search_term'));
 $('#bookingStatusId_search').val(getParameterByName('bStatusId'));
+$('#price_verified').val(getParameterByName('priceVerified'));
 
 
 if($('#search_term').val()=="gpid"){
@@ -471,6 +517,9 @@ selProject = $("#selProjId").val();*/
           }
           if($("#bookingStatusId_search").val()){
              url += '&bStatusId=' + $("#bookingStatusId_search").val();
+          }
+          if($("#price_verified").val()){
+             url += '&priceVerified=' + $("#price_verified").val();
           }
           if($("#search_term").val()){
               if($("#search_value").val()){
@@ -1396,6 +1445,7 @@ function get_towers(project_id){
 }
 
 function get_phases(projectId){
+    alert("{$url_phase_id}");
   $.ajax({
                         type: "GET",
                         url: "{$url_phase_id}"+projectId+"/phase",
@@ -1513,13 +1563,15 @@ function getParameterByName(name) {
 		    </TD>
 		</TR>
 		<TR>
-		<TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
+		<TD vAlign=top align=middle class="backgorund-rt" height=450>
+                    <span id="peoject_search_msg" style="color:red"></span>
+                    <BR>
 		    <table width="93%" border="0" align="center" cellpadding="0" cellspacing="0">
                         <tr>
 		            <td>
                                 <div id="search-top">
                                     <form method = "get">
-                                        <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">		                        
+                                        <table width="80%" border="0" cellpadding="0" cellspacing="0" align="center">
 		            	            <tr>
 		                                <td height="25" align="left" valign="top">
                                                     <select id="citydd" name="citydd" >
@@ -1541,7 +1593,7 @@ function getParameterByName(name) {
                                                 
                                                 <td>
                                                     <select name="search_range" id="search_range">
-                                                        <option value="">--Select--</option>
+                                                        <option value="">Select Budget</option>
                                                         <option value="price">Absolute Price</option>
                                                         <option value="listingPricesPricePerUnitArea">Price Per Unit Area</option>
                                                     </select>
@@ -1579,7 +1631,13 @@ function getParameterByName(name) {
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2"></td>
+                                                <td>
+                                                    <select name="price_verified" id="price_verified">
+                                                        <option value="">Select Price Verified Status</option>
+                                                        <option value=true>Price Verified</option>
+                                                        <option value=false>Price Not Verified</option>
+                                                    </select>
+                                                </td>
                                                 <td style="padding-left: 10px;">
                                                     <input type = "submit" name = "submit" value = "submit" onclick="return submitButton();">
                                                     <input type = "button" name = "Download" value = "Download" onclick="return downloadClick();">
@@ -2185,7 +2243,7 @@ function getParameterByName(name) {
                                   <TH align="center" class="filter-false sorter-false">Price</TH>
                                   <TH align="center" class="filter-false sorter-false">Created Date</TH>
                                   <TH align="center" class="filter-false sorter-false">Photo</TH>
-                                  <TH align="center" class="filter-false sorter-false">Verified</TH>
+                                  <TH align="center" class="filter-false sorter-false">Price Verified</TH>
                                   <TH align="center" class="filter-false sorter-false">Error Messsage</TH>
                                   <TH align="center" class="filter-false sorter-false">Save</TH>
                                   {if $listingDelAuth==true}
@@ -2200,26 +2258,8 @@ function getParameterByName(name) {
                                 <!--<TR><TD colspan="9" class="td-border" align="right">&nbsp;</TD></TR>-->
                           </tbody>
                           
-                          <tfoot>
-                              <tr>
-                                <th>1</th> <!-- tfoot text will be updated at the same time as the thead -->
-                                <th>2</th>
-                                <th>3</th>
-                                <th>4</th>
-                                <th>5</th>
-                                <th>6</th>
-                                <th>7</th>
-                                <th>8</th>
-                                <th>9</th>
-                                <th>10</th>
-                                <th>11</th>
-                                <th>12</th>
-                                {if $listingDelAuth==true}
-                                    <th>13</th>
-                                {/if}
-                              </tr>
-                              <tr>
-                                <td class="pager" colspan="7">
+                          <tr>
+                                <td class="pager" colspan="13">
                                   <img src="tablesorter/addons/pager/icons/first.png" class="first"/>
                                   <img src="tablesorter/addons/pager/icons/prev.png" class="prev"/>
                                   <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
@@ -2232,8 +2272,6 @@ function getParameterByName(name) {
                                   </select>
                                 </td>
                               </tr>
-                          </tfoot>
-
                         </form>
                     </TABLE>
 
@@ -2333,10 +2371,14 @@ $(document).ready(function(){
     });
     
     $("#project_search").keypress(function(event){
-        if($("#citydd").val() == "" && (event.which >47 && event.which<123)){
-            event.preventDefault();
-            alert("Please select city");
+        if($("#citydd").val() == ""){
+            $("#peoject_search_msg").text("Please select city first for better project search experience");
+        }else{
+            $("#peoject_search_msg").text('');
         }
+    });
+    $("#project_search").focusout(function(){
+        $("#peoject_search_msg").text('');
     });
     
 });

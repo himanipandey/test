@@ -18,6 +18,7 @@ $range_from = filter_input(INPUT_GET, "range_from");
 $range_to = filter_input(INPUT_GET, "range_to");
 $gpid = filter_input(INPUT_GET, "gpid");
 $bookingStatusId = filter_input(INPUT_GET, "bStatusId");
+$priceVerified = filter_input(INPUT_GET, "priceVerified");
 
 $filterArr = new stdClass();
 
@@ -45,6 +46,9 @@ if (isset($search_term) && !empty($search_term) && ($search_term != "null") && (
 if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
     $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
 }
+if (isset($priceVerified) && !empty($priceVerified) && ($priceVerified != "null") && ($priceVerified != "")) {
+    $filterArr->and[] = array("equal" => array("listingVerified" => $priceVerified));
+}
 if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
     if ($range_from != "" || $range_to != "") {
         $tempRange["range"][$search_range]["from"] = ($range_from != "") ? (int) $range_from : 1;
@@ -53,6 +57,11 @@ if (isset($search_range) && !empty($search_range) && ($search_range != "null") &
         $tempRange["range"][$search_range]["to"] = (int) $range_to;
     }
     $filterArr->and[] = $tempRange;
+    if($search_range == "listingPricesPricePerUnitArea"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => true));
+    }else if($search_range == "price"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => false));
+    }
 }
 $gpidFilter = "";
 if (isset($gpid) && $gpid != "") {
@@ -61,7 +70,7 @@ if (isset($gpid) && $gpid != "") {
 
 $filter = json_encode($filterArr);
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
-$fields = '"fields":["vendorId","brokerConsent","furnished","homeLoanBank","errorMesssage","imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
+$fields = '"fields":["vendorId","brokerConsent","furnished","homeLoanBank","errorMessage","imageCount","verified","description","seller","id","fullName","currentListingPrice","hasPricePerUnitArea","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -70,13 +79,16 @@ try {
     if ($responseLists->body->statusCode == "2XX") {
         $data = $responseLists->body->data;
         $tbsorterArr['total_rows'] = $responseLists->body->totalCount;
-        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Verified","Error Messsage", "Save", "Delete");
+        $tbsorterArr['headers'] = array("Serial", "Listing Id", "City", "Broker Name", "Project", "Listing", "Price", "Created Date", "Photo", "Price Verified","Error Messsage", "Save", "Delete");
         $tbsorterArr['rows'] = array();
         foreach ($data as $index => $row) {
             $brokerName = "";
             $row->sellerId->id = $row->sellerId;
             if ($row->sellerId) {
                 list($row->seller->brokerId, $row->seller->brokerName) = getBroker($row->sellerId);
+            }
+            if ($row->currentListingPrice->hasPricePerUnitArea == FALSE){
+                $row->currentListingPrice->pricePerUnitArea = 0;
             }
             if ($row->currentListingPrice->pricePerUnitArea != 0) {
                 $price = "Price Per Unit Area - " . $row->currentListingPrice->pricePerUnitArea;
@@ -101,8 +113,8 @@ try {
                 "ListingId" => $row->id,
                 "CreatedDate" => date("Y-m-d", ($row->createdAt) / 1000),
                 "Photo" => ($row->imageCount > 0) ? "Done" : "Not Done",
-                "Verified" => ($row->verified) ? "Yes" : "No",
-                "ErrorMesssage" => ($row->errorMesssage)? $row->errorMesssage : "",
+                "PriceVerified" => ($row->verified) ? "Yes" : "No",
+                "ErrorMesssage" => ($row->errorMessage)? $row->errorMessage : "",
                 "Delete" => ''
             );
             array_push($tbsorterArr['rows'], $data_rows);
