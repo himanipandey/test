@@ -17,6 +17,11 @@
     .calender{
         z-index:9999;
     }
+    
+    #listing_table td {
+        border: 1px solid #ccc;
+        text-align: center;
+    }
 </style>
 <div class="modal">Please Wait..............</div>
 </TD>
@@ -72,7 +77,7 @@
                                                 </table> 
                                             </form>
 
-                                            <table width="100%" class="row-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4   border=0 id="listing_table" class="tablesorter">
+                                            <table width="100%" class="cell-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4    id="listing_table">
 
                                                 <thead>
                                                     <TR class = "headingrowcolor">
@@ -94,20 +99,20 @@
                                                                     {$color = "bgcolor = '#F7F7F7'"}
                                                                 {/if}	
                                                                 <tr {$color} >
-                                                                    <td>{$count}</td>
-                                                                    <td>{$sub_data['pgf_name']}</td>
-                                                                    <td>{$sub_data['assigned']}</td>
-                                                                    <td>{$sub_data['pending']}</td>
-                                                                    <td>{$sub_data['complete']}</td>
+                                                                    <td align="center">{$count}</td>
+                                                                    <td align="center">{$sub_data['pgf_name']}</td>
+                                                                    <td align="center">{$sub_data['assigned']}</td>
+                                                                    <td align="center">{$sub_data['pending']}</td>
+                                                                    <td align="center">{$sub_data['complete']}</td>
                                                                 </tr>
                                                             {/foreach}
 
                                                             <tr {if $data['data']}style='background-color:#ddd'{else}style='background-color:#bbb'{/if}>
-                                                                <td>&nbsp;</td>
-                                                                <td><b>{$data['admin']}</b></td>
-                                                                <td>{$data['total_assigned']}</td>
-                                                                <td>{$data['total_pending']}</td>
-                                                                <td>{$data['total_complete']}</td>
+                                                                <td align="center">&nbsp;</td>
+                                                                <td align="center"><b>{$data['admin']}</b></td>
+                                                                <td align="center">{$data['total_assigned']}</td>
+                                                                <td align="center">{$data['total_pending']}</td>
+                                                                <td align="center">{$data['total_complete']}</td>
                                                             </tr>
                                                         {/foreach}
                                                     {else}

@@ -66,9 +66,9 @@ download_report($report_data);
 <?php
 
 function download_report($report_data) {
-    $content .= '<table width="100%" class="row-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4   border=0 id="listing_table" class="tablesorter">
+    $content .= '<table width="100%" class="row-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4 >
             <thead>
-                <TR class = "headingrowcolor">
+                <TR class = "">
                     <TH width="5%" align="center">Serial</TH>
                     <TH width="25%" align="center">Team</TH>
                     <th width="20%" align="center">Assigned</th>
@@ -83,10 +83,10 @@ function download_report($report_data) {
             foreach ($data['data'] as $k => $sub_data) {
                 $count = $count + 1;
                 if ($count % 2 == 0)
-                    $color = "bgcolor = '#FCFCFC'";
+                    $color = "bgcolor = ''";
                 else
-                    $color = "bgcolor = '#F7F7F7'";
-                $content .= '<tr ' . $color . ' >
+                    $color = "bgcolor = ''";
+                $content .= '<tr >
                         <td>' . $count . '</td>
                         <td>' . $sub_data['pgf_name'] . '</td>
                         <td>' . $sub_data['assigned'] . '</td>
@@ -96,12 +96,12 @@ function download_report($report_data) {
             }
             ;
             if ($data['data'])
-                $color = "style='background-color:#ddd'";
+                $color = "style=''";
             else
-                $color = "style='background-color:#bbb'";
+                $color = "style=''";
 
 
-            $content .= '<tr ' . $color . '>
+            $content .= '<tr>
                     <td>&nbsp;</td>
                     <td><b>' . $data['admin'] . '</b></td>
                     <td>' . $data['total_assigned'] . '</td>
