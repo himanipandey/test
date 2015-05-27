@@ -644,9 +644,9 @@ function view_listing($listing_data, $phase_api_url) {
     }
 
     if ($listing_data->currentListingPrice->pricePerUnitArea != 0) {
-        $price = $listing_data->currentListingPrice->pricePerUnitArea;
+        $price = $listing_data->currentListingPrice->pricePerUnitArea." (Per Sq. Ft.)";
     } else {
-        $price = $listing_data->currentListingPrice->price;
+        $price = $listing_data->currentListingPrice->price. " (all inclusive)";
     }
     if ($listing_data->currentListingPrice->otherCharges != 0) {
         $other_price = $listing_data->currentListingPrice->otherCharges;
