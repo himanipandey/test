@@ -66,9 +66,9 @@ download_report($report_data);
 <?php
 
 function download_report($report_data) {
-    $content .= '<table width="100%" class="row-border stripe hover" style="color:#fff" cellSpacing=1 cellPadding=4 >
+    $content .= '<table width="100%" cellSpacing=1 cellPadding=4 >
             <thead>
-                <TR class = "">
+                <TR>
                     <TH width="5%" align="center">Serial</TH>
                     <TH width="25%" align="center">Team</TH>
                     <th width="20%" align="center">Assigned</th>
