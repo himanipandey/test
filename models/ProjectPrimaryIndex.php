@@ -179,7 +179,7 @@ class ProjectPrimaryIndex extends ActiveRecord\Model
         $rows = 1000;
         $data = array();
         for($j = 0; $j < $count ; $j++){
-           $url = 'https://www.proptiger.com/app/v2/project-listing?selector='. urlencode('{"fields": ["projectId", "resaleListingCount"], "paging":{"start": '.$start.', "rows":'.$rows.' }}');
+           $url = PROPTIGER_URL.'/app/v2/project-listing?selector='. urlencode('{"fields": ["projectId", "resaleListingCount"], "paging":{"start": '.$start.', "rows":'.$rows.' }}');
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_TIMEOUT, CALL_TIMEOUT);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
