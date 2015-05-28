@@ -23,7 +23,7 @@ define('PROPTIGER_URL', "https://www.proptiger.com/");
 define('CALL_TIMEOUT', 0);
 
 ProjectPrimaryIndex::populatePrimaryAndResaleIndex();
-die;
+
 ProjectLivability::repopulateProjectIds();
 LocalityLivability::repopulateLocalityIds();
 
