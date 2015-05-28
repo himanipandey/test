@@ -387,7 +387,8 @@ function createDescription(){
         }
         $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
         $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
-        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".strtolower($response->projectDetails->projectName).", ".strtolower($city).".";
+        $projeName = ucwords(strtolower($response->projectDetails->projectName));
+        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".$projeName.", ".ucfirst(strtolower($city)).".";
         $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
         $temp .= "";
         if($facing != "" || $floor != ""){
@@ -416,7 +417,7 @@ function createDescription(){
             $priceUnit = "crs";
         }
         $price = number_format($price, 2);
-        $description .= " The price of this property is {$price} {$priceUnit} all inclusive(registration charges extra).";
+        $description .= " The price of this property is INR {$price} {$priceUnit} (all inclusive, registration charges extra).";
         if($_POST["homeLoanBank"]){
             $description .= " The property already has a home loan";
             if($_POST["loan_bank"] !=""){
@@ -464,7 +465,7 @@ function getBhk($propArr, $propId){
         if($prop->propertyId == $propId){
             $unitName = explode("+", $prop->unitName);
             $city = $prop->project->locality->suburb->city->label;
-            $builderName = strtolower($prop->project->builder->name);
+            $builderName = ucwords(strtolower($prop->project->builder->name));
             return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
         }
     }
