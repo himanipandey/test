@@ -192,6 +192,22 @@ function groupOnKey($aData, $key){
     return $result;
 }
 
+function groupOnArrayKey($aData, $key){
+    global $logger;
+    $t1 = microtime(TRUE);
+    $result = array();
+    foreach ($aData as $data) {
+        if(!isset($result[$data[$key]])){
+            $result[$data[$key]] = array();
+        }
+        $result[$data[$key]][] = $data;
+    }
+    if(isset($logger)){
+        $logger->info("Indexing on key:$key complete. Took " . (microtime(TRUE)-$t1) . " second");
+    }
+    return $result;
+}
+
 function saveToFileOrDb($arRow, $bulkInsertFlag, $handle=NULL){
     if($bulkInsertFlag){
         fwrite ($handle, getCSVRowFromArray($arRow->to_array()));

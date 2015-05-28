@@ -6,6 +6,9 @@ require_once $docroot . 'dbConfig.php';
 require_once 'cronFunctions.php';
 require_once $docroot . 'includes/send_mail_amazon.php';
 
+define("PROPTIGER_URL", "https://www.proptiger.com/");
+
+
 $past_date = date("Y-m-d", strtotime('-1 days'));
 $future_date = date("Y-m-d", strtotime('+1 days'));
 $latLongList = '0,1,2,3,4,5,6,7,8,9';
