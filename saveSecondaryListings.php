@@ -5,6 +5,7 @@ ini_set('display_errors','1');
 include('httpful.phar');
 require_once("appWideConfig.php");
 include("dbConfig.php");
+include("./modelsConfig.php");
 
 if($_POST['task'] === 'get_tower')  {
    
@@ -179,8 +180,11 @@ else {
 
     $dataArr['jsonDump'] = json_encode($jsonDump);
 
-    if(isset($_POST['description']) && !empty($_POST['description']))
-        $dataArr['description'] =$_POST['description'];
+    if(isset($_POST['description']) && !empty($_POST['description'])){
+        $dataArr['description'] = $_POST['description'];
+    }else{
+        $dataArr["description"] = createDescription();
+    }
 
 
     if(isset($_POST['review']) && !empty($_POST['review']))
@@ -360,5 +364,118 @@ function authListing(){
         $ck_new = $ck_new.$ck[$i];
     }
     return $ck_new;
+}
+function createDescription(){
+    $furnished = array("Furnished"=>"A fully furnished", "Semi-Furnished"=>"A semi furnished", "Unfurnished"=>"An unfurnished");
+    $description = "";
+    $getProjUrl = project_detail."".$_POST["project_id"];
+    $response = \Httpful\Request::get($getProjUrl)->sendsJson()->body('')->send();
+    if($response->body->statusCode == "2XX"){
+        $response = $response->body->data;
+        list($bhk, $bathrooms, $balcony, $city, $size) = getBhk($response->properties, $_POST["property_id"]);
+
+        $facing = "";
+        if($_POST["facing"]) {
+            $facing = MasterDirections::find('first',array('conditions'=>array('id=?',$_POST["facing"])));
+            $facing = $facing->direction;
+        }        
+        $description = "A";
+        if($_POST["furnished"] != ""){
+            $description = $furnished[$_POST["furnished"]];
+        }
+        $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
+        $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
+        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in ".strtolower($response->projectDetails->projectName).", ".strtolower($city).".";
+        $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
+        $temp .= "";
+        if($facing != "" || $floor != ""){
+            $facing = camel2dashed($facing);
+            $temp .= (($facing !="")? " It is {$facing} facing" :"");
+            if($floor !=""){
+                $floorNoStr = "ground";
+                if($floor != 0){
+                    $floorNoStr = addOrdinalNumberSuffix($floor);
+                }
+                $temp .= ($temp !="")? " and is" :" It is";
+                $temp .= (($floor !="")? " located on {$floorNoStr} floor" : "");
+            }
+            $temp .= ($floor !="" && $floors !="")? "(out of {$floors} total floors)" : "";
+            $temp .= ".";
+        }
+        $description .= $temp;
+        $price = $_POST["price"];
+        if($_POST["price_per_unit_area"]){
+            $price = $_POST["price_per_unit_area"]*$size;
+        }
+        $price = $price/100000;
+        $priceUnit = "lacs";
+        if($price>=100){
+            $price = $price/100;
+            $priceUnit = "crs";
+        }
+        $description .= " The price of this property is {$price} {$priceUnit} all inclusive(registration charges extra).";
+        if($_POST["homeLoanBank"]){
+            $description .= " The property already has a home loan";
+            if($_POST["loan_bank"] !=""){
+                $bankArray = BankList::find("first",array("conditions"=>array("bank_id=?",$_POST["loan_bank"])));
+                $bank = strtolower($bankArray->bank_name);
+                $description .= " approved by {$bank}";
+            }
+            $description .= ".";
+        }
+        $car = "1";
+        if($_POST["parking"] !=""){
+            $car = $_POST["parking"];
+        }
+        $description .= " It has {$car} car parking and 1 two-wheeler parking.";
+        if(isset($response->specification->flooring)){
+            $obj = $response->specification->flooring;
+
+            if((trim($obj->LivingDining) == trim($obj->MasterBedroom)) && (trim($obj->LivingDining)  == trim($obj->OtherBedroom))){
+                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, master bedroom and other bedrooms.";
+            }else if(trim($obj->LivingDining) == trim($obj->MasterBedroom)){
+                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, master bedroom and ".$obj->OtherBedroom." in other bedrooms.";
+            }else if(trim($obj->LivingDining) == trim($obj->OtherBedroom)){
+                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, other bedrooms and ".$obj->MasterBedroom." in master bedroom.";
+            }else if(trim($obj->MasterBedroom) == trim($obj->OtherBedroom)){
+                $description .= " It has ".strtolower($obj->MasterBedroom)." in master bedroom room, other bedrooms and ".$obj->LivingDining." in living/dining room.";
+            }else{
+                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, ".$obj->MasterBedroom. " in master bedroom and ".$obj->OtherBedroom." other bedrooms.";
+            }
+
+
+            if(trim($obj->Toilets) == trim($obj->Balcony)){
+                $description .= " Toilets and balcony have ".strtolower($obj->Toilets)." flooring.";
+            }else {
+                $description .= " Toilets have ".strtolower($obj->Toilets)." and balconies have ".strtolower($obj->Balcony)." flooring.";
+            }
+            if($obj->kitchen){
+                $description .= " Kitchen has ".strtolower($obj->kitchen)." flooring.";
+            }
+        }
+    }
+    return ($description);
+}
+function getBhk($propArr, $propId){
+    foreach ($propArr as $prop){
+        if($prop->propertyId == $propId){
+            $unitName = explode("+", $prop->unitName);
+            $city = $prop->project->locality->suburb->city->label;
+            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size);
+        }
+    }
+}
+function addOrdinalNumberSuffix($num) {
+    if (!in_array(($num % 100),array(11,12,13))){
+        switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+        }
+    }
+    return $num.'th';
+}
+function camel2dashed($str) {
+    return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
 }
 ?>
