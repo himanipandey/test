@@ -5,19 +5,66 @@ include("../dbConfig.php");
 include("../httpful.phar");
 
 $size = 200000;
-$cityId = filter_input(INPUT_GET, "cityId");
-$filterArr = new stdClass();
-
 $start = 0;
+
+$projectId = filter_input(INPUT_GET, "projectId");
+$listingId = filter_input(INPUT_GET, "listingId");
+$cityId = filter_input(INPUT_GET, "cityId");
+$search_term = filter_input(INPUT_GET, "search_term");
+$search_value = filter_input(INPUT_GET, "search_value");
+$search_range = filter_input(INPUT_GET, "search_range");
+$range_from = filter_input(INPUT_GET, "range_from");
+$range_to = filter_input(INPUT_GET, "range_to");
+$gpid = filter_input(INPUT_GET, "gpid");
+$bookingStatusId = filter_input(INPUT_GET, "bStatusId");
+$priceVerified = filter_input(INPUT_GET, "priceVerified");
+
+$filterArr = new stdClass();
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
     $filterArr->and[] = array("equal" => array("cityId" => $cityId));
+}else if(in_array($_SESSION["ROLE"], array("cityHeadpropertyAdvisor","teamLeadpropertyAdvisors"))){
+    $cityArray = getUserCities($_SESSION["adminId"]);
+    $cityOr = array();
+    foreach ($cityArray as $id=>$label){
+        $cityOr[] = $id;
+    }
+    $filterArr->and[] = array("equal" => array("cityId" => $cityOr));
 }
-
+if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($projectId != "")) {
+    $filterArr->and[] = array("equal" => array("projectId" => $projectId));
+}
+if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
+    $filterArr->and[] = array("equal" => array("listingId" => $listingId));
+}
+if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
+    $filterArr->and[] = array("equal" => array($search_term => $search_value));
+}
+if (isset($bookingStatusId) && !empty($bookingStatusId) && ($bookingStatusId != "null") && ($bookingStatusId != "")) {
+    $filterArr->and[] = array("equal" => array("bookingStatusId" => $bookingStatusId));
+}
+if (isset($priceVerified) && !empty($priceVerified) && ($priceVerified != "null") && ($priceVerified != "")) {
+    $filterArr->and[] = array("equal" => array("listingVerified" => $priceVerified));
+}
+if (isset($search_range) && !empty($search_range) && ($search_range != "null") && ($search_range != "")) {
+    if ($range_from != "" || $range_to != "") {
+        $tempRange["range"][$search_range]["from"] = ($range_from != "") ? (int) $range_from : 1;
+    }
+    if ($range_to != "") {
+        $tempRange["range"][$search_range]["to"] = (int) $range_to;
+    }
+    $filterArr->and[] = $tempRange;
+    if($search_range == "listingPricesPricePerUnitArea"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => true));
+    }else if($search_range == "price"){
+        $filterArr->and[] = array("equal" => array("hasPricePerUnitArea" => false));
+    }
+}
 
 $sort = '"sort":{"field":"listingId","sortOrder":"DESC"}';
 $filter = json_encode($filterArr);
-$fields = '"fields":["errorMessage","imageCount","verified","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBank","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facing","direction","facingId","tower","towerId","towerName"]}';
+
+$fields = '"fields":["hasPricePerUnitArea","errorMessage","imageCount","verified","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBank","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facing","direction","facingId","tower","towerId","towerName"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?selector={"paging":{"start":' . $start . ',"rows":' . $size . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
 
 $tbsorterArr = array();
@@ -31,6 +78,9 @@ try {
             $row->sellerId->id = $row->sellerId;
             if ($row->sellerId) {
                 list($row->seller->brokerId, $row->seller->brokerName) = getBroker($row->sellerId);
+            }
+            if ($row->currentListingPrice->hasPricePerUnitArea == FALSE){
+                $row->currentListingPrice->pricePerUnitArea = 0;
             }
             if ($row->currentListingPrice->pricePerUnitArea != 0) {
                 $price = "Price Per Unit Area - " . $row->currentListingPrice->pricePerUnitArea;

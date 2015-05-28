@@ -24,7 +24,7 @@ $dailyEmail = array(
                             DATE(rp.created_at) = DATE(subdate(current_date, 1))
                             and rp.version = 'Cms'",
         'subject' => 'Projects inserted yesterday',
-        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'akivito.chishi@proptiger.com', 'gayatri.talukdar@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'pallavi.singh@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects',
         'message' => '',
         'sendifnodata' => 0
@@ -125,6 +125,22 @@ $dailyEmail = array(
         'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com', 'kapil.chadha@proptiger.com'),
         'attachmentname' => 'Carpet Area Greater than 80 and Less than 60',
         'message' => "Carpet Area Greater than 80% and Less than 60% of Size",
+        'sendifnodata' => 0
+    ),
+    array(
+        'sql' => "select city.LABEL as CITY_NAME, rp.PROJECT_ID, rp.PROJECT_NAME, rb.BUILDER_NAME, l.LOCALITY_ID, l.LABEL as LOCALITY_NAME, city.SOUTH_WEST_LONGITUDE as MIN_LONGITUDE, city.NORTH_EAST_LONGITUDE as MAX_LONGITUDE, city.SOUTH_WEST_LATITUDE as MIN_LATITUDE, city.NORTH_EAST_LATITUDE as MAX_LATITUDE,rp.LATITUDE as PROJECT_LATITUDE, rp.LONGITUDE as PROJECT_LONGITUDE
+            from locality l inner join resi_project rp
+            on l.LOCALITY_ID = rp.LOCALITY_ID
+            inner join suburb s on l.suburb_id = s.suburb_id
+            inner join city on s.city_id = city.city_id
+            inner join resi_builder rb on rp.builder_id = rb.builder_id
+             where 
+             rp.version = 'Cms' and rp.status in('Active','ActiveInCms')
+            and ((rp.LONGITUDE not between city.SOUTH_WEST_LONGITUDE and city.NORTH_EAST_LONGITUDE) or (rp.LATITUDE not between city.SOUTH_WEST_LATITUDE and city.NORTH_EAST_LATITUDE))
+             and (rp.LATITUDE not in ($latLongList) or rp.LONGITUDE not in ($latLongList)) and rp.LATITUDE is not null and rp.LONGITUDE is not null;",
+        'subject' => 'Projects Lat Long Beyond City Boundary Limits',
+        'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com'),
+        'attachmentname' => 'Projects_beyond_City_boundary_limit',
         'sendifnodata' => 0
     )
 );
@@ -268,9 +284,31 @@ $weeklyEmail = array(
         'sql' => "select project_id, project_name, CHAR_LENGTH(project_description) description_length 
                    from resi_project where CHAR_LENGTH(project_description) < 25 and version = 'Cms' and status != 'Inactive';",
         'subject' => 'Projects having description length less than 25 characters',
-        'recipients' => array('cms-cron@proptiger.com', 'pallavi.singh@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'chandan.singh@proptiger.com'),
+        'recipients' => array('cms-cron@proptiger.com', 'pallavi.singh@proptiger.com', 'akivito.chishi@proptiger.com', 'gayatri.talukdar@proptiger.com', 'parvathy.rajendran@proptiger.com', 'jashuwanta.narayan@proptiger.com', 'chandan.singh@proptiger.com'),
         'attachmentname' => 'projects_having_short_description',
         'sendifnodata' => 0
     )
 );
+
+$monthlyEmail = array(
+    array(
+        'sql' => "select 
+    rp.project_id, rb.builder_name, rp.project_name, l.label as locality_name, c.label as city_name, rp.PROMISED_COMPLETION_DATE 
+ from
+    resi_project rp join resi_builder rb on rp.builder_id = rb.builder_id join locality l on l.locality_id = rp.locality_id 
+    join suburb s on s.suburb_id = l.suburb_id join city c on c.city_id = s.city_id
+WHERE
+    rp.PROMISED_COMPLETION_DATE  
+        BETWEEN  
+        DATE_SUB(DATE_ADD(NOW(), INTERVAL 1 MONTH), INTERVAL (DAY(NOW())) DAY) 
+        AND DATE_SUB(DATE_ADD(NOW(), INTERVAL 2 MONTH), INTERVAL (DAY(NOW())) DAY) 
+ AND rp.version = 'Cms' AND rp.status != 'Inactive';",
+        'subject' => 'Projects Completing next month',
+        'recipients' => array('cms-cron@proptiger.com', 'ankur.dhawan@proptiger.com', 'Suneel.kumar@proptiger.com', 'kapil.chadha@proptiger.com'),
+        'attachmentname' => 'projects_completing_next_month',
+        'sendifnodata' => 0
+    )
+);
+
+
 ?>

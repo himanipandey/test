@@ -12,6 +12,14 @@ class City extends ActiveRecord\Model
         }
         return $arrCity;
     }
+    static function CityIdArr() {
+        $getCity = City::find('all',array('conditions'=>array('status'=>'Active'),'select'=>'city_id, label','order'=>'label asc'));
+        $arrCity = array();
+        foreach($getCity as $value) {
+            $arrCity[] = $value->city_id;
+        }
+        return $arrCity;
+    }
     static function getCityById($cityId) {
         $cityDetail = City::find('all',array('conditions'=>array("city_id = $cityId")));
         return $cityDetail;
