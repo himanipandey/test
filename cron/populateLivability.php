@@ -20,7 +20,7 @@ require_once ($currentDir . '/../cron/cronFunctions.php');
 define('PROPTIGER_URL', "https://www.proptiger.com/");
 define('CALL_TIMEOUT', 0);
 
-ProjectPrimaryIndex::populatePrimaryIndex();
+ProjectPrimaryIndex::populatePrimaryAndResaleIndex();
 
 ProjectLivability::repopulateProjectIds();
 LocalityLivability::repopulateLocalityIds();
