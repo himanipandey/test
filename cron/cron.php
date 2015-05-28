@@ -8,6 +8,9 @@ switch ($argv[1]) {
 	case 'weekly':
 		$configArray = $weeklyEmail;
 		break;
+        case 'monthly':
+                $configArray = $monthlyEmail;
+                break;
 }
 
 foreach ($configArray as $email) {

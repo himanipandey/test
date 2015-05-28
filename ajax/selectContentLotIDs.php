@@ -38,7 +38,7 @@ if ($lotType == '') {
     //project
     if ($lotType == 'project') {
         //fetch all the project which are not inactive and version is cms
-        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.project_id, concat(resi_builder.builder_name, ' ', resi_project.project_name) project_name, 
+        $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.created_at, resi_project.project_id, concat(resi_builder.builder_name, ' ', resi_project.project_name) project_name, 
                             ( LENGTH(resi_project.project_description) - LENGTH(REPLACE(resi_project.project_description, ' ', ''))+1) words FROM `resi_project`                     
                             left join locality
                                on resi_project.locality_id = locality.locality_id
@@ -62,6 +62,7 @@ if ($lotType == '') {
                             <tr>
                                 <th style="font-size: 12px" nowrap>Project Name</td>
                                 <th style="font-size: 12px" nowrap>Project ID</th>
+                                <th style="font-size: 12px" nowrap>Created At</th>
                                 <th style="font-size: 12px" nowrap>Lot#</th>
                                 <th class="filter-false" style="font-size: 12px" nowrap>Select</th>
                             </tr>
@@ -96,7 +97,8 @@ if ($lotType == '') {
                 }
                 print '<tr>
                             <td>' . $row->project_name . '</td>
-                            <td>' . $row->project_id . '</td>';
+                            <td>' . $row->project_id . '</td>'
+                        . '<td>' . $row->created_at . '</td>';
                 if ($row->lot_id) {
                     print '<td>#' . $row->lot_id . ' - ' . $arrLotStatus[$row->lot_status] . '</td>';
                 } else {
