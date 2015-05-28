@@ -14,13 +14,15 @@ error_reporting(E_ALL);
 // Get demand data
 
 $currentDir = dirname(__FILE__);
+require_once $currentDir.'/../cron/errorHandler.php';
 require_once ($currentDir . '/../modelsConfig.php');
 require_once ($currentDir . '/../cron/cronFunctions.php');
 
 define('PROPTIGER_URL', "https://www.proptiger.com/");
+//define('PROPTIGER_URL', "http://localhost:8080/dal");
 define('CALL_TIMEOUT', 0);
 
-ProjectPrimaryIndex::populatePrimaryIndex();
+ProjectPrimaryIndex::populatePrimaryAndResaleIndex();
 
 ProjectLivability::repopulateProjectIds();
 LocalityLivability::repopulateLocalityIds();
