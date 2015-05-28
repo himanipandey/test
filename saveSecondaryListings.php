@@ -370,10 +370,12 @@ function createDescription(){
     $description = "";
     $getProjUrl = project_detail."".$_POST["project_id"];
     $response = \Httpful\Request::get($getProjUrl)->sendsJson()->body('')->send();
-    if($response->body->statusCode == "2XX"){
+    if($response->body->statusCode == "2XX" && $response->body->data){
         $response = $response->body->data;
-        list($bhk, $bathrooms, $balcony, $city, $size) = getBhk($response->properties, $_POST["property_id"]);
-
+        list($bhk, $bathrooms, $balcony, $city, $size, $unitType, $builderName) = getBhk($response->properties, $_POST["property_id"]);
+        if(!(strpos($unitType, "plot") === FALSE)){
+            return "";
+        }
         $facing = "";
         if($_POST["facing"]) {
             $facing = MasterDirections::find('first',array('conditions'=>array('id=?',$_POST["facing"])));
@@ -385,7 +387,7 @@ function createDescription(){
         }
         $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
         $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
-        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in ".strtolower($response->projectDetails->projectName).", ".strtolower($city).".";
+        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".strtolower($response->projectDetails->projectName).", ".strtolower($city).".";
         $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
         $temp .= "";
         if($facing != "" || $floor != ""){
@@ -461,7 +463,8 @@ function getBhk($propArr, $propId){
         if($prop->propertyId == $propId){
             $unitName = explode("+", $prop->unitName);
             $city = $prop->project->locality->suburb->city->label;
-            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size);
+            $builderName = strtolower($prop->project->builder->name);
+            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
         }
     }
 }
