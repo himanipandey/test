@@ -387,7 +387,8 @@ function createDescription(){
         }
         $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
         $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
-        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".strtolower($response->projectDetails->projectName).", ".strtolower($city).".";
+        $projeName = ucwords(strtolower($response->projectDetails->projectName));
+        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".$projeName.", ".ucfirst(strtolower($city)).".";
         $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
         $temp .= "";
         if($facing != "" || $floor != ""){
@@ -407,7 +408,7 @@ function createDescription(){
         $description .= $temp;
         $price = $_POST["price"];
         if($_POST["price_per_unit_area"]){
-            $price = $_POST["price_per_unit_area"]*$size;
+            $price = ($_POST["price_per_unit_area"]*$size) + $_POST["other_charges"];
         }
         $price = $price/100000;
         $priceUnit = "lacs";
@@ -415,7 +416,8 @@ function createDescription(){
             $price = $price/100;
             $priceUnit = "crs";
         }
-        $description .= " The price of this property is {$price} {$priceUnit} all inclusive(registration charges extra).";
+        $price = number_format($price, 2);
+        $description .= " The price of this property is INR {$price} {$priceUnit} (all inclusive, registration charges extra).";
         if($_POST["homeLoanBank"]){
             $description .= " The property already has a home loan";
             if($_POST["loan_bank"] !=""){
@@ -426,7 +428,7 @@ function createDescription(){
             $description .= ".";
         }
         $car = "1";
-        if($_POST["parking"] !=""){
+        if($_POST["parking"] !="" && $_POST["parking"]>1){
             $car = $_POST["parking"];
         }
         $description .= " It has {$car} car parking and 1 two-wheeler parking.";
@@ -434,25 +436,25 @@ function createDescription(){
             $obj = $response->specification->flooring;
 
             if((trim($obj->LivingDining) == trim($obj->MasterBedroom)) && (trim($obj->LivingDining)  == trim($obj->OtherBedroom))){
-                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, master bedroom and other bedrooms.";
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and other bedrooms.";
             }else if(trim($obj->LivingDining) == trim($obj->MasterBedroom)){
-                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, master bedroom and ".$obj->OtherBedroom." in other bedrooms.";
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and ".addFloring($obj->OtherBedroom)." in other bedrooms.";
             }else if(trim($obj->LivingDining) == trim($obj->OtherBedroom)){
-                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, other bedrooms and ".$obj->MasterBedroom." in master bedroom.";
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, other bedrooms and ".addFloring($obj->MasterBedroom)." in master bedroom.";
             }else if(trim($obj->MasterBedroom) == trim($obj->OtherBedroom)){
-                $description .= " It has ".strtolower($obj->MasterBedroom)." in master bedroom room, other bedrooms and ".$obj->LivingDining." in living/dining room.";
+                $description .= " It has ".addFloring($obj->MasterBedroom)." in master bedroom, other bedrooms and ".addFloring($obj->LivingDining)." in living/dining room.";
             }else{
-                $description .= " It has ".strtolower($obj->LivingDining)." in living/dining room, ".$obj->MasterBedroom. " in master bedroom and ".$obj->OtherBedroom." other bedrooms.";
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, ".addFloring($obj->MasterBedroom). " in master bedroom and ".addFloring($obj->OtherBedroom)." other bedrooms.";
             }
 
 
             if(trim($obj->Toilets) == trim($obj->Balcony)){
-                $description .= " Toilets and balcony have ".strtolower($obj->Toilets)." flooring.";
+                $description .= " Toilets and balcony have ".addFloring($obj->Toilets).".";
             }else {
-                $description .= " Toilets have ".strtolower($obj->Toilets)." and balconies have ".strtolower($obj->Balcony)." flooring.";
+                $description .= " Toilets have ".addFloring($obj->Toilets)." and balconies have ".addFloring($obj->Balcony).".";
             }
             if($obj->kitchen){
-                $description .= " Kitchen has ".strtolower($obj->kitchen)." flooring.";
+                $description .= " Kitchen has ".addFloring($obj->kitchen).".";
             }
         }
     }
@@ -463,7 +465,7 @@ function getBhk($propArr, $propId){
         if($prop->propertyId == $propId){
             $unitName = explode("+", $prop->unitName);
             $city = $prop->project->locality->suburb->city->label;
-            $builderName = strtolower($prop->project->builder->name);
+            $builderName = ucwords(strtolower($prop->project->builder->name));
             return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
         }
     }
@@ -480,5 +482,15 @@ function addOrdinalNumberSuffix($num) {
 }
 function camel2dashed($str) {
     return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
+}
+
+function addFloring($string){
+    $string = strtolower($string);
+    $last_word_start = strrpos($string, ' ') + 1;
+    $last_word = substr($string, $last_word_start);
+    if($last_word != "flooring"){
+        $string = $string." flooring";
+    }
+    return $string;
 }
 ?>
