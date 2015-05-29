@@ -66,6 +66,7 @@
     $smarty->assign("errorMsg", $errorMsg);
     $smarty->assign("finalArr", $mergeArr['finalArr']);
     $smarty->assign("arrAllData", $mergeArr['arrAllData']);
+    $smarty->assign("timeSpent", $mergeArr['timeSpent']);
 
     /*******code for fetch all active users**************/
     $adminDetail = getAdminDetail();

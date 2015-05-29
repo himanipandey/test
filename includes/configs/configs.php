@@ -107,6 +107,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com' )
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME']."/admin_cms/offlineproject/");
 	$smarty->assign("proptiger_broker_id", '410');
+        define('LISTING_IMAGE_FOLDER_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 }
 else
 {
@@ -115,6 +116,7 @@ else
 	define('OFFLINE_PROJECT_IMAGE_SAVE_PATH', $_SERVER['DOCUMENT_ROOT'].$dirName."/images/");
 	//define('OFFLINE_PROJECT_IMAGE_PATH',"http://".$_SERVER['SERVER_NAME'].$dirName."/admin_cms/offlineproject/");
 	$smarty->assign("proptiger_broker_id", '171');
+        define('LISTING_IMAGE_FOLDER_PATH', $_SERVER['DOCUMENT_ROOT']."/images/");
 }
 
 define('OFFLINE_PROJECT_SERVER_PATH','');
@@ -195,6 +197,7 @@ DEFINE("CONTENT_LOT_DETAILS","content_lot_details");
 DEFINE("CONTENT_LOT_COMMENTS","content_lot_comments");
 DEFINE("CMS_ASSIGNMENTS","cms_assignments");
 DEFINE("CONTENT_LOT_APPROVED_PROJECTS","content_lot_approved_projects");
+DEFINE("LISTING_SCHEDULES"," listing_schedules");
 
 
 /**************This always put at the end of define tables*******************/
@@ -405,7 +408,9 @@ $ArrModuleOld	=	array(
 /***************************************/
 
 /*************Array Designation********************/
-	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor');
+
+	$designationArray = array("manager"=>"Manager","executive"=>"Executive","teamLeader"=>"TeamLeader", 'contentTeamLead' => 'Content Team Leader','contentEditor' => 'Content Editor','contentVendor' => 'Content Vendor','cityHeadpropertyAdvisor'=>'City Head Property Advisor','teamLeadpropertyAdvisors'=>'Team Lead Property Advisor', 'rm' => 'Relationship Manager', 'crm' => 'CRM', 'fieldManager' => 'Field Manager', 'photoGrapher' => 'Photographer', 'reToucher' => 'Re-Toucher');
+
 	$smarty->assign("designationArray", $designationArray);
 
 
@@ -413,7 +418,8 @@ $ArrModuleOld	=	array(
 
 	$departmentArray	=	array("ADMINISTRATOR"=>"ADMINISTRATOR","DATAENTRY"=>"DATAENTRY","CALLCENTER"=>"CALLCENTER",
             "AUDIT-1"=>"AUDIT-1","NEWPROJECTAUDIT"=>"NEWPROJECTAUDIT","SURVEY"=>"SURVEY","RESALE-CALLCENTER"=>
-            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT");
+            "RESALE-CALLCENTER","CUNSULTING"=>"CUNSULTING","SALES"=>"SALES","CONTENT"=>"CONTENT","RESALE"=>"RESALE");
+
 	$smarty->assign("departmentArray", $departmentArray);
 
 	/******add service tax for invoice**********/
@@ -792,6 +798,13 @@ $arrRoles = array(
 );
 $smarty->assign('arrRoles', $arrRoles);
 
+$arrResaleStatus = array(
+    'unassigned' => 'Unassigned',
+    'assignedToPhotoGrapher'=>'Assigned',
+    'readyToTouchUp'=>'Ready to Touchup',
+    'touchUpDone'=>'Touchup Done'  
+);
+$smarty->assign('arrResaleStatus', $arrResaleStatus);
 
 /********config for project type of residential/nonresidential******************/
 

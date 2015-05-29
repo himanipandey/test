@@ -18,7 +18,7 @@ $ImageDataListingArr = array(); //Image data from Image service
 
 $objectId = $projectId;
 
-$url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
+$url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId."&activeStatus=1&activeStatus=2";
 $content = file_get_contents($url);
 $imgPath = json_decode($content);
 

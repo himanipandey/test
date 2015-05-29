@@ -37,4 +37,8 @@ class ResiBuilder extends Objects
         $responce =  ResiBuilder::find('all',array('conditions'=>array("builder_id = ?",$builderId),"select" => "builder_name")); 
         return $responce;
     }
+
+    static function updateBuiderScore($builderId, $builderScore){
+        self::update_all(array('conditions' => array('builder_id' => $builderId), 'set' => "builder_score = $builderScore"));
+    }
 }

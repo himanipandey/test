@@ -5,10 +5,11 @@ ini_set('display_errors','1');
 include('httpful.phar');
 require_once("appWideConfig.php");
 include("dbConfig.php");
+include("./modelsConfig.php");
 
 if($_POST['task'] === 'get_tower')  {
    
-    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
+    $Sql = "SELECT TOWER_ID,PROJECT_ID,TOWER_NAME,NO_OF_FLOORS FROM resi_project_tower_details WHERE PROJECT_ID =".$_POST['project_id']." ";
     $Tower = array();
     $ExecSql = mysql_query($Sql) or die();
     $cnt = 0;
@@ -17,20 +18,13 @@ if($_POST['task'] === 'get_tower')  {
             $tmp = array();
             $tmp['tower_id'] = $Res['TOWER_ID'];
             $tmp['tower_name'] = $Res['TOWER_NAME'];
+            $tmp['total_floor'] = $Res['NO_OF_FLOORS'];
             if($Res['TOWER_ID']!='')
                 array_push($Tower, $tmp);
             $cnt++;
-            //$tower = $Res['TOWER_NAME'];
         }    
     }
-    //echo $cnt;
-   
-
     echo json_encode($Tower);
-    //echo $tower;
-    //echo "Finish";
-    //$smarty->assign("sel",$Sel);
-
 }
 
 else if($_POST['task'] === 'get_seller')  {
@@ -51,11 +45,7 @@ else if($_POST['task'] === 'get_seller')  {
             $cnt++;
         }    
     }
-    //echo $cnt;
-   
-
     echo json_encode($Sel);
-    //$smarty->assign("sel",$Sel);
 
 }
 else if($_POST['task'] === 'get_broker')  {
@@ -70,11 +60,7 @@ else if($_POST['task'] === 'get_broker')  {
         $broker_id = $Res['id'];
            
     }
-    //echo $cnt;
-   
-
     echo $broker_id;
-    //$smarty->assign("sel",$Sel);
 
 }
 else if($_POST['task'] == 'delete_listing'){
@@ -104,8 +90,6 @@ else if($_POST['task'] == 'delete_listing'){
         $returnArr['msg'] = "Authentication error";
         echo json_encode($returnArr);
     }
-    
-    
     
 }
 else {
@@ -177,13 +161,6 @@ else {
     if(isset($phaseId) && !empty($phaseId))
         $dataArr['phaseId'] =$phaseId;
 
-  
-
-    
-    
-    
-
-
 /*** json dump values  ****************************************************/    
    if(isset($total_floor) && !empty($total_floor))
         $jsonDump['total_floor'] =$total_floor;
@@ -203,8 +180,11 @@ else {
 
     $dataArr['jsonDump'] = json_encode($jsonDump);
 
-    if(isset($_POST['description']) && !empty($_POST['description']))
-        $dataArr['description'] =$_POST['description'];
+    if(isset($_POST['description']) && !empty($_POST['description'])){
+        $dataArr['description'] = $_POST['description'];
+    }else{
+        $dataArr["description"] = createDescription();
+    }
 
 
     if(isset($_POST['review']) && !empty($_POST['review']))
@@ -233,12 +213,18 @@ else {
     if($_POST['bookingStatusId'] != "")  {
         $dataArr['bookingStatusId'] = $_POST['bookingStatusId'];    
     }
+    if($_POST['furnished'] != "")  {
+        $dataArr['furnished'] = $_POST['furnished'];    
+    }
+    if($_POST['homeLoanBank'] != "")  {
+        $dataArr['homeLoanBank'] = $_POST['homeLoanBank'];    
+    }
     
 
     $masterAmenityIds = array(
         1,2,3,4
         );
-    //$dataArr['masterAmenityIds'] = $masterAmenityIds;
+
     if($_POST['price_per_unit_area'] != NaN)
         $pricePerUnitArea = $_POST['price_per_unit_area'];
     else
@@ -259,11 +245,11 @@ else {
     if($pricePerUnitArea == '' || $pricePerUnitArea == null) {
         $pricePerUnitArea = null;
     }
-    if($$price == '' || $$price == null) {
-        $$price = null;
+    if($price == '' || $price == null) {
+        $price = null;
     }
-    if($$other_charges == '' || $$other_charges == null) {
-        $$other_charges = null;
+    if($other_charges == '' || $other_charges == null) {
+        $other_charges = null;
     }
     $currentListingPrice = array(
         'pricePerUnitArea'=> $pricePerUnitArea,
@@ -274,45 +260,22 @@ else {
     if((isset($pricePerUnitArea) && $pricePerUnitArea!='') || (isset($price) && $price!=''))
         $dataArr['currentListingPrice'] = $currentListingPrice;
 
+    
+    if($_POST["vendor"] !=""){
+        $dataArr["vendorId"] = $_POST["vendor"];
+    }
+    $dataArr["brokerConsent"] = $_POST["broker"];
 
-    /*"{"floor":"2","jsonDump":{"comment":"QA Marketplace Test Company"},"sellerId":null,"flatNumber":"3","homeLoanBankId":"select bank","noOfCarParks":"4","negotiable":"true","transferCharges":"","plc":"","otherInfo":{"size":"","projectId":"503095","bedrooms":null,"unitType":"Sq. Ft.","facing":"East"},"currentListingPrice":{"pricePerUnitArea":"100"}}"*/
-
-    //'{"floor":{$x},"jsonDump":"{\"comment\":\"anubhav\"}","sellerId":"1216008","flatNumber":"D-12","homeLoanBankId":"1","noOfCarParks":"3","negotiable":"true","transferCharges":1000,"plc":200,"otherInfo":{"size":"100","projectId":"656368","bedrooms":"3","unitType":"Plot","penthouse":"true","studio":"true","facing":"North"},"masterAmenityIds":[1,2,3,4],"currentListingPrice":{"pricePerUnitArea":2000,}}'
-
-
-//print("<pre>");
-//print_r($dataArr); 
     $dataJson = json_encode($dataArr);
-    //print("<pre>");
-//    echo($dataJson); die;
-     //var_dump($dataJson);   
-
 
         $uri = LISTING_API_URL;
         $uriLogin = ADMIN_USER_LOGIN_API_URL;
-        //$urlNew: $url + "?page="+page+ "&size="size;
-        /*try{ 
-            $response_login = \Httpful\Request::post($uri1)->sendIt();
-            
-
-
-            $response = \Httpful\Request::put($uri)->authenticateWith('admin-22550@proptiger.com', '1234')->sendsJson()->body($dataJson)->sendIt();    
-            echo "This response has " . count($response); 
-            echo $response,'\n';
-            //echo $response1;
-            //admin-22550@proptiger.com 
-            //1234 
-
-
-        } catch(Exception $e)  {
-            print_R($e);
-        }*/
-        //echo "dhsjadfhsjdkdf";    
+        
         $response_login = \Httpful\Request::post($uriLogin)                  // Build a PUT request...
         ->sendsJson()                               // tell it we're sending (Content-Type) JSON...
         ->body('')             // attach a body/payload...
         ->send(); 
-        //var_dump($response_login);die();
+        
         $header = $response_login->headers;
         $header = $header->toArray();
         $ck = $header['set-cookie'];
@@ -324,24 +287,22 @@ else {
             }
             $ck_new = $ck_new.$ck[$i];
         }
-        //echo $ck_new;
+        
         if($ck_new!='')
         {    
             $returnArr = array();
             if($listing_id!=''){
                 $uri = $uri."/".$listing_id;
-//                echo($uri);
-//                die($dataJson);
+
                 $response = \Httpful\Request::put($uri)           
                 ->sendsJson()                               
                 ->body($dataJson)
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
-                //echo "update";
-                //var_dump($response);
+
 
                 if($response->body->statusCode=="2XX"){
-                   // echo "2";
+                   
                     $returnArr['code'] = "2";
                     $returnArr['msg'] = "update";
                     if($response->body->error){
@@ -350,7 +311,7 @@ else {
                     echo json_encode($returnArr);
                 }
                 else{
-                     //echo $response->body->error->msg;
+                     
                     $returnArr['code'] = "0";
                     $returnArr['msg'] = $response->body->error->msg;
                     echo json_encode($returnArr);
@@ -362,8 +323,7 @@ else {
                 ->body($dataJson)
                 ->addHeader("COOKIE", $ck_new) 
                 ->send(); 
-                //echo "create";
-                //var_dump($response);
+                
                 if($response->body->statusCode=="2XX"){
                     $id = $response->body->data->id;
 
@@ -375,39 +335,18 @@ else {
                     echo json_encode($returnArr);
                 }
                 else{
-                     //echo $response->body->error->msg;
+                    
                     $returnArr['code'] = "0";
                     $returnArr['msg'] = $response->body->error->msg;
                     echo json_encode($returnArr);
                 }
             }
-
-
-            //var_dump($response);
-
             
         }
         else{
             echo "Authentication Error.";
         }
 
-
-
-        /*$ch = curl_init();
-
-                    curl_setopt($ch, CURLOPT_URL,$uri);             
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $dataJson);
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Content-length: ".strlen($dataJson))); 
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    //curl_setopt($ch, CURLOPT_VERBOSE, 1);
-                    //curl_setopt($ch, CURLOPT_HEADER, 1);
-                    curl_setopt($ch, CURLOPT_COOKIE, "JSESSIONID=".$cookies['JSESSIONID']);
-                    $server_output = curl_exec($ch);
-                    curl_close ($ch);
-                    $output_array = json_decode($server_output,true);
-                    print_r($output_array);*/
     }
 
 function authListing(){
@@ -425,5 +364,133 @@ function authListing(){
         $ck_new = $ck_new.$ck[$i];
     }
     return $ck_new;
+}
+function createDescription(){
+    $furnished = array("Furnished"=>"A fully furnished", "Semi-Furnished"=>"A semi furnished", "Unfurnished"=>"An unfurnished");
+    $description = "";
+    $getProjUrl = project_detail."".$_POST["project_id"];
+    $response = \Httpful\Request::get($getProjUrl)->sendsJson()->body('')->send();
+    if($response->body->statusCode == "2XX" && $response->body->data){
+        $response = $response->body->data;
+        list($bhk, $bathrooms, $balcony, $city, $size, $unitType, $builderName) = getBhk($response->properties, $_POST["property_id"]);
+        if(!(strpos($unitType, "plot") === FALSE)){
+            return "";
+        }
+        $facing = "";
+        if($_POST["facing"]) {
+            $facing = MasterDirections::find('first',array('conditions'=>array('id=?',$_POST["facing"])));
+            $facing = $facing->direction;
+        }        
+        $description = "A";
+        if($_POST["furnished"] != ""){
+            $description = $furnished[$_POST["furnished"]];
+        }
+        $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
+        $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
+        $projeName = ucwords(strtolower($response->projectDetails->projectName));
+        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".$projeName.", ".ucfirst(strtolower($city)).".";
+        $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
+        $temp .= "";
+        if($facing != "" || $floor != ""){
+            $facing = camel2dashed($facing);
+            $temp .= (($facing !="")? " It is {$facing} facing" :"");
+            if($floor !=""){
+                $floorNoStr = "ground";
+                if($floor != 0){
+                    $floorNoStr = addOrdinalNumberSuffix($floor);
+                }
+                $temp .= ($temp !="")? " and is" :" It is";
+                $temp .= (($floor !="")? " located on {$floorNoStr} floor" : "");
+            }
+            $temp .= ($floor !="" && $floors !="")? "(out of {$floors} total floors)" : "";
+            $temp .= ".";
+        }
+        $description .= $temp;
+        $price = $_POST["price"];
+        if($_POST["price_per_unit_area"]){
+            $price = ($_POST["price_per_unit_area"]*$size) + $_POST["other_charges"];
+        }
+        $price = $price/100000;
+        $priceUnit = "lacs";
+        if($price>=100){
+            $price = $price/100;
+            $priceUnit = "crs";
+        }
+        $price = number_format($price, 2);
+        $description .= " The price of this property is INR {$price} {$priceUnit} (all inclusive, registration charges extra).";
+        if($_POST["homeLoanBank"]){
+            $description .= " The property already has a home loan";
+            if($_POST["loan_bank"] !=""){
+                $bankArray = BankList::find("first",array("conditions"=>array("bank_id=?",$_POST["loan_bank"])));
+                $bank = strtolower($bankArray->bank_name);
+                $description .= " approved by {$bank}";
+            }
+            $description .= ".";
+        }
+        $car = "1";
+        if($_POST["parking"] !="" && $_POST["parking"]>1){
+            $car = $_POST["parking"];
+        }
+        $description .= " It has {$car} car parking and 1 two-wheeler parking.";
+        if(isset($response->specification->flooring)){
+            $obj = $response->specification->flooring;
+
+            if((trim($obj->LivingDining) == trim($obj->MasterBedroom)) && (trim($obj->LivingDining)  == trim($obj->OtherBedroom))){
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and other bedrooms.";
+            }else if(trim($obj->LivingDining) == trim($obj->MasterBedroom)){
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and ".addFloring($obj->OtherBedroom)." in other bedrooms.";
+            }else if(trim($obj->LivingDining) == trim($obj->OtherBedroom)){
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, other bedrooms and ".addFloring($obj->MasterBedroom)." in master bedroom.";
+            }else if(trim($obj->MasterBedroom) == trim($obj->OtherBedroom)){
+                $description .= " It has ".addFloring($obj->MasterBedroom)." in master bedroom, other bedrooms and ".addFloring($obj->LivingDining)." in living/dining room.";
+            }else{
+                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, ".addFloring($obj->MasterBedroom). " in master bedroom and ".addFloring($obj->OtherBedroom)." other bedrooms.";
+            }
+
+
+            if(trim($obj->Toilets) == trim($obj->Balcony)){
+                $description .= " Toilets and balcony have ".addFloring($obj->Toilets).".";
+            }else {
+                $description .= " Toilets have ".addFloring($obj->Toilets)." and balconies have ".addFloring($obj->Balcony).".";
+            }
+            if($obj->kitchen){
+                $description .= " Kitchen has ".addFloring($obj->kitchen).".";
+            }
+        }
+    }
+    return ($description);
+}
+function getBhk($propArr, $propId){
+    foreach ($propArr as $prop){
+        if($prop->propertyId == $propId){
+            $unitName = explode("+", $prop->unitName);
+            $city = $prop->project->locality->suburb->city->label;
+            $builderName = ucwords(strtolower($prop->project->builder->name));
+            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
+        }
+    }
+}
+function addOrdinalNumberSuffix($num) {
+    if (!in_array(($num % 100),array(11,12,13))){
+        switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+        }
+    }
+    return $num.'th';
+}
+function camel2dashed($str) {
+    return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
+}
+
+function addFloring($string){
+    $string = strtolower($string);
+    $last_word_start = strrpos($string, ' ') + 1;
+    $last_word = substr($string, $last_word_start);
+    if($last_word != "flooring"){
+        $string = $string." flooring";
+    }
+    return $string;
 }
 ?>

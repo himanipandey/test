@@ -89,7 +89,7 @@ if ($objectType == 'property') {
     
     $towerDetail = fetch_towerDetails($objectId);
     
-    $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId;
+    $url = ImageServiceUpload::$image_upload_url . "?objectType=$objectType&objectId=" . $objectId."&activeStatus=1&activeStatus=2";
 
     $content = file_get_contents($url);
     $imgPath = json_decode($content);
@@ -173,7 +173,8 @@ if ($objectType == 'property') {
         $html .= '<b>Image Title : </b>' . $data['TITLE'] . '<br><br>';
         
         if ($data['PLAN_TYPE'] == 'Construction Status') {
-            $html .= '<b>Tagged Date : </b>' . date('F Y', strtotime($data['tagged_month'])) . '<br><br>';
+            if($data['tagged_month'])
+                $html .= '<b>Tagged Date : </b>' . date('F Y', strtotime($data['tagged_month'])) . '<br><br>';            
             $html .= '<b>Tagged Tower : </b>' . (($data['tower_id'] >= 0) ? $data['TOWER_NAME'] : '') . '<br><br>';
         }
 

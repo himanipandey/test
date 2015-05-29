@@ -188,17 +188,23 @@
                               {$towerface       = $towerDetail[$cnt]['TOWER_FACING_DIRECTION']}
                               {$stilt           = $towerDetail[$cnt]['STILT']}
                               {$completion_date = $towerDetail[$cnt]['ACTUAL_COMPLETION_DATE']}
+                              {$name_readOnly=""}
+                              {$delete_disable=""}
+                              {if $tower_id|in_array :$towersInResale}
+                                  {$name_readOnly="readOnly='readOnly'"}
+                                  {$delete_disable="disabled='disabled'"}
+                              {/if}
 
                           <tr id="row_1" {$color}>
 
-                            <td align="center" valign = "top"><input type="checkbox" name="delete_{$smarty.section.rowLoop.index}" id = "{$smarty.section.rowLoop.index}"></td>
+                            <td align="center" valign = "top"><input type="checkbox" name="delete_{$smarty.section.rowLoop.index}" id = "{$smarty.section.rowLoop.index}" {$delete_disable}></td>
                              <td align="center" valign= "top">
                                        {$smarty.section.rowLoop.index}
                               </td>
 
                                <td align="center" valign = "top">
                                        
-                                    <input type = "text" name = "tower_name[]" id = "tower_name_{$smarty.section.rowLoop.index}" value = "{$tower_name}" style = "width:150px">
+                                    <input type = "text" name = "tower_name[]" id = "tower_name_{$smarty.section.rowLoop.index}" value = "{$tower_name}" {$name_readOnly} style = "width:150px">
 
                                     <input type = "hidden" name = "tower_name_old[]" value = "{$tower_name}" style = "width:150px">
 
