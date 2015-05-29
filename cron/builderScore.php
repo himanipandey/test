@@ -5,6 +5,9 @@
  * factor is computed using various factors like construction status sqft area sold, unsold,
  * builder age and rate of unit sold by builder. 
  */
+
+error_reporting(E_ALL);
+
 $docroot = dirname(__FILE__) . "/../";
 $currentDir = dirname(__FILE__);
 require_once $docroot.'dbConfig.php';
@@ -93,7 +96,7 @@ foreach($trend_api_response_array as $builder_id => $trend_api_response_builder)
     
     $params_array[AGE_IN_DAY][$builder_id] = 0;
     
-    $established_date = $__builder_api_respose_data[$builder_id][0]["establishedDate"];
+    $established_date = $builder_api_respose_data[$builder_id][0]["establishedDate"];
     //echo "$established_date\n";
     if(isset($established_date)){
         $params_array[AGE_IN_DAY][$builder_id] = (time() - $established_date/1000)/86400;
@@ -133,7 +136,7 @@ foreach ($params_array as $key => $value) {
 }
 
 foreach ($trend_api_response_array as $builder_id => $value) {
-    $score = $params_array[AGE_IN_DAY . SCORE_SUFFIX][$builder_id] * $weights[AGE_IN_DAY] + $params_array[OVERHANG_INVERSE . SCORE_SUFFIX][$builder_id] * $weights[OVERHANG_INVERSE] + $params_array[COMPLETION_DELAY . SCORE_SUFFIX][$builder_id] * $weights[SCORE_SUFFIX] + $params_array[COMPLETED_AREA . SCORE_SUFFIX][$builder_id] * $weights[COMPLETED_AREA] + $params_array[NON_COMPLETED_AREA . SCORE_SUFFIX][$builder_id] * $weights[NON_COMPLETED_AREA] + $params_array[LISTED_SCORE . SCORE_SUFFIX][$builder_id] * $weights[LISTED_SCORE];
+    $score = $params_array[AGE_IN_DAY . SCORE_SUFFIX][$builder_id] * $weights[AGE_IN_DAY] + $params_array[OVERHANG_INVERSE . SCORE_SUFFIX][$builder_id] * $weights[OVERHANG_INVERSE] + $params_array[COMPLETION_DELAY . SCORE_SUFFIX][$builder_id] * $weights[COMPLETION_DELAY] + $params_array[COMPLETED_AREA . SCORE_SUFFIX][$builder_id] * $weights[COMPLETED_AREA] + $params_array[NON_COMPLETED_AREA . SCORE_SUFFIX][$builder_id] * $weights[NON_COMPLETED_AREA] + $params_array[LISTED . SCORE_SUFFIX][$builder_id] * $weights[LISTED];
     ResiBuilder::updateBuiderScore($builder_id, $score);
     # $sql = "update cms.resi_builder set AGE_IN_DAY = " . $params_array[AGE_IN_DAY][$builder_id] . ", AGE_IN_DAY_SCORE = " . $params_array[AGE_IN_DAY_SCORE][$builder_id] . ", OVERHANG_INVERSE = " . $params_array[OVERHANG_INVERSE][$builder_id] . ", OVERHANG_INVERSE_FLOAT = " . $params_array[OVERHANG_INVERSE_SCORE][$builder_id] . ", COMPLETION_DELAY = " . $params_array[COMPLETION_DELAY][$builder_id] . ", COMPLETION_DELAY_SCORE = " . $params_array[COMPLETION_DELAY_SCORE][$builder_id] . ", COMPLETED_AREA = " . $params_array[COMPLETED_AREA][$builder_id] . ", COMPLETED_AREA_SCORE = " . $params_array[COMPLETED_AREA_SCORE][$builder_id] . ", NON_COMPLETED_AREA = " . $params_array[NON_COMPLETED_AREA][$builder_id] . ", NON_COMPLETED_AREA_SCORE = " . $params_array[NON_COMPLETED_AREA_SCORE][$builder_id] . ", LISTED_SCORE = " . $params_array[LISTED_SCORE][$builder_id] . " where builder_id = $builder_id";
     # mysql_query($sql);
@@ -155,7 +158,6 @@ function getAllPaginatedResponse($url){
     $page_size = 1000;
     $count_response = json_decode(file_get_contents($url . "&start=0&rows=1"), TRUE);
     $count = $count_response["totalCount"];
-    
     $final_array = array();
     $start = 0;
     
