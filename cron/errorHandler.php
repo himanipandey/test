@@ -12,7 +12,7 @@ else{
 
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
-    if(in_array($errno, array(E_WARNING, E_ERROR))){
+    if(in_array($errno, array(E_WARNING, E_ERROR, E_USER_ERROR))){
       sendRawEmailFromAmazon(FAILURE_EMAIL_RECEIPIENT, '', '', 'Error in cron on ' . exec('hostname'), "Error[$errno] in cron on server: " . exec('hostname') . " on line  $errline in file $errfile. Error message: $errstr. Aborting....", '', '', array(FAILURE_EMAIL_RECEIPIENT));
       exit(1);
     }

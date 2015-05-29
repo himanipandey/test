@@ -49,6 +49,12 @@ $trend_api_response_status_grouped_array = getStatusGroupedBuilderTrend();
 
 $trend_api_response_array = getBuilderTrend();
 
+$min_builder_count = ResiBuilder::count() * 0.7;
+
+if(!(count($builder_api_respose_data) > $min_builder_count && count($trend_api_response_status_grouped_array) > $min_builder_count && count($trend_api_response_array) > $min_builder_count)){
+  trigger_error ("Not enough builders found in api response", E_USER_ERROR );
+}
+
 $params_array = array();
 foreach($trend_api_response_array as $builder_id => $trend_api_response_builder){
     $trend_extra_attributes = $trend_api_response_builder[0]["extraAttributes"];
