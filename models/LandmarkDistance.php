@@ -9,6 +9,9 @@ require_once (dirname(__FILE__) . '/../cron/cronConfig.php');
 class LandmarkDistance extends ActiveRecord\Model {
 
     static $table_name = 'landmark_distances';
+    static $limit_on_localitiy_amenities = 50;
+    static $limit_on_project_amenities = 20;
+
     static $all_landmark_type_ids = array(
         1, // school
         2, // hospital
@@ -36,17 +39,16 @@ class LandmarkDistance extends ActiveRecord\Model {
     static function insertProjectDistance() {
         global $latLongList;
 
-        $sql = "SELECT PROJECT_ID FROM cms.resi_project WHERE resi_project.STATUS = 'Active' AND resi_project.version = 'website' ";
+        $sql = "SELECT PROJECT_ID FROM resi_project WHERE STATUS = 'Active' AND version = 'website' ";
         $result = self::connection()->query($sql);
         $projectList = array();
         while ($data = $result->fetch(PDO::FETCH_NUM)) {
             array_push($projectList, $data[0]);
         }
-        $uniqueProjectIdList = array_unique($projectList);
-
-        foreach ($uniqueProjectIdList as $projectId) {
+        
+        foreach ($projectList as $projectId) {
             foreach (self::$all_landmark_type_ids as $typeId) {
-                $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select rp.PROJECT_ID, 'Project', ld.id, " . getDBDistanceQueryString("if(rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in ($latLongList), rp.LONGITUDE, l.LONGITUDE)", "if(rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in ($latLongList), rp.LATITUDE, l.LATITUDE)", 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from resi_project rp inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where rp.version = 'Website' AND rp.PROJECT_ID = ".$projectId." and ((rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in (" . $latLongList . ")) or (l.LONGITUDE not in (" . $latLongList . ") and l.LATITUDE not in (" . $latLongList .   "))) and ld.status = 'Active' and ld.place_type_id  = ".$typeId." order by distance limit 0 , 20 ";
+                $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select rp.PROJECT_ID, 'Project', ld.id, " . getDBDistanceQueryString("if(rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in ($latLongList), rp.LONGITUDE, l.LONGITUDE)", "if(rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in ($latLongList), rp.LATITUDE, l.LATITUDE)", 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from resi_project rp inner join locality l on rp.LOCALITY_ID = l.LOCALITY_ID inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where rp.version = 'Website' AND rp.PROJECT_ID = ".$projectId." and ((rp.LONGITUDE not in (" . $latLongList . ") and rp.LATITUDE not in (" . $latLongList . ")) or (l.LONGITUDE not in (" . $latLongList . ") and l.LATITUDE not in (" . $latLongList .   "))) and ld.status = 'Active' and ld.place_type_id  = ".$typeId." order by distance limit 0 , ".self::$limit_on_project_amenities." ";
                 self::connection()->query($sql);
             }
         }
@@ -61,17 +63,16 @@ class LandmarkDistance extends ActiveRecord\Model {
 
     static function insertLocalityDistance() {
         global $latLongList;
-        $sql = "SELECT LOCALITY_ID FROM cms.locality WHERE locality.STATUS = 'Active'";
+        $sql = "SELECT LOCALITY_ID FROM locality WHERE STATUS = 'Active'";
         $result = self::connection()->query($sql);
         $localityList = array();
         while ($data = $result->fetch(PDO::FETCH_NUM)) {
             array_push($localityList, $data[0]);
         }
-        $uniqueLocalityIdList = array_unique($localityList);
-        foreach ($uniqueLocalityIdList as $localityId) {
+        foreach ($localityList as $localityId) {
             foreach (self::$all_landmark_type_ids as $typeId) {
                 
-                $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select l.LOCALITY_ID, 'Locality', ld.id, " . getDBDistanceQueryString('l.LONGITUDE', 'l.LATITUDE', 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from locality l inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where l.LONGITUDE not in (" . $latLongList . ") and l.LATITUDE not in (" . $latLongList . ") and LOCALITY_ID = ".$localityId." and ld.status = 'Active' and ld.place_type_id = ".$typeId." order by distance limit 0 , 20 ";
+                $sql = "insert into landmark_distances (object_id, object_type, landmark_id, distance, city_id, place_type_id, priority) select l.LOCALITY_ID, 'Locality', ld.id, " . getDBDistanceQueryString('l.LONGITUDE', 'l.LATITUDE', 'ld.longitude', 'ld.latitude') . " AS distance, ld.city_id, ld.place_type_id, ld.priority from locality l inner join suburb s on l.SUBURB_ID = s.SUBURB_ID inner join landmarks ld on s.CITY_ID = ld.city_id where l.LONGITUDE not in (" . $latLongList . ") and l.LATITUDE not in (" . $latLongList . ") and LOCALITY_ID = ".$localityId." and ld.status = 'Active' and ld.place_type_id = ".$typeId." order by distance limit 0 , ".self::$limit_on_localitiy_amenities." ";
                 self::connection()->query($sql);
             }
         } 
