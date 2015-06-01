@@ -8,6 +8,14 @@ include("../modelsConfig.php");
 
 $listing_id = $_POST['selected_rows'];
 $current_user = $_POST['current_user'];
+$current_user_role = $_POST['current_user_role'];
+
+if($current_user_role == 'photoGrapher'){
+    $readOnlyFlag = 'readonly';
+}else{
+    $readOnlyFlag = '';
+}
+
 
 $listing_schdule_data = ListingSchedules::find('all', array(
             'joins' => 'left join cms_assignments ca on ca.id = listing_schedules.cms_assignment_id',
@@ -43,7 +51,7 @@ if ($listing_schdule_data) {
             <b><font color="red">*</font>Key Person Name : </b>
         </td>
         <td>
-            <input type="text" id="key-person-name" value="<?php echo $key_person_name ?>"/>
+            <input <?php echo $readOnlyFlag ?> type="text" id="key-person-name" value="<?php echo $key_person_name ?>"/>
         </td>
     </tr>
     <tr>
@@ -51,7 +59,7 @@ if ($listing_schdule_data) {
             <b><font color="red">*</font>Key Person Contact : </b>
         </td>
         <td>
-            <input type="text" id="key-person-contact" size=5 value="<?php echo $key_person_contact ?>"  onkeypress = "return isNumberKey(event);" maxlength = "10"/>
+            <input <?php echo $readOnlyFlag ?> type="text" id="key-person-contact" size=5 value="<?php echo $key_person_contact ?>"  onkeypress = "return isNumberKey(event);" maxlength = "10"/>
         </td>
     </tr>
     <tr>
