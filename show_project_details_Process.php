@@ -62,7 +62,7 @@ $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
-$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
+/*$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
     join resi_project_options o on (o.options_id = option_id)", 'conditions' =>
             array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active' and listings.listing_category='Primary'"), "select" =>
             "listings.*,p.phase_name,o.option_name,o.size,o.carpet_area,o.villa_plot_area,o.villa_no_floors"));
@@ -82,7 +82,7 @@ foreach ($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $listing_price[0]->effective_date;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
-}
+}*/
 
 $PhaseOptionHash = $ProjectPhases[1];
 $ProjectPhases = $ProjectPhases[0];
@@ -90,7 +90,7 @@ $ProjectOptionDetail = ProjectOptionDetail($projectId);
 $PreviousMonthsData = getPrevMonthProjectData($projectId);
 $PreviousMonthsAvailability = getFlatAvailability($projectId);
 $arrPriceListData = array();
-$cnt = 0;
+/*$cnt = 0;
 $arrPrevMonthDate = array();
 $arrPhase = array();
 foreach ($PreviousMonthsData as $k => $v) {
@@ -113,7 +113,7 @@ foreach ($PreviousMonthsData as $k => $v) {
     if ($cnt > 2 and $cnt <= 4)
         $arrPrevMonthDate[] = $k;
     $cnt++;
-}
+}*/
 //echo "<pre>";
 //print_r($uptionDetailWithPrice);
 $smarty->assign("arrPrevMonthDate", $arrPrevMonthDate);
@@ -775,7 +775,7 @@ if (isset($_REQUEST['flag'])) {
 }
 $smarty->assign("callerMessage", $msg);
 $smarty->assign("currentUser", $_SESSION['adminId']);
-$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+//$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
 
 /* * *****code for check user have access to move in audit1 stage or not********** */
 if ($_SESSION['DEPARTMENT'] == 'CALLCENTER') {

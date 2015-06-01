@@ -704,7 +704,7 @@ margin-left: 0px;
     outline: 0 none;
     display:    none;
     position:   fixed;
-    z-index:    1000;
+    z-index:    9999;
     top:        40%;
     left:       60%;
     height:     20%;

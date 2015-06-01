@@ -34,7 +34,7 @@
             ["event20", "project_offers.php", true]
 		]; 
 		for(var i=0; i< eventArray.length; i++){
-			$('.clickbutton').bind(eventArray[i][0], function(event){
+			$('.clickbutton').live(eventArray[i][0], function(event){
 				
 				for(var i=0; i<eventArray.length; i++){
 					if(eventArray[i].indexOf(event.type)!=(-1)){
@@ -565,7 +565,45 @@ function show_calling_links(pid, type){
         }
     });
 }
-    
+
+function show_project_prices(pid){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_prices.php",
+        data: "projectId=" + pid,
+        beforeSend: function(){           
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project prices are not available!');
+            }else{
+                $('#show-project-prices').html(dt);
+            }
+        }
+    });
+}
+function show_project_supplies(pid, project_phase, isSupplyLaunchVerified){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_supplies.php",
+        data: "projectId=" + pid + "&project_phase="+project_phase + "&isSupplyLaunchVerified="+isSupplyLaunchVerified,
+        beforeSend: function(){           
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project supplies are not available!');
+            }else{
+                $('#show-project-supplies').html(dt);
+            }
+        }
+    });
+}
 </script>
 
 <div class="modal">Please Wait..............</div>
@@ -1835,119 +1873,19 @@ function show_calling_links(pid, type){
 						  	</td>
 						</tr>
 						{/if}
-						
-						<tr bgcolor = "#c2c2c2">
-						{if count($lastUpdatedDetail['listing_prices'])>0}
-						
-							  <td nowrap="nowrap"  align="left" valign="top"><b>Last Updated Detail : Project Price</b><br></br>
-							  {foreach from = $lastUpdatedDetail['listing_prices'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-																
-							  </td>
-							  
-						  
-						{/if}
-						{if count($lastUpdatedDetail['resi_project_options'])>0}
-						  
-							  <td nowrap="nowrap"  align="left" colspan = "8" valign="top"><b>Last Updated Detail : Project Configuration</b><br></br>
-							  {foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-																
-							  </td>
-							  
-						 
-						{/if}
-						 </tr>
-						 
-			 <tr>
- 				<td width = "100%" align = "center" colspan = "16">
-					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-						<tr>
-							<td align="left"  nowrap colspan ="4">
-								<b> Locality Average Price : </b> {$localityAvgPrice}
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+                                                <tr>
+                                                    <td colspan="16">
+                                                       <button onclick="show_project_prices('{$projectId}');">Show Project Prices</button> 
+                                                       <div id="show-project-prices">
+                                                           
+                                                       </div>
+                                                    </td>
+                                                </tr> 			
 						
                 {*{/if}*}
-                    <tr class="headingrowcolor" height="30px;">
-						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Effecive Date</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Unit Name</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Carpet Area</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Price Per Unit Area</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Villa Floors</td>
-						 <td nowrap="nowrap"  align="left" class=whiteTxt>Booking Status</td>
-                    </tr>
-                    {$cntPrice = 0}
-                    {foreach from = $uptionDetailWithPrice key=key item = value}
-                        {foreach from = $value key=keyInner item = valueInner}
-                        {if ($cntPrice+1)%2 == 0}
-                            {$color = "bgcolor='#F7F8E0'"}
-                        {else}
-                            {$color = "bgcolor='#f2f2f2'"}
-                        {/if}
-                        <tr {$color}>
-                        <td align = "center" >{$cntPrice+1}</td>
-                        <td align = "left" >{$valueInner['phase_name']}</td>
-                        <td align = "left" style="width:250px;display:block;" >{$valueInner['effective_date']}</td>
-                        <td >
-                             <input type='hidden' value='{$projectId}' name='projectId' />
-                            {$valueInner['option_name']}
-                      </td>
-                      <td >
-                         {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
-                      </td>
-                       <td >
-                         {if isset($valueInner['carpet_area'])} {$valueInner['carpet_area']} {else} -- {/if}
-                      </td>
-                      <td >
-                        {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
-                      </td>
-                        <td >
-                            {if isset($valueInner['prevMonthPrice'])}
-                                {$valueInner['prevMonthPrice']}
-                            {else}
-                                {"Not Applicable"}
-                            {/if}
-                        </td>
-                        <td >
-                            {if isset($valueInner['prevPrevMonthPrice'])}
-                                {$valueInner['prevPrevMonthPrice']}
-                            {else}
-                                {"Not Applicable"}
-                            {/if}
-                        </td>
-                      <td >
-                            {$valueInner['villa_no_floors']}
-                      </td>
-                      <td >{if $valueInner['booking_status_id'] > 0}
-																	{if $valueInner['booking_status_id'] == 1}Available{/if}
-																	{if $valueInner['booking_status_id'] == 2}Sold out{/if}
-																	{if $valueInner['booking_status_id'] == 3}On Hold{/if}
-																{else}
-																	--
-																{/if}
-                           
-                      </td>
-                    {$cntPrice = $cntPrice+1}
-		   </tr>
-                    {/foreach}
-                   {/foreach}
+                                        </table>
+                                </td>
+                  </tr>
                    {*code start for calling records secondary*}
                    <tr>
                         <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
@@ -2478,6 +2416,15 @@ function show_calling_links(pid, type){
 		   </tr>
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
+                                    <table width="100%" align="center" style="border:1px solid #c2c2c2;">
+                                        <tr>
+                                            <td>
+                                                <button onclick="show_project_supplies('{$projectId}', '{$projectDetails[0].PROJECT_PHASE}', '{$isSupplyLaunchVerified}');">Show Project Supplies</button> 
+                                                <div id="show-project-supplies"></div>                                                
+                                            </td>
+                                        </tr>                                        
+                                    </table> 
+                                    
 				{if is_array($supplyAllArray)}
 					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
 						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
