@@ -366,6 +366,64 @@ function authListing(){
     return $ck_new;
 }
 function createDescription(){
+    $description = "";
+    $format = 1;
+    switch ($format){
+        case 1 :
+            $description = descFormat1();
+            break;
+        case 2:
+            $description = descFormat2();
+            break;
+        case 3:
+            $description = descFormat3();
+            break;
+        case 4:
+            $description = descFormat4();
+            break;
+        case 5:
+            $description = descFormat5();
+            break;
+    }
+    return ($description);
+}
+function getBhk($propArr, $propId){
+    foreach ($propArr as $prop){
+        if($prop->propertyId == $propId){
+            $unitName = explode("+", $prop->unitName);
+            $city = $prop->project->locality->suburb->city->label;
+            $builderName = ucwords(strtolower($prop->project->builder->name));
+            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
+        }
+    }
+}
+function addOrdinalNumberSuffix($num) {
+    if (!in_array(($num % 100),array(11,12,13))){
+        switch ($num % 10) {
+            case 1:  return $num.'st';
+            case 2:  return $num.'nd';
+            case 3:  return $num.'rd';
+        }
+    }
+    return $num.'th';
+}
+function camel2dashed($str) {
+    return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
+}
+
+function addFloring($string){
+    $string = strtolower($string);
+    $last_word_start = strrpos($string, ' ') + 1;
+    $last_word = substr($string, $last_word_start);
+    if($last_word != "flooring"){
+        $string = $string." flooring";
+    }
+    return $string;
+}
+
+//*********************************
+
+function descFormat1(){
     $furnished = array("Furnished"=>"A fully furnished", "Semi-Furnished"=>"A semi furnished", "Unfurnished"=>"An unfurnished");
     $description = "";
     $getProjUrl = project_detail."".$_POST["project_id"];
@@ -460,37 +518,17 @@ function createDescription(){
     }
     return ($description);
 }
-function getBhk($propArr, $propId){
-    foreach ($propArr as $prop){
-        if($prop->propertyId == $propId){
-            $unitName = explode("+", $prop->unitName);
-            $city = $prop->project->locality->suburb->city->label;
-            $builderName = ucwords(strtolower($prop->project->builder->name));
-            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
-        }
-    }
-}
-function addOrdinalNumberSuffix($num) {
-    if (!in_array(($num % 100),array(11,12,13))){
-        switch ($num % 10) {
-            case 1:  return $num.'st';
-            case 2:  return $num.'nd';
-            case 3:  return $num.'rd';
-        }
-    }
-    return $num.'th';
-}
-function camel2dashed($str) {
-    return strtolower(preg_replace('/([a-zA-Z])(?=[A-Z])/', '$1-', $str));
-}
 
-function addFloring($string){
-    $string = strtolower($string);
-    $last_word_start = strrpos($string, ' ') + 1;
-    $last_word = substr($string, $last_word_start);
-    if($last_word != "flooring"){
-        $string = $string." flooring";
-    }
-    return $string;
+function descFormat2(){
+    return "";
+}
+function descFormat3(){
+    return "";
+}
+function descFormat4(){
+    return "";
+}
+function descFormat5(){
+    return "";
 }
 ?>
