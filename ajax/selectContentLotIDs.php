@@ -28,15 +28,23 @@ $activeLotArr = array('unassigned', 'assigned', 'completedByVendor', 'waitingApp
 
 $lotType = $_REQUEST['lotType'];
 $city = $_REQUEST['city'];
+$pids = $_REQUEST['pids'];
 
 if ($lotType == '') {
     print "Please select Lot Type";
-} elseif ($city == '' && $lotType != 'city') {
+} elseif ($city == '' && $lotType != 'city' && $lotType != 'project') {
     print "Please select City";
 } else {
-    //print $lotType . " - " . $city;
     //project
     if ($lotType == 'project') {
+        if ($city == '') {
+            $all_pids = explode(',', $pids);
+            $all_pids = array_map('trim', $all_pids);
+            $all_pids = implode(",", $all_pids);
+            $condition = " and resi_project.project_id in ($all_pids)";
+        } else {
+            $condition = " and city.city_id = '$city'";
+        }
         //fetch all the project which are not inactive and version is cms
         $allProjectSql = "SELECT cld.lot_id, cl.lot_status, resi_project.created_at, resi_project.project_id, concat(resi_builder.builder_name, ' ', resi_project.project_name) project_name, 
                             ( LENGTH(resi_project.project_description) - LENGTH(REPLACE(resi_project.project_description, ' ', ''))+1) words FROM `resi_project`                     
@@ -50,10 +58,11 @@ if ($lotType == '') {
                             left join content_lots cl on cl.id = cld.lot_id
                             LEFT JOIN resi_builder  on resi_project.builder_id = resi_builder.builder_id and resi_builder.builder_status = 0 
                             left join content_lot_approved_projects clap on resi_project.project_id = clap.project_id
-                             WHERE city.city_id in ($city)  
-                                    and resi_project.status in ('Active','ActiveInCms')
+                             WHERE  
+                                    resi_project.status in ('Active','ActiveInCms')
                                     and clap.project_id is null
-                                    and  resi_project.version = 'Cms'                                     
+                                    and  resi_project.version = 'Cms'
+                                    " . $condition . "
                                     ORDER BY resi_project.project_id DESC";
         $allProjects = mysql_query($allProjectSql) or die(mysql_error());
         if (mysql_num_rows($allProjects)) {
@@ -64,7 +73,12 @@ if ($lotType == '') {
                                 <th style="font-size: 12px" nowrap>Project ID</th>
                                 <th style="font-size: 12px" nowrap>Created At</th>
                                 <th style="font-size: 12px" nowrap>Lot#</th>
-                                <th class="filter-false" style="font-size: 12px" nowrap>Select</th>
+                                <th class="filter-false" style="font-size: 12px" nowrap>
+                                    Select<br/>';
+            if ($city == '') {
+              print  '<input type="checkbox" id="id-ALL" value="ALL" onclick="selectAllID(this.value)">';
+            }
+            print '</th>
                             </tr>
                         </thead>
                         ';
@@ -89,7 +103,9 @@ if ($lotType == '') {
                     </tr>
                 </tfoot>';
             print '<tbody>';
+            $valid_ids = array();
             while ($row = mysql_fetch_object($allProjects)) {
+                $valid_ids[] = $row->project_id;
                 if (in_array($row->lot_status, $activeLotArr)) {
                     $select_status = 'disabled = "true"';
                 } else {
@@ -105,12 +121,24 @@ if ($lotType == '') {
                     print '<td></td>';
                 }
                 print '<td>
-                            <input ' . $select_status . ' type="checkbox" id="id-' . $row->project_id . '" value="' . $row->project_id . '" name="' . $row->words . '" onclick="selectID(this.value)">
+                            <input class="select-pid-box" ' . $select_status . ' type="checkbox" id="id-' . $row->project_id . '" value="' . $row->project_id . '" name="' . $row->words . '" onclick="selectID(this.value)">
                         </td>
                         </tr>';
             }
             print '</tbody>
                 </table>';
+
+            //showing invalid ids
+            if ($city == '') { //incase city not selected         
+                $all_pids = explode(',', $all_pids);
+                $invalid_pids = array_diff($all_pids, $valid_ids);
+                if ($invalid_pids) {
+                    echo "<b>Invalid Project IDs :</b>";
+                    foreach ($invalid_pids as $pid) {
+                        echo " <font color='#db0306'><b>" . $pid . "</b></font>,";
+                    }
+                }
+            }
         } else {
             print "No Project available to select!";
         }
@@ -327,11 +355,10 @@ if ($lotType == '') {
 }
 ?>
 <script type="text/javascript">
-    var arrIDs = [];
     var wordCount = 0;
+    var lotType = "<?php echo $lotType ?>";
     $(document).ready(function () {
-        if ($('#selArticles').val().trim() != '') {
-            arrIDs = $('#selArticles').val().split(',');
+        if (arrIDs.length > 0) {            
             $.each(arrIDs, function (i, v) {
                 $('#id-' + v).prop('checked', true);
                 wordCount = parseInt(wordCount) + parseInt($('#id-' + v).attr('name'));
@@ -341,6 +368,7 @@ if ($lotType == '') {
 
     });
     function selectID(v) {
+
         if ($('#id-' + v).is(':checked')) {
             arrIDs.push(v);
             wordCount = parseInt(wordCount) + parseInt($('#id-' + v).attr('name'));
@@ -352,6 +380,31 @@ if ($lotType == '') {
         $('#totalArticles').html(arrIDs.length);
         $('#totalWords').html(wordCount);
         $('#selArticles').val(arrIDs.join(','));
+    }
+    function selectAllID(v) {
+        if ($('#id-' + v).is(':checked')) {
+            index = '';
+            arrIDs = [];
+            wordCount = 0;
+            $('.select-pid-box').each(function () {
+                $(this).attr('checked', true);
+                arrIDs.push($(this).val());
+                wordCount = parseInt(wordCount) + parseInt($(this).attr('name'));
+            });
+
+        } else {
+            $('.select-pid-box').each(function () {
+                $(this).attr('checked', false);
+            });
+            index = '';
+            arrIDs = [];
+            wordCount = 0;
+
+        }
+        $('#totalArticles').html(arrIDs.length);
+        $('#totalWords').html(wordCount);
+        if(arrIDs.length > 0)
+            $('#selArticles').val(arrIDs.join(','));
     }
 </script>
 

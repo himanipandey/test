@@ -56,10 +56,10 @@
                                                             <td align="right" style = "padding-left:20px;"><b>Lot Type<font color="red">*</font>:</b></td>
                                                             <td align="left" style = "padding-left:20px;">
                                                                 <select name = 'lotType' id = "lotType" >
-                                                                    <option value = "">Select</option>
+                                                                    <option value = "">Select</option>                                                                   
                                                                     {foreach from = $arrLotTypes key= key item = val}
-                                                                        <option value = "{$key}" {if $lotType == $key} selected  {else}{/if}>{$val}</option>
-                                                                    {/foreach}                                                                    
+                                                                        <option value = "{$key}" {if $lotType == $key} selected  {else}{/if}>{$val}</option>                                                                        
+                                                                    {/foreach}                                                                            
                                                                 </select>
                                                             </td>
                                                         </tr>                                                        
@@ -68,7 +68,7 @@
                                                             <td align="right" style = "padding-left:20px;"><b>City<font color="red">*</font>:</b></td>
                                                             <td align="left" style = "padding-left:20px;">
                                                                 <select name = 'city' id = "cities" >
-                                                                    <option value = "">Select City</option>
+                                                                    <option value = "">Select City</option>                                                                    
                                                                     {foreach from = $CityDataArr key= key item = val}
                                                                         <option value = "{$key}" {if $city == $key} selected  {else}{/if}>{$val}</option>
                                                                     {/foreach}                                                                    
@@ -83,7 +83,7 @@
                                                                 <table>
                                                                     <tbody><tr>
                                                                             <td>
-                                                                                <textarea readonly="true" id="selArticles" name="selArticles" rows="10" cols="50"> </textarea>
+                                                                                <textarea placeholder="Please Enter Comma(,) Seperated Ids..." readonly="true" id="selArticles" name="selArticles" rows="10" cols="50"> </textarea>
                                                                             </td>
                                                                             <td>
                                                                                 <input type="button" name="selectIDs" onclick="selectLotContentIds();" value="Click To Select IDs">
@@ -131,14 +131,26 @@
     </TD>
 </TR>
 <script type="text/javascript">
+    var arrIDs = [];
     $(document).ready(function () {
-        $('#lotType').on('change', function () {
+        $('#lotType').on('change', function () {            
             $('#selArticles').val('');
             if ($(this).val() == 'city') {
                 $('#cityContiner').hide();
             } else {
                 $('#cityContiner').show();
-            }
+            }            
+            
+        });
+        
+        $('#cities, #lotType').on('change', function(){
+            arrIDs = []; //empty the old values
+            if($('#lotType').val() == 'project' && $('#cities').val() == ''){
+               $('#selArticles').attr('readonly', false); 
+            }else{
+               $('#selArticles').attr('readonly', true);               
+            }                    
+            $('#selArticles').val('');            
         });
         
         $('#assignTo').on('change', function() {
@@ -157,11 +169,17 @@
     function selectLotContentIds() {
         var lotType = $('#lotType').val();
         var city = $('#cities').val();
+        var pids = $('#selArticles').val().trim();
+        
+        if(lotType == 'project' && $('#cities').val() == -1 && $('#selArticles').val().trim() == ''){
+            alert('Please enter Project IDs to select!');
+            return;
+        }
 
         $.ajax({
             type: "POST",
             url: 'ajax/selectContentLotIDs.php',
-            data: { lotType:lotType, city: city },
+            data: { lotType:lotType, city: city, pids:pids },
             beforeSend: function () {
                     $("body").addClass("loading");
                 },
@@ -189,15 +207,17 @@
 
         if (lotType == '') {
             alert('Please select Lot Type');
-            return false
+            return false;
         }
-        if (lotType != 'city' && lotCity == '') {
+        
+        if (lotType != 'city' && lotType != 'project' && lotCity == '') {
             alert('Please select Lot City');
-            return false
+            return false;
         }
-        if (selArticles == '') {
+        
+        if (selArticles == '' || arrIDs.length == 0) {
             alert('Please select Ids to assign!');
-            return false
+            return false;
         }
 
         return true;
