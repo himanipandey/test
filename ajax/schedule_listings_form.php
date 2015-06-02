@@ -10,9 +10,9 @@ $listing_id = $_POST['selected_rows'];
 $current_user = $_POST['current_user'];
 $current_user_role = $_POST['current_user_role'];
 
-if($current_user_role == 'photoGrapher'){
+if ($current_user_role == 'photoGrapher') {
     $readOnlyFlag = 'readonly';
-}else{
+} else {
     $readOnlyFlag = '';
 }
 
@@ -67,7 +67,13 @@ if ($listing_schdule_data) {
             <b><font color="red">*</font>Date-Time : </b>
         </td>
         <td>
-            <input readonly="true" style="width:150px" name="meeting_date" value="<?php echo $scheduled_time ?>" type="text" class="formstyle2" id="meeting_date" size="30" />  <img src="images/cal_1.jpg" id="trigger_meeting_date" style="cursor: pointer; border: 1px solid red;" title="Meeting date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+            <div id="datetimepicker2" class="input-append">
+                <input style="width:150px" readonly="true" data-format="yyyy/MM/dd HH:mm PP" type="text" id="meeting_date" name="meeting_date" value="<?php echo $scheduled_time ?>"></input>
+                <span class="add-on">
+                    <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                    </i>
+                </span>
+            </div>
         </td>
     </tr>    
     <tr>
@@ -79,6 +85,19 @@ if ($listing_schdule_data) {
 
     </tr>
 </table>
+<script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../js/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../js/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+<script type="text/javascript">
+                $(function () {
+                    $('#datetimepicker2').datetimepicker({
+                        language: 'en',
+                        pick12HourFormat: true,
+                        pickSeconds: false,
+                    });
+                });
+</script>
+
 <script type="text/javascript">
     function save_scheduling() {
 
@@ -98,7 +117,7 @@ if ($listing_schdule_data) {
         $.ajax({
             url: 'ajax/schedule_listings_save.php',
             type: 'POST',
-            data: "cms_assignment_id="+ "<?php echo $cms_assignment_id ?>" +"&schduled_id=" + "<?php echo $schduled_id ?>" + "&listing_id=" + "<?php echo $listing_id ?>" + "&key_person_name=" + $('#key-person-name').val().trim() + "&key_person_contact=" + $('#key-person-contact').val().trim() + "&meeting_date=" + $('#meeting_date').val().trim() + "&current_user=" + "<?php echo $current_user ?>",
+            data: "cms_assignment_id=" + "<?php echo $cms_assignment_id ?>" + "&schduled_id=" + "<?php echo $schduled_id ?>" + "&listing_id=" + "<?php echo $listing_id ?>" + "&key_person_name=" + $('#key-person-name').val().trim() + "&key_person_contact=" + $('#key-person-contact').val().trim() + "&meeting_date=" + $('#meeting_date').val().trim() + "&current_user=" + "<?php echo $current_user ?>",
             beforeSend: function () {
                 $("body").addClass("loading");
             },
@@ -121,22 +140,6 @@ if ($listing_schdule_data) {
 
         $('#create-lot').on('click', function () {
             window.location = 'create_content_lot.php';
-        });
-
-        var cals_dict = {
-            "trigger_meeting_date": "meeting_date",
-        };
-        $.each(cals_dict, function (k, v) {
-            Calendar.setup({
-                inputField: v, // id of the input field
-                ifFormat: "%Y/%m/%d %l:%M %P", // format of the input field
-                //ifFormat: "%Y-%m-%d", // format of the input field
-                timeFormat: 12,
-                button: k, // trigger for the calendar (button ID)
-                align: "Tl", // alignment (defaults to "Bl")
-                singleClick: true,
-                showsTime: true
-            });
         });
 
     });
