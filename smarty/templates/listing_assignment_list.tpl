@@ -51,7 +51,7 @@
                                     <TR>
                                         <TD vAlign=top align=middle class="backgorund-rt" height=450><BR>
                                             <div id="search-top" style="width:600px;float:left">
-                                                {if $current_user_role != 'photoGrapher' && $current_user_role != 'reToucher'}
+                                                {if $current_user_role != 'reToucher'}
                                                 <form method = "get">
                                                     <fieldset>
                                                         <legend>Filters</legend>                                                        
@@ -95,6 +95,24 @@
                                                                     </tr>
                                                                     
                                                                 {/if}
+                                                                {if $current_user_role == 'photoGrapher'}
+                                                                    {if count($errorMsg)>0}
+                                                                       <tr><td colspan="3" align = "left">{$errorMsg['dateDiff']}</td></tr>
+                                                                   {/if}
+                                                                   <tr>
+                                                                       <td colspan="3">
+                                                                           <select style="width:150px" name="date_filter">   
+                                                                               <option value="">-Select Date Type-</option>                                                                               
+                                                                               <option  value = "visit-date" {if $date_filter == 'visit-date'} selected  {else}{/if}>Scheduled Date</option>
+                                                                           </select>
+                                                                            &nbsp;&nbsp&nbsp;&nbsp;
+                                                                           <input placeholder="From Date" readonly="true" style="width:80px" name="from_date_filter" value="{$frmdate}" type="text" class="formstyle2" id="from_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_from_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                                            &nbsp;&nbsp&nbsp;&nbsp;
+                                                                           <input placeholder="To Date" readonly="true" style="width:80px" name="to_date_filter" value="{$todate}" type="text" class="formstyle2" id="to_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_to_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
+                                                                       </td>
+                                                                   </tr> 
+                                                                                                                                    
+                                                                {/if}
                                                                 {if $current_user_role == 'fieldManager'}
                                                                     
                                                                     {if count($errorMsg)>0}
@@ -105,7 +123,7 @@
                                                                            <select style="width:150px" name="date_filter">   
                                                                                <option value="">-Select Date Type-</option>
                                                                                <option  value = "assigned-date" {if $date_filter == 'assigned-date'} selected  {else}{/if}>Assigned Date</option>
-                                                                               <option  value = "visit-date" {if $date_filter == 'visit-date'} selected  {else}{/if}>Visit Date</option>
+                                                                               <option  value = "visit-date" {if $date_filter == 'visit-date'} selected  {else}{/if}>Scheduled Date</option>
                                                                            </select>
                                                                             &nbsp;&nbsp&nbsp;&nbsp;
                                                                            <input placeholder="From Date" readonly="true" style="width:80px" name="from_date_filter" value="{$frmdate}" type="text" class="formstyle2" id="from_date_filter" size="10" />  <img src="images/cal_1.jpg" id="trigger_from_date_filter" style="cursor: pointer; border: 1px solid red;" title="From Date" onMouseOver="this.style.background = 'red';" onMouseOut="this.style.background = ''" />
@@ -178,14 +196,8 @@
                                                     </thead>
                                                     <tbody></tbody>
                                                     
-                                                    <tfoot>                                                        
-                                                        {if $current_user_role == 'crm'}
-                                                            <tr>
-                                                                <td colspan="13" style="text-align:left">
-                                                                    <input type="button" class="page-button" value="Add/Edit Scheduling" onclick="add_edit_scheduling()">
-                                                                </td>
-                                                            </tr>  
-                                                        {/if} 
+                                                    <tfoot>                                                      
+                                                        
                                                         {if $current_user_role == 'fieldManager'}
                                                             <tr>
                                                                 <td colspan="11" style="text-align:left">
@@ -267,24 +279,10 @@
             "ajax": "ajax/ajax_assignment_listing.php?page=0&size=10&col&city=" + city + "&admin_cities=" + admin_cities + "&project=" + projectId + "&listingId=" + listingId + "&current_user_role=" + "{$current_user_role}&error_msg=" + "{$errorMsg['dateDiff']}&frmdate="+"{$frmdate}&todate="+"{$todate}&date_type="+"{$date_filter}&current_user="+"{$current_user}&download=0&resaleAssignStatus="+resaleStatus+"&schedStatus="+schedStatus
         });
 
-
-        $('.schedule_check').live('click', function () {
-            if($(this).is(':checked')){
-                var selected_row = $(this).attr('id');
-                $('.schedule_check').each(function(){
-                    if($(this).attr('id') != selected_row){
-                       $(this).attr('disabled', true); 
-                    }
-                });
-            }else{
-                $('.schedule_check').each(function(){
-                    $(this).attr('disabled', false);
-                });
-            }
-        });
+        
         
         //calender set up
-        if("{$current_user_role}"  == 'fieldManager'){
+        if("{$current_user_role}"  == 'fieldManager' || "{$current_user_role}"  == 'photoGrapher'){
             var cals_dict = {
                 "trigger_from_date_filter": "from_date_filter",
                 "trigger_to_date_filter": "to_date_filter"
@@ -450,20 +448,14 @@
             });
     }
     
-    function add_edit_scheduling(){
-        var selected_rows = '';
-        $('.schedule_check').each(function(){
-            if($(this).is(':checked')){
-                selected_rows = $(this).val();
-            }
-            
-        });
+    function add_edit_scheduling(selected_rows){
+        
         //open a popup to schedule
         if (selected_rows) {
             $.ajax({
                 type: "POST",
                 url: 'ajax/schedule_listings_form.php',
-                data: { selected_rows: selected_rows, current_user: "{$current_user}" },
+                data: { selected_rows: selected_rows, current_user: "{$current_user}", current_user_role:"{$current_user_role}" },
                 beforeSend: function () {
                     $("body").addClass("loading");
                 },
