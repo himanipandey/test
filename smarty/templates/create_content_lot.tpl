@@ -132,6 +132,7 @@
 </TR>
 <script type="text/javascript">
     var arrIDs = [];
+    var wordCount = 0;
     $(document).ready(function () {
         
         //empty the old values
@@ -147,6 +148,7 @@
             arrIDs = []; 
             $('#totalArticles').html(0);
             $('#totalWords').html(0);
+            $('#cities').val('');
         
             if ($(this).val() == 'city') {
                 $('#cityContiner').hide();

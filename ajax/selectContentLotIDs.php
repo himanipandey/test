@@ -354,14 +354,13 @@ if ($lotType == '') {
     }
 }
 ?>
-<script type="text/javascript">
-    var wordCount = 0;
+<script type="text/javascript">   
     var lotType = "<?php echo $lotType ?>";
     $(document).ready(function () {
         if (arrIDs.length > 0) {            
             $.each(arrIDs, function (i, v) {
                 $('#id-' + v).prop('checked', true);
-                wordCount = parseInt(wordCount) + parseInt($('#id-' + v).attr('name'));
+                //wordCount = parseInt(wordCount) + parseInt($('#id-' + v).attr('name'));
             });
 
         }
@@ -371,6 +370,8 @@ if ($lotType == '') {
 
         if ($('#id-' + v).is(':checked')) {
             arrIDs.push(v);
+            console.log(wordCount," -- ",$('#id-' + v).attr('name'));
+            
             wordCount = parseInt(wordCount) + parseInt($('#id-' + v).attr('name'));
         } else {
             var index = arrIDs.indexOf(v);

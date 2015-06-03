@@ -7,6 +7,10 @@
 <script type="text/javascript" src="fancybox/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="tablesorter/css/theme.bootstrap.css">
 <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.widgets.min.js"></script> 
+<script type="text/javascript" src="tablesorter/js/jquery.tablesorter.pager.js"></script>
+<script type="text/javascript" src="js/tablesorter_default_table.js"></script>
 <script type="text/javascript" src="js/content_delivery.js"></script>
 
 <div class="modal">Please Wait..............</div>
@@ -113,12 +117,12 @@
                                                     <TABLE cellSpacing=1 cellPadding=4 width="97%" align=center border=0>
                                                         <thead>
                                                             <TR class = "headingrowcolor" height="25">
-                                                                <th class=whiteTxt width=5% align="center">S.No.</th>
-                                                                <th class=whiteTxt width=15% align="center">{$lot_details['lot_type']|ucwords} Name</th>
-                                                                <th class=whiteTxt width=15% align="center">Locality/City</th>
-                                                                <th class=whiteTxt width=25% align="center">Current Description</th>
-                                                                <th class=whiteTxt width=25% align="center">Updated Description</th>
-                                                                <th class=whiteTxt width=12% align="center">
+                                                                <th style="font-size: 12px" nowrap>S.No.</th>
+                                                                <th style="font-size: 12px" nowrap>{$lot_details['lot_type']|ucwords} Name</th>
+                                                                <th style="font-size: 12px" nowrap>Locality/City</th>
+                                                                <th style="font-size: 12px" nowrap>Current Description</th>
+                                                                <th style="font-size: 12px" nowrap>Updated Description</th>
+                                                                <th style="font-size: 12px" nowrap>
                                                                     {if $currentRole == 'contentEditor' && $lot_details['completed_by']}
                                                                         Revert
                                                                         <br/>
@@ -134,6 +138,24 @@
                                                                 </th>
                                                             </tr>
                                                         </thead>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th colspan="21" class="pager form-horizontal" style="font-size:12px;">
+                                                                    <button class="btn first"><i class="icon-step-backward"></i></button>
+                                                                    <button class="btn prev"><i class="icon-arrow-left"></i></button>
+                                                                    <span class="pagedisplay"></span> <!-- this can be any element, including an input -->
+                                                                    <button class="btn next"><i class="icon-arrow-right"></i></button>
+                                                                    <button class="btn last"><i class="icon-step-forward"></i></button>
+                                                                    <select class="pagesize input-mini" title="Select page size">
+                                                                        <option selected="selected" value="10">10</option>
+                                                                        <option value="20">20</option>
+                                                                        <option value="50">50</option>
+                                                                        <option  value="100">100</option>
+                                                                    </select>
+                                                                    <select class="pagenum input-mini" title="Select page number"></select>
+                                                                </th>
+                                                            </tr>
+                                                        </tfoot>
                                                         <tbody>
                                                             {foreach from=$lot_details['lot_contents'] key=key item=row}
                                                                 {$count = $key+1}
