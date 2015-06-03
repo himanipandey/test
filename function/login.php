@@ -100,13 +100,12 @@ $gacl = new gacl(array());
 			header("Location:index.php");
 			exit;
 		}
-                
-                if(isset($_COOKIE["time_spent"]) && $_COOKIE["time_spent"]>30){
-                    $sqlUpdateTime = "UPDATE admin_time_log SET time_spent = time_spent + ".$_COOKIE["time_spent"]." WHERE admin_id = ".$_SESSION["adminId"] ." AND login_date = '".date("Y-m-d")."'";
-                    mysql_query($sqlUpdateTime);
-                    setcookie("time_spent",0);
+                $sess_cur_time_diff = strtotime(date("Y-m-d H:i:s"))- strtotime($_SESSION["last_updated"]);
+                if((int)$sess_cur_time_diff > 30){
+                    $sqlUpdateTime = "UPDATE admin_time_log SET time_spent = time_spent + ".$sess_cur_time_diff.", last_request_time= '".date("Y-m-d H:i:s")."' WHERE admin_id = ".$_SESSION["adminId"] ." AND login_date = '".date("Y-m-d")."' AND TIMESTAMPDIFF(SECOND, last_request_time, '".date("Y-m-d H:i:s")."')>=".$sess_cur_time_diff;
+                    mysql_query($sqlUpdateTime) or die("Some error occurred[UL-002] ");
+                    $_SESSION["last_updated"] = date("Y-m-d H:i:s");
                 }
-                
 	}
 
     function isUserPermitted($resource, $action, $username = NULL) {

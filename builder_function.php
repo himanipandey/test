@@ -1555,7 +1555,8 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-                     
+     
+	/*                
      $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
@@ -1582,7 +1583,6 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}
-	
 	 $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
@@ -1610,8 +1610,8 @@ function lastUpdatedAuditDetail($projectId) {
 		$arrData['listing_prices'][$count]['ACTION_DATE'] = $res->updated_at;
 		
 		$count++;
-	}     
-	
+	}     */
+	/*
 	 $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
@@ -1640,7 +1640,7 @@ function lastUpdatedAuditDetail($projectId) {
 		
 		$count++;
 	}                        
-	                   
+	  */                 
      $qry = "SELECT
                      b.DEPARTMENT, c.FNAME, a.updated_at
                     FROM
@@ -1682,7 +1682,7 @@ function lastUpdatedAuditDetail($projectId) {
 		$arrData['resi_project_other_pricing']['ACTION_DATE'] = $res->updated_at;
 	}
     
-     $qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
+     /*$qry = " SELECT rp.updated_at, p.FNAME, p.DEPARTMENT                   
                     FROM
                        _t_project_supplies rp
 						  JOIN ".LISTINGS." lst ON rp.LISTING_ID = lst.ID
@@ -1700,7 +1700,7 @@ function lastUpdatedAuditDetail($projectId) {
 		$arrData['resi_proj_supply'][$count]['ACTION_DATE'] = $res->updated_at;
 		
 		$count++;
-	}
+	}*/
         
    return $arrData;
 }
