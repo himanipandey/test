@@ -16,13 +16,7 @@ if($callingFieldFlag == 'survey'){//filter executive list for survey
 }
 $smarty->assign("arrSurveyTeamList", $arrSurveyTeamList);
 
-//teamSize
-if($callingFieldFlag == 'survey'){
-    $teamSize = count($arrSurveyTeamList);
-}else{
-    $teamSize = count($executiveWorkLoad);
-}
-$smarty->assign("teamSize", $teamSize);
+
 
 //building data for the display when user is coming from project-status page
 if(in_array($_POST['submit'], array('fresh assignement', 'field assignement'))){
@@ -58,4 +52,12 @@ elseif($_POST['submit'] === 'Assign') {   //assigning projects
     $_SESSION['project-status']['assignmentError'] = $errorMsg;
     header("Location: project-status.php?flag=$callingFieldFlag");
 }
+
+//teamSize
+if($callingFieldFlag == 'survey'){
+    $teamSize = count($arrSurveyTeamList);
+}else{
+    $teamSize = count($executiveWorkLoad);
+}
+$smarty->assign("teamSize", $teamSize);
 ?>
