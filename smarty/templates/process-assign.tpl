@@ -45,7 +45,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <select name="executive" class="squareDiv200" multiple>  
+                                                                <select name="executive" class="squareDiv200" size="{$executiveWorkLoad|count}">  
                                                                     {foreach from = $executiveWorkLoad key = key item = itemExec}
                                                                         <option value ='{trim($itemExec['adminid'])}'>{trim($itemExec['username'])}</option>
                                                                     {/foreach}  
