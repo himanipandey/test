@@ -77,7 +77,7 @@ $dailyEmail = array(
         'sendifnodata' => 0
     ),
     array(
-        'sql' => "SELECT pof.id as OFFER_ID,pof.project_id as PROJECT_ID,pof.OFFER,pof.OFFER_DESC,pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='" . $future_date . "';",
+        'sql' => "SELECT pof.project_id as PROJECT_ID,rp.PROJECT_NAME, rb.BUILDER_NAME, pof.id as OFFER_ID, pof.OFFER,pof.OFFER_DESC, pof.created_at as START_DATE,pof.OFFER_END_DATE,pof.STATUS FROM `project_offers` pof inner join resi_project rp on rp.project_id = pof.project_id and rp.version='Cms' and rp.status in('Active','ActiveInCms') inner join resi_builder rb on rb.builder_id = rp.builder_id  WHERE pof.STATUS = 'Active' AND pof.OFFER_END_DATE='" . $future_date . "';",
         'subject' => 'Project Offers Reaching Expiry Date',
         'recipients' => array('cms-cron@proptiger.com', 'kapil.chadha@proptiger.com', 'ankur.dhawan@proptiger.com', 'Sandeep.jakhar@proptiger.com', 'Suneel.kumar@proptiger.com', 'ravi.srivastava@proptiger.com'),
         'attachmentname' => 'expired_project_offers',
