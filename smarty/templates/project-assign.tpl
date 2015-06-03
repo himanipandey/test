@@ -45,7 +45,7 @@
                                                                 </div>
                                                             </td>
                                                             <td>
-                                                                <select name="executives[]" class="squareDiv200" multiple>
+                                                                <select name="executives[]" class="squareDiv200" size="{$teamSize}">
                                                                     {if $callingFieldFlag == 'survey'}
                                                                         {foreach from = $arrSurveyTeamList key= key item = item}
                                                                             <option {if $executive['WORKLOAD'] gte 80}disabled{/if} value ='{$item['ADMINID']}'>{$item['FNAME']} - {$item['WORKLOAD']}</option>
