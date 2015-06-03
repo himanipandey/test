@@ -133,8 +133,21 @@
 <script type="text/javascript">
     var arrIDs = [];
     $(document).ready(function () {
-        $('#lotType').on('change', function () {            
+        
+        //empty the old values
+        $('#selArticles').on('keyup change', function(){
+            arrIDs = []; 
+            $('#totalArticles').html(0);
+            $('#totalWords').html(0);          
+        });
+        
+        $('#lotType').on('change', function () {  
+            //empty the old values
             $('#selArticles').val('');
+            arrIDs = []; 
+            $('#totalArticles').html(0);
+            $('#totalWords').html(0);
+        
             if ($(this).val() == 'city') {
                 $('#cityContiner').hide();
             } else {
@@ -144,13 +157,13 @@
         });
         
         $('#cities, #lotType').on('change', function(){
-            arrIDs = []; //empty the old values
+            //arrIDs = []; //empty the old values
             if($('#lotType').val() == 'project' && $('#cities').val() == ''){
                $('#selArticles').attr('readonly', false); 
             }else{
                $('#selArticles').attr('readonly', true);               
             }                    
-            $('#selArticles').val('');            
+                      
         });
         
         $('#assignTo').on('change', function() {

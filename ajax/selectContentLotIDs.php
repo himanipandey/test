@@ -398,7 +398,7 @@ if ($lotType == '') {
             });
             index = '';
             arrIDs = [];
-            wordCount = 0;
+            wordCount = 0;            
 
         }
         $('#totalArticles').html(arrIDs.length);
