@@ -387,8 +387,8 @@ if ($lotType == '') {
             index = '';
             arrIDs = [];
             wordCount = 0;
-            $('.select-pid-box').each(function () {
-                if($(this).attr('disabled') == false){
+            $('.select-pid-box').each(function () {                
+                if(!$(this).attr('disabled')){
                     $(this).attr('checked', true);
                     arrIDs.push($(this).val());
                     wordCount = parseInt(wordCount) + parseInt($(this).attr('name'));
