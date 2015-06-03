@@ -388,9 +388,11 @@ if ($lotType == '') {
             arrIDs = [];
             wordCount = 0;
             $('.select-pid-box').each(function () {
-                $(this).attr('checked', true);
-                arrIDs.push($(this).val());
-                wordCount = parseInt(wordCount) + parseInt($(this).attr('name'));
+                if($(this).attr('disabled') == false){
+                    $(this).attr('checked', true);
+                    arrIDs.push($(this).val());
+                    wordCount = parseInt(wordCount) + parseInt($(this).attr('name'));
+                }
             });
 
         } else {
