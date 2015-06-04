@@ -567,10 +567,11 @@ function show_calling_links(pid, type){
 }
 
 function show_project_prices(pid){
+    
     $.ajax({
         type: "post",
         url: "ajax/fetch_project_prices.php",
-        data: "projectId=" + pid,
+        data: "projectId=" + pid + "&locId=" + "{$projectDetails[0]['LOCALITY_ID']}",
         beforeSend: function(){           
             $("body").addClass("loading");
           },

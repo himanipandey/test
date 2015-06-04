@@ -7,12 +7,13 @@ include("../includes/configs/configs.php");
 include("../builder_function.php");
 
 $projectId = $_POST['projectId'];
+$locId = $_POST['locId'];
 
 //fetching last updated details of listing prices and project configurations
 $lastUpdatedDetail = lastUpdatedAuditDetailProjectPrices($projectId);
 
 //fetching Locality Avg prices
-$localityAvgPrice = getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']);
+$localityAvgPrice = getLocalityAveragePrice($locId);
 
 //fetching project prices
 $arrResult = fetch_listing_prices($projectId);
