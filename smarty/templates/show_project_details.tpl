@@ -461,13 +461,7 @@ function broker_call_edit(callId, brokerId)
          data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
          success:function(msg){
            if(msg){
-             $.fancybox({
-                    'content': msg,
-                    'onCleanup': function () {
-                        //	$("#row_"+rowId).remove();
-                    }
-
-                });
+             $('#builder-contact-info').html(msg);
             }
          }
      });
@@ -553,8 +547,7 @@ function show_calling_links(pid, type){
             
             if(dt.trim() == 'Empty'){
                 alert('Project '+ type +' calling links not available!');
-            }else{
-                
+            }else{                
                 if(type == 'primary'){
                     $('#primary-links').html(dt);
                 }else{
@@ -820,6 +813,11 @@ function show_project_supplies(pid, project_phase, isSupplyLaunchVerified){
                                                               {/if}
 							  </td>
 						</tr>
+                                                <tr>
+                                                    <td width="1%" align="left" colspan ="2" valign ="top">
+                                                        <div id="builder-contact-info"></div>
+                                                    </td>
+                                                </tr>
 
 						{*Builder contact info show hide*}
 						
