@@ -8,9 +8,9 @@ include("../httpful.phar");
 include("../includes/configs/configs.php");
 include("../function/functions_assignments.php");
 
-$draw = (filter_input(INPUT_GET, "draw"))?filter_input(INPUT_GET, "draw"):1;
-$start = (filter_input(INPUT_GET, "start"))?filter_input(INPUT_GET, "start"):0;
-$length = (filter_input(INPUT_GET, "length"))?filter_input(INPUT_GET, "length"):10;
+$draw = (filter_input(INPUT_GET, "draw")) ? filter_input(INPUT_GET, "draw") : 1;
+$start = (filter_input(INPUT_GET, "start")) ? filter_input(INPUT_GET, "start") : 0;
+$length = (filter_input(INPUT_GET, "length")) ? filter_input(INPUT_GET, "length") : 10;
 
 $projectId = filter_input(INPUT_GET, "project");
 $listingId = filter_input(INPUT_GET, "listingId");
@@ -38,12 +38,12 @@ $order = $_GET["order"];
 $order_column_arr = array(
     0 => 'listingId', 2 => 'listingId', 3 => 'city', 4 => 'locality', 4 => 'project'
 );
-$order_column = ($order[0]['column'])?$order_column_arr[$order[0]['column']]:$order_column_arr[0];
-$order_dir = ($order[0]['dir'])?strtoupper($order[0]['dir']):'DESC';
+$order_column = ($order[0]['column']) ? $order_column_arr[$order[0]['column']] : $order_column_arr[0];
+$order_dir = ($order[0]['dir']) ? strtoupper($order[0]['dir']) : 'DESC';
 
 
 //if $download true the length would be full :)
-if($download){
+if ($download) {
     $length = 200000; //maximum
 }
 
@@ -54,7 +54,7 @@ $empty_flag = false; //decide if api request required or not
 
 if (isset($cityId) && !empty($cityId) && ($cityId != "null") && ($cityId != "")) {
     $filterArr["and"][] = array("equal" => array("cityId" => $cityId));
-}elseif(!empty($_REQUEST['admin_cities'])){
+} elseif (!empty($_REQUEST['admin_cities'])) {
     $admin_city_array = json_decode($_REQUEST['admin_cities']);
     $filterArr = array("and" => array(array("equal" => array("cityId" => $admin_city_array))));
 }
@@ -63,19 +63,18 @@ if (isset($projectId) && !empty($projectId) && ($projectId != "null") && ($proje
 }
 if (isset($listingId) && !empty($listingId) && ($listingId != "null") && ($listingId != "")) {
     $filterArr["and"][] = array("equal" => array("listingId" => $listingId));
-}else{
+} else {
     $listing_ids = getting_listingIds_to_fetch($current_user, $current_user_role, $resaleAssignStatus, $schedStatus);
-    
-    if(empty($listing_ids)){
+
+    if (empty($listing_ids)) {
         $empty_flag = true;
-    }elseif($listing_ids != 1){
-        if($schedStatus == 'not_done'){
+    } elseif ($listing_ids != 1) {
+        if ($schedStatus == 'not_done') {
             $filterArr["and"][] = array("notEqual" => array("listingId" => $listing_ids));
-        }else{
+        } else {
             $filterArr["and"][] = array("equal" => array("listingId" => $listing_ids));
-        }        
-    }    
-    
+        }
+    }
 }
 if (isset($search_term) && !empty($search_term) && ($search_term != "null") && ($search_term != "")) {
     $filterArr["and"][] = array("equal" => array($search_term => $search_value));
@@ -96,7 +95,7 @@ if (isset($gpid) && $gpid != "") {
 
 $filter = json_encode($filterArr);
 
-$sort = '"sort":{"field":"'.$order_column.'","sortOrder":"'.$order_dir.'"}';
+$sort = '"sort":{"field":"' . $order_column . '","sortOrder":"' . $order_dir . '"}';
 
 $fields = '"fields":["imageCount","verified","description","seller","id","fullName","currentListingPrice","pricePerUnitArea","price","otherCharges","property","project","locality","suburb","city","label","name","builder","unitName","size","unitType","createdAt","projectId","propertyId","phaseId","updatedBy","sellerId","jsonDump","remark","homeLoanBankId","flatNumber","noOfCarParks","negotiable","transferCharges","plc","listingAmenities","amenity","amenityMaster","masterAmenityIds","floor","latitude","longitude","amenityDisplayName","isDeleted","bedrooms","bathrooms","amenityId","imagesCount","listingId","bookingStatusId","facingId","towerId"]}';
 $uriListing = RESALE_LISTING_API_V2_URL . '?' . $gpidFilter . 'selector={"paging":{"start":' . $start . ',"rows":' . $length . '},"filters":' . $filter . "," . $sort . "," . $fields . '}';
@@ -109,14 +108,13 @@ if ($readOnly == 1) { //show specific listing
         if ($responseLists->body->statusCode == "2XX") {
             $data = $responseLists->body->data;
             view_listing($data[0], phase_detail);
-        } else {           
+        } else {
             echo $responseLists->body->error->msg;
         }
     } catch (Exception $ex) {
         die($ex->getMessage());
     }
-} elseif($empty_flag == false){ // other operations
-   
+} elseif ($empty_flag == false) { // other operations
     $tbsorterArr = array();
     try {
         $responseLists = \Httpful\Request::get($uriListing)->send();
@@ -151,7 +149,7 @@ if ($readOnly == 1) { //show specific listing
                     );
                 } elseif ($current_user_role == 'photoGrapher') { //Photographer
                     $data_rows = array(
-                        "<input type='checkbox' value='" . $row->id . "' class='assign_check' name='" . $row->property->unitName . "-" . $row->property->size . "-" . $row->property->unitType . "' id='assign_check-" . $index . "'>",
+                        "<img style='cursor:pointer' src='../images/schedule-icon.png' onclick='add_edit_scheduling(" . $row->id . ")'/>",
                         $start + $index + 1,
                         $row->id,
                         $row->property->project->locality->suburb->city->label,
@@ -176,9 +174,25 @@ if ($readOnly == 1) { //show specific listing
                         "",
                         ""
                     );
-                } else { // RM & CRM
+                } elseif ($current_user_role == 'crm') { //CRM
                     $data_rows = array(
-                        "<input type='checkbox' value='" . $row->id . "' class='schedule_check' name='schedule_check-" . $index . "' id='schedule_check-" . $index . "'>",
+                        "<img style='cursor:pointer' src='../images/schedule-icon.png' onclick='add_edit_scheduling(" . $row->id . ")'/>",
+                        $start + $index + 1,
+                        $row->id,
+                        $row->property->project->locality->suburb->city->label,
+                        $row->property->project->locality->label,
+                        $row->seller->brokerName,
+                        $row->property->project->name . ", " . $row->property->project->builder->name,
+                        $row->property->unitName . "-" . $row->property->size . "-" . $row->property->unitType,
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    );
+                } else { //rm
+                    $data_rows = array(
+                        "",
                         $start + $index + 1,
                         $row->id,
                         $row->property->project->locality->suburb->city->label,
@@ -208,8 +222,8 @@ if ($readOnly == 1) { //show specific listing
         // print_r($all_records);
         $arr = array(
             "draw" => $draw,
-            "recordsTotal" => $tbsorterArr['total_rows'],//count($all_records),
-            "recordsFiltered" => $tbsorterArr['total_rows'],//count($all_records),
+            "recordsTotal" => $tbsorterArr['total_rows'], //count($all_records),
+            "recordsFiltered" => $tbsorterArr['total_rows'], //count($all_records),
             "data" => $all_records
         );
     } else {
@@ -227,13 +241,12 @@ if ($readOnly == 1) { //show specific listing
         echo json_encode($arr);
     }
 } else {
-        $arr = array(
-            "draw" => 10,
-            "recordsTotal" => 0,
-            "recordsFiltered" => 0,
-            "data" => ''
-        );
-        echo json_encode($arr);
-    }
-
+    $arr = array(
+        "draw" => 10,
+        "recordsTotal" => 0,
+        "recordsFiltered" => 0,
+        "data" => ''
+    );
+    echo json_encode($arr);
+}
 ?>
