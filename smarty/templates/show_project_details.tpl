@@ -468,13 +468,13 @@ function broker_call_edit(callId, brokerId)
                 }
             });
             document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
-            document.getElementById("builder_showHide").style.display = '';
+            //document.getElementById("builder_showHide").style.display = '';
   	}
   	else
   	{
                 $('#builder-contact-info').html('');
   		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
-	  	document.getElementById("builder_showHide").style.display = 'none';
+	  	//document.getElementById("builder_showHide").style.display = 'none';
   	}
       
   	
@@ -814,7 +814,8 @@ function show_project_supplies(pid, project_phase, isSupplyLaunchVerified){
 
 						<tr height="25px;">
 							  <td width="1%" align="left" colspan ="2" valign ="top"><b>Builder Contact Information</b>&nbsp;&nbsp;
-							  	<span id = "plusMinusImg">
+							  	<input type="hidden" name="projectId" value="{$projectId}" id ="projectId"/>
+                                                                <span id = "plusMinusImg">
 							  	<a href = "javascript:void(0);" onclick = "showhideBuilder('plus');">
 							  		
 							  			<img src = "images/plus.jpg" width ="20px">

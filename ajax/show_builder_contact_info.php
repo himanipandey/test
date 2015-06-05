@@ -302,8 +302,7 @@ $arrCampaign = CampaignDids::allCampaign();
 
     <tr><td>&nbsp;</td></tr>         
     <tr class = "headingrowcolor">
-        <td align="right" nowrap  colspan= "15">
-            <input type="hidden" name="projectId" value="{$projectId}" id ="projectId"/>
+        <td align="right" nowrap  colspan= "15">            
 
             <input type="button" name="btnSave" id="btnSave" value="Save" onclick = "return chkConfirm(<?php echo count($arrContact)?>);" />
 
