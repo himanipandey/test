@@ -39,7 +39,7 @@ $weights = array(
 );
 #print_r($weights);echo $weights[COMPLETED_AREA];die;
 define("MIN_BUILDER_SCORE", 0.5);
-define("MIN_MAX_LIVABILITY_SCORE", 0.95);
+define("MIN_MAX_BUILDER_SCORE", 0.95);
     
 $builder_api_respose = file_get_contents(PROPTIGER_URL . '/data/v1/entity/builder?selector={"fields":["id","establishedDate","isBuilderListed"],"paging":{"start":0,"rows":20000}}');
 $builder_api_respose_json = json_decode($builder_api_respose, true);
@@ -141,6 +141,15 @@ foreach ($trend_api_response_array as $builder_id => $value) {
     # $sql = "update cms.resi_builder set AGE_IN_DAY = " . $params_array[AGE_IN_DAY][$builder_id] . ", AGE_IN_DAY_SCORE = " . $params_array[AGE_IN_DAY_SCORE][$builder_id] . ", OVERHANG_INVERSE = " . $params_array[OVERHANG_INVERSE][$builder_id] . ", OVERHANG_INVERSE_FLOAT = " . $params_array[OVERHANG_INVERSE_SCORE][$builder_id] . ", COMPLETION_DELAY = " . $params_array[COMPLETION_DELAY][$builder_id] . ", COMPLETION_DELAY_SCORE = " . $params_array[COMPLETION_DELAY_SCORE][$builder_id] . ", COMPLETED_AREA = " . $params_array[COMPLETED_AREA][$builder_id] . ", COMPLETED_AREA_SCORE = " . $params_array[COMPLETED_AREA_SCORE][$builder_id] . ", NON_COMPLETED_AREA = " . $params_array[NON_COMPLETED_AREA][$builder_id] . ", NON_COMPLETED_AREA_SCORE = " . $params_array[NON_COMPLETED_AREA_SCORE][$builder_id] . ", LISTED_SCORE = " . $params_array[LISTED_SCORE][$builder_id] . " where builder_id = $builder_id";
     # mysql_query($sql);
 }
+
+
+foreach ($trend_api_response_array as $builder_id => $value) {
+    $maxActualBuilderScore = ResiBuilder::getMaxBuilderScore();
+    $maxActualBuilderScore = $maxActualBuilderScore[0]->builder_score;
+    $min_max_builder_score = max(MIN_MAX_BUILDER_SCORE, $maxActualBuilderScore);
+    ResiBuilder::updateScaleBuiderScore(MIN_BUILDER_SCORE, $min_max_builder_score, $maxActualBuilderScore, $builder_id);
+}
+
 
 function getBuilderTrend(){
     $url = PROPTIGER_URL . "/data/v1/trend-list/current?filters=unitType!=Plot&fields=builderName,wavgCompletionDelayInMonthOnLtdLaunchedUnit,sumLtdLaunchedUnit,sumRateOfSale,sumInventory&group=builderId&order=builderId";
