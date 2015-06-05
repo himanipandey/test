@@ -454,23 +454,29 @@ function broker_call_edit(callId, brokerId)
 
   function showhideBuilder(plsmns)
   {
-      $.ajax({
-         type: "POST",
-         //dataType:"json",
-         url: 'ajax/show_builder_contact_info.php',
-         data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
-         success:function(msg){
-           if(msg){
-             $.fancybox({
-                    'content': msg,
-                    'onCleanup': function () {
-                        //	$("#row_"+rowId).remove();
-                    }
-
-                });
-            }
-         }
-     });
+      if(plsmns == 'plus')
+  	{
+            $.ajax({
+                type: "POST",
+                //dataType:"json",
+                url: 'ajax/show_builder_contact_info.php',
+                data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
+                success:function(msg){
+                  if(msg){
+                    $('#builder-contact-info').html(msg);
+                   }
+                }
+            });
+            document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+            document.getElementById("builder_showHide").style.display = '';
+  	}
+  	else
+  	{
+                $('#builder-contact-info').html('');
+  		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
+	  	document.getElementById("builder_showHide").style.display = 'none';
+  	}
+      
   	
   }
 /*********builder contact info related js end here*************/
@@ -553,8 +559,7 @@ function show_calling_links(pid, type){
             
             if(dt.trim() == 'Empty'){
                 alert('Project '+ type +' calling links not available!');
-            }else{
-                
+            }else{                
                 if(type == 'primary'){
                     $('#primary-links').html(dt);
                 }else{
@@ -820,6 +825,11 @@ function show_project_supplies(pid, project_phase, isSupplyLaunchVerified){
                                                               {/if}
 							  </td>
 						</tr>
+                                                <tr>
+                                                    <td width="1%" align="left" colspan ="2" valign ="top">
+                                                        <div id="builder-contact-info"></div>
+                                                    </td>
+                                                </tr>
 
 						{*Builder contact info show hide*}
 						
