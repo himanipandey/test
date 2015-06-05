@@ -34,7 +34,7 @@
             ["event20", "project_offers.php", true]
 		]; 
 		for(var i=0; i< eventArray.length; i++){
-			$('.clickbutton').bind(eventArray[i][0], function(event){
+			$('.clickbutton').live(eventArray[i][0], function(event){
 				
 				for(var i=0; i<eventArray.length; i++){
 					if(eventArray[i].indexOf(event.type)!=(-1)){
@@ -352,7 +352,11 @@ function broker_call_edit(callId, brokerId)
               type:"post",
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
+              beforeSend: function(){                
+                $("body").addClass("loading");
+              },
               success:function(dt){
+                       $("body").removeClass("loading");
                        window.location.href = "show_project_details.php?projectId="+pid;
                     // jQuery("#update_insert_delete").show();
               }
@@ -367,7 +371,11 @@ function broker_call_edit(callId, brokerId)
               type:"post",
               url:"submit_builder_contact.php",
               data:"name="+str1+"&phone="+phone1+"&email="+email1+"&builderId="+builderId+"&deleteval="+deleteval+"&id="+id+"&projects="+projects1,
+              beforeSend: function(){                
+                $("body").addClass("loading");
+              },
               success:function(dt){
+                  $("body").removeClass("loading");
                   window.location.href = "show_project_details.php?projectId="+pid+"&flag="+dt;
               }
 
@@ -446,16 +454,30 @@ function broker_call_edit(callId, brokerId)
 
   function showhideBuilder(plsmns)
   {
-  	if(plsmns == 'plus')
+      if(plsmns == 'plus')
   	{
+            $.ajax({
+                type: "POST",
+                //dataType:"json",
+                url: 'ajax/show_builder_contact_info.php',
+                data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
+                success:function(msg){
+                  if(msg){
+                    $('#builder-contact-info').html(msg);
+                   }
+                }
+            });
             document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
-            document.getElementById("builder_showHide").style.display = '';
+            //document.getElementById("builder_showHide").style.display = '';
   	}
   	else
   	{
+                $('#builder-contact-info').html('');
   		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
-	  	document.getElementById("builder_showHide").style.display = 'none';
+	  	//document.getElementById("builder_showHide").style.display = 'none';
   	}
+      
+  	
   }
 /*********builder contact info related js end here*************/
 
@@ -537,8 +559,7 @@ function show_calling_links(pid, type){
             
             if(dt.trim() == 'Empty'){
                 alert('Project '+ type +' calling links not available!');
-            }else{
-                
+            }else{                
                 if(type == 'primary'){
                     $('#primary-links').html(dt);
                 }else{
@@ -549,7 +570,46 @@ function show_calling_links(pid, type){
         }
     });
 }
+
+function show_project_prices(pid){
     
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_prices.php",
+        data: "projectId=" + pid + "&locId=" + "{$projectDetails[0]['LOCALITY_ID']}",
+        beforeSend: function(){           
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project prices are not available!');
+            }else{
+                $('#show-project-prices').html(dt);
+            }
+        }
+    });
+}
+function show_project_supplies(pid, project_phase, isSupplyLaunchVerified){
+    $.ajax({
+        type: "post",
+        url: "ajax/fetch_project_supplies.php",
+        data: "projectId=" + pid + "&project_phase="+project_phase + "&isSupplyLaunchVerified="+isSupplyLaunchVerified,
+        beforeSend: function(){           
+            $("body").addClass("loading");
+          },
+        success: function (dt) {                    
+            $("body").removeClass("loading"); 
+            
+            if(dt.trim() == 'Empty'){
+                alert('Project supplies are not available!');
+            }else{
+                $('#show-project-supplies').html(dt);
+            }
+        }
+    });
+}
 </script>
 
 <div class="modal">Please Wait..............</div>
@@ -683,7 +743,7 @@ function show_calling_links(pid, type){
 	      </TR>
 	      
 	      <TD vAlign="top" align="middle" class="backgorund-rt" height="450"><BR>
-		<table cellSpacing="1" cellPadding="4" width="67%" align="center" border="0">
+		<table cellSpacing="1" cellPadding="4" width="100%" align="center" border="0">
 	      <div>
 	      <tr>
 	      <td style = "padding-left:30px;">
@@ -754,7 +814,8 @@ function show_calling_links(pid, type){
 
 						<tr height="25px;">
 							  <td width="1%" align="left" colspan ="2" valign ="top"><b>Builder Contact Information</b>&nbsp;&nbsp;
-							  	<span id = "plusMinusImg">
+							  	<input type="hidden" name="projectId" value="{$projectId}" id ="projectId"/>
+                                                                <span id = "plusMinusImg">
 							  	<a href = "javascript:void(0);" onclick = "showhideBuilder('plus');">
 							  		
 							  			<img src = "images/plus.jpg" width ="20px">
@@ -765,283 +826,14 @@ function show_calling_links(pid, type){
                                                               {/if}
 							  </td>
 						</tr>
+                                                <tr>
+                                                    <td width="1%" align="left" colspan ="2" valign ="top">
+                                                        <div id="builder-contact-info"></div>
+                                                    </td>
+                                                </tr>
 
 						{*Builder contact info show hide*}
-						<tr id = "builder_showHide" style = "display:none;">
-							<td align = "center" colspan= "2">
-
-								<table cellSpacing=0 cellPadding=0 width="100%" style = "border:1px solid #BDBDBD;" align= "center">
-								   <tr><td>&nbsp;</td></tr>      
-								  <TR>
-								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b>Builder URL:</b> {$builderDetail['URL']}&nbsp;&nbsp;&nbsp;&nbsp;<b>Builder Website:</b> {$builderDetail['WEBSITE']}</TD>
-								    
-								  </TR>
-								     <tr><td>&nbsp;</td></tr>    
-
-								  <TR style = "display:none;" id = "update_insert_delete">
-								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b><font COLOR="#008000">Data has been Inserted/Updated/Deleted Successfully!</font></b></TD>
-								  </TR>
-
-								  <TR style = "display:none;" id = "update_insert">
-								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b><font COLOR="#008000">Data has been Inserted/Updated/Deleted Successfully!</font></b></TD>
-								  </TR>
-
-								  <TR style = "display:none;" id = "error1">
-								    <TD style = "padding-left:20px;" align = "left" nowrap colspan = "6"><b><font COLOR="red">Problem in data Insertion/Updation!</font></b></TD>
-								  </TR>
-								      
-
-								  <tr class="headingrowcolor" height="30px;">
-								   
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="1%" align="center"class=whiteTxt>SNo.</td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="2%" align="left" class=whiteTxt>Contact Name</td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt>Phone</td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt>Click To Call</td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt> Campaign Name </td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt> Select Projects for Call </td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt>Remark </td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt> Success / Fail </td>
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt>Email</td>
-								    
-								    <td style = "padding-left:20px;" nowrap="nowrap" width="3%" align="left" class=whiteTxt>Projects</td>
-								     <td  style = "padding-right:20px;"nowrap="nowrap" width="1%" align="center" class=whiteTxt >Delete </td>  
-								  </tr>
-								    
-								     <input type = "hidden" name = "builderid" id = "builderId" value = "{$builderId}">
-								     {$cnt = 1}
-								    {section name=rowLoop start=1 loop=(count($arrContact)+1) step=1}
-
-								        {if ($smarty.section.rowLoop.index)%2 == 0}
-								            {$color = "bgcolor = '#F7F7F7'"}
-								        {else}
-								            {$color = "bgcolor = '#FCFCFC'"}
-								        {/if}
-
-								        {$cnt = ($smarty.section.rowLoop.index)-1}
-
-								        {$name         = $arrContact[$cnt]['NAME']}
-								        {$phone        = $arrContact[$cnt]['PHONE']}
-								        {$email        = $arrContact[$cnt]['EMAIL']}
-								        {$projects     = $arrContact[$cnt]['PROJECTS']}    
-								        {$id           = $arrContact[$cnt]['ID']}                      
-
-								    <tr><td>&nbsp;</td></tr>         
-
-								    <tr id="row_1" {$color}>
-
-								       <td align="center" valign= "top">
-								                 {$smarty.section.rowLoop.index}
-								        </td>
-
-								         <td align="center" valign = "top">
-								                 
-								              <input type = "text" name = "name[]" id = "name_{$smarty.section.rowLoop.index}" value = "{$name}" style = "width:150px">
-
-								              <input type = "hidden" name = "name_old[]" value = "{$name}" style = "width:150px">
-
-								              <input type = "hidden" name = "id[]" id = "id_{$smarty.section.rowLoop.index}" value = "{$id}" style = "width:150px">
-								        </td>
-
-								         <td align="center" valign = "top">
-									   <input type = "text" name = "phone[]" id = "phone_{$smarty.section.rowLoop.index}" class="phone_box" value = "{$phone}" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "10">
-
-									     <input type = "hidden" name = "phone_old[]" value = "{$phone}" style = "width:150px">
-								        </td>
-									
-									<td align="center" valign = "top">
-									  <a href="javascript:void(0);" id = "c2c_{$smarty.section.rowLoop.index}" class="c2c" style = "width:120px"  onclick = "clickToCall(this);"> Click To Call </a>
-
-								        </td>
-									<td align="center" valign = "top">
-									  <select name="campaignName{$start}[]" id="campaignName_{$smarty.section.rowLoop.index}">
-									    {foreach from = $arrCampaign item=item}
-									    <option value={$item}> {$item} </option>
-									    {/foreach}
-
-								        </td>
-								        <td align="center" valign = "top">
-
-							                  <select name = "projects_call_{$start}[]" id = "projects_call_{$smarty.section.rowLoop.index}" multiple>
-							                        <option value = "">Select Project</option>
-							                        {foreach from = $ProjectList key = key item = item}
-							                          <option value = "{$item['PROJECT_ID']}" >{$item['PROJECT_NAME']}</option>
-							                        {/foreach}
-							                        </option>
-							                   </select>
-								        </td>
-								         <td align="center" valign = "top">
 						
-							                  <textarea name = "remark_call_{$start}[]" id = "remark_call_{$smarty.section.rowLoop.index}"></textarea>
-								        </td>
-								        <td align="center" valign = "top">
-								             <input type="hidden" name="callId[]" id="callId_{$smarty.section.rowLoop.index}" value="">
-								             <a href="javascript:void(0);" id = "success_{$smarty.section.rowLoop.index}" onclick="setStatus(this);"> Success </a> ||
-								             <a href="javascript:void(0);" id = "fail_{$smarty.section.rowLoop.index}" onclick="setStatus(this);"> Fail </a>
-								        </td>
-
-								         <td align="center" valign = "top">
-								                 <input type = "text" name = "email[]" id = "email_{$smarty.section.rowLoop.index}" value = "{$email}" style = "width:160px">
-								                 <input type = "hidden" name = "emails_old[]" value = "{$email}" style = "width:150px">
-								        </td>
-								        <td align="center" valign = "top">
-									  <input type = "hidden" name = "projects_old[]" value = "{$projects}" style = "width:150px">
-
-									    <select name = "projects_{$start}[]" id = "projects_{$smarty.section.rowLoop.index}" multiple>
-									      <option value = "">Select Project</option>
-									      {foreach from = $ProjectList key = key item = item}
-									      <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
-									      {/foreach}
-									    </option>
-									  </select>
-								        </td>
-									<td align="center" valign = "top"><input type="checkbox" name="dlt_{$smarty.section.rowLoop.index}" id = "{$smarty.section.rowLoop.index}"></td>
-								          
-								        
-								     </tr>
-								     {$cnt = $cnt+2}
-								    {/section}
-
-								     <tr id="row_2">
-
-								       <td align="center" valign= "top">
-								                 {$cnt}
-								        </td>
-
-								         <td align="center" valign = "top">
-								                 
-								              <input type = "text" name = "name[]" id = "name_{$cnt}" value = "" style = "width:150px">
-								              <input type = "hidden" name = "id[]" id = "id_{$cnt}" value = "blank1" style = "width:150px">
-								        </td>
-
-								         <td align="center" valign = "top">
-								                <input type = "text" name = "phone[]" id = "phone_{$cnt}" value = "" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "13">
-								        </td>
-									<td align="center" valign = "top">
-									  <a href="javascript:void(0);" id = "c2c_{$smarty.section.rowLoop.index}" class="c2c" style = "width:120px"  onclick = "clickToCall(this);"> Click To Call </a>
-
-								        </td>
-									<td align="center" valign = "top">
-									  <select name="campaignName{$start}[]" id="campaignName_{$smarty.section.rowLoop.index}">
-									    {foreach from = $arrCampaign item=item}
-									    <option value={$item}> {$item} </option>
-									    {/foreach}
-
-								        </td>
-								        <td align="center" valign = "top">
-
-								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt}" multiple>
-								                        <option value = "">Select Project</option>
-								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
-								                        {/foreach}
-								                        </option>
-								                      </select>
-								        </td>
-								        <td align="center" valign = "top">
-							                  
-							                  <textarea name = "remark_call_{$start}[]" id = "remark_call_{$cnt}"></textarea>
-								        </td>
-								        <td align="center" valign = "top">
-								             <input type="hidden" name="callId[]" id="callId_{$cnt}" value="">
-								             <a href="javascript:void(0);" id = "success_{$cnt}" onclick="setStatus(this);"> Success </a> ||
-								             <a href="javascript:void(0);" id = "fail_{$cnt}" onclick="setStatus(this);"> Fail </a>
-								        </td>
-
-								         <td align="center" valign = "top">
-								                 <input type = "text" name = "email[]" id = "email_{$cnt}" value = "" style = "width:160px">
-								        </td>
-								        <td align="center" valign = "top">
-								                  <select name = "projects_{$start}[]" id = "projects_{$cnt}" multiple>
-								                        <option value = "">Select Project</option>
-								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
-								                        {/foreach}
-								                        </option>
-								                      </select>
-								        </td>
-								         <td align="center" valign = "top"><input type="checkbox" name="dlt_{$cnt}" id = "{$cnt}"></td>
-								          
-								        
-								     </tr>
-
-								     <tr id="row_3">
-
-								       <td align="center" valign= "top">
-								                 {$cnt+1}
-								        </td>
-
-								         <td align="center" valign = "top">
-								                 
-								              <input type = "text" name = "name[]" id = "name_{$cnt+1}" value = "" style = "width:150px">
-								              <input type = "hidden" name = "id[]" id = "id_{$cnt+1}" value = "blank2" style = "width:150px">
-								        </td>
-
-								         <td align="center" valign = "top">
-								                <input type = "text" name = "phone[]" id = "phone_{$cnt+1}" value = "" style = "width:120px"  onkeypress = "return isNumberKey(event);" maxlength = "13">
-								        </td>
-									<td align="center" valign = "top">
-									  <a href="javascript:void(0);" id = "c2c_{$cnt+1}" class="c2c" style = "width:120px"  onclick = "clickToCall(this);"> Click To Call </a>
-
-								        </td>
-									<td align="center" valign = "top">
-									  <select name="campaignName{$start}[]" id="campaignName_{$cnt+1}">
-									    {foreach from = $arrCampaign item=item}
-									    <option value={$item}> {$item} </option>
-									    {/foreach}
-
-								        </td>
-								        <td align="center" valign = "top">
-
-								                  <select name = "projects_call_{$start}[]" id = "projects_call_{$cnt+1}" multiple>
-								                        <option value = "">Select Project</option>
-								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
-								                        {/foreach}
-								                        </option>
-								                      </select>
-								        </td>
-								        <td align="center" valign = "top">
-							              
-							                  <textarea name = "remark_call_{$start}[]" id = "remark_call_{$cnt+1}"></textarea>
-							                 
-								        </td>
-								        <td align="center" valign = "top">
-								             <input type="hidden" name="callId[]" id="callId_{$cnt+1}" value="">
-								             <a href="javascript:void(0);" id = "success_{$cnt+1}" onclick="setStatus(this);"> Success </a> ||
-								             <a href="javascript:void(0);" id = "fail_{$cnt+1}" onclick="setStatus(this);"> Fail </a>
-								        </td>
-
-								             
-								         <td align="center" valign = "top">
-								                 <input type = "text" name = "email[]" id = "email_{$cnt+1}" value = "" style = "width:160px">
-								        </td>
-								        <td align="center" valign = "top">
-
-								                  <select name = "projects_{$start}[]" id = "projects_{$cnt+1}" multiple>
-								                        <option value = "">Select Project</option>
-								                        {foreach from = $ProjectList key = key item = item}
-								                          <option value = "{$item['PROJECT_ID']}" {if in_array($item['PROJECT_ID'],$arrContact[$cnt]['PROJECTS'])} selected {/if}>{$item['PROJECT_NAME']}</option>
-								                        {/foreach}
-								                        </option>
-								                      </select>
-								        </td>
-								         <td align="center" valign = "top"><input type="checkbox" name="dlt_{$cnt+1}" id = "{$cnt+1}"></td> 
-								        
-								     </tr>
-
-								   <tr><td>&nbsp;</td></tr>         
-								  <tr class = "headingrowcolor">
-								      <td align="right" nowrap  colspan= "15">
-								       <input type="hidden" name="projectId" value="{$projectId}" id ="projectId"/>
-								      
-								       <input type="button" name="btnSave" id="btnSave" value="Save" onclick = "return chkConfirm({count($arrContact)});" />
-								      
-								     </td>
-								  </tr>
-								</table>
-
-							</td>
-						</tr>
 						{*end Builder contact info show hide*}
 
 						<tr height="25px;">
@@ -2093,119 +1885,19 @@ function show_calling_links(pid, type){
 						  	</td>
 						</tr>
 						{/if}
-						
-						<tr bgcolor = "#c2c2c2">
-						{if count($lastUpdatedDetail['listing_prices'])>0}
-						
-							  <td nowrap="nowrap"  align="left" valign="top"><b>Last Updated Detail : Project Price</b><br></br>
-							  {foreach from = $lastUpdatedDetail['listing_prices'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-																
-							  </td>
-							  
-						  
-						{/if}
-						{if count($lastUpdatedDetail['resi_project_options'])>0}
-						  
-							  <td nowrap="nowrap"  align="left" colspan = "8" valign="top"><b>Last Updated Detail : Project Configuration</b><br></br>
-							  {foreach from = $lastUpdatedDetail['resi_project_options'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-																
-							  </td>
-							  
-						 
-						{/if}
-						 </tr>
-						 
-			 <tr>
- 				<td width = "100%" align = "center" colspan = "16">
-					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-						<tr>
-							<td align="left"  nowrap colspan ="4">
-								<b> Locality Average Price : </b> {$localityAvgPrice}
-							</td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+                                                <tr>
+                                                    <td colspan="16">
+                                                       <button onclick="show_project_prices('{$projectId}');">Show Project Prices</button> 
+                                                       <div id="show-project-prices">
+                                                           
+                                                       </div>
+                                                    </td>
+                                                </tr> 			
 						
                 {*{/if}*}
-                    <tr class="headingrowcolor" height="30px;">
-						<td  nowrap="nowrap"  align="center" class=whiteTxt >SNo.</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Phase Name</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Effecive Date</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Unit Name</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Size</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Carpet Area</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Price Per Unit Area</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[0]}</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt nowrap>Price Per Unit Area <br> in {$arrPrevMonthDate[1]}</td>
-                         <td nowrap="nowrap"  align="left" class=whiteTxt>Villa Floors</td>
-						 <td nowrap="nowrap"  align="left" class=whiteTxt>Booking Status</td>
-                    </tr>
-                    {$cntPrice = 0}
-                    {foreach from = $uptionDetailWithPrice key=key item = value}
-                        {foreach from = $value key=keyInner item = valueInner}
-                        {if ($cntPrice+1)%2 == 0}
-                            {$color = "bgcolor='#F7F8E0'"}
-                        {else}
-                            {$color = "bgcolor='#f2f2f2'"}
-                        {/if}
-                        <tr {$color}>
-                        <td align = "center" >{$cntPrice+1}</td>
-                        <td align = "left" >{$valueInner['phase_name']}</td>
-                        <td align = "left" style="width:250px;display:block;" >{$valueInner['effective_date']}</td>
-                        <td >
-                             <input type='hidden' value='{$projectId}' name='projectId' />
-                            {$valueInner['option_name']}
-                      </td>
-                      <td >
-                         {if isset($valueInner['size'])} {$valueInner['size']} {else} -- {/if}
-                      </td>
-                       <td >
-                         {if isset($valueInner['carpet_area'])} {$valueInner['carpet_area']} {else} -- {/if}
-                      </td>
-                      <td >
-                        {if isset($valueInner['latestPrice'])} {$valueInner['latestPrice']} {else} -- {/if}
-                      </td>
-                        <td >
-                            {if isset($valueInner['prevMonthPrice'])}
-                                {$valueInner['prevMonthPrice']}
-                            {else}
-                                {"Not Applicable"}
-                            {/if}
-                        </td>
-                        <td >
-                            {if isset($valueInner['prevPrevMonthPrice'])}
-                                {$valueInner['prevPrevMonthPrice']}
-                            {else}
-                                {"Not Applicable"}
-                            {/if}
-                        </td>
-                      <td >
-                            {$valueInner['villa_no_floors']}
-                      </td>
-                      <td >{if $valueInner['booking_status_id'] > 0}
-																	{if $valueInner['booking_status_id'] == 1}Available{/if}
-																	{if $valueInner['booking_status_id'] == 2}Sold out{/if}
-																	{if $valueInner['booking_status_id'] == 3}On Hold{/if}
-																{else}
-																	--
-																{/if}
-                           
-                      </td>
-                    {$cntPrice = $cntPrice+1}
-		   </tr>
-                    {/foreach}
-                   {/foreach}
+                                        </table>
+                                </td>
+                  </tr>
                    {*code start for calling records secondary*}
                    <tr>
                         <td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
@@ -2736,361 +2428,20 @@ function show_calling_links(pid, type){
 		   </tr>
 		   <tr>
 				<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-				{if is_array($supplyAllArray)}
-					<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-						 {if in_array($projectDetails[0].PROJECT_PHASE,$arrProjEditPermission)}
-							<tr>
-
-							  	<td align="left"  nowrap><b>Supply</b><button class="clickbutton" onclick="$(this).trigger('event8');">Edit</button>
-							  	{if $supplyEditPermissionAccess == 1} 
-									{if !$isSupplyLaunchVerified}
-										<button class="clickbutton" style="background-color: red" onclick="$(this).trigger('event17');">Verify Supply Change</button>
-									{/if}
-								{/if}	
-									<button class="clickbutton" onclick="$(this).trigger('event19');">Edit Historical Price-Inventory</button></td>
-
-							</tr>
-						{/if}
-						<tr bgcolor = "#c2c2c2">
-						{if count($lastUpdatedDetail['resi_proj_supply'])>0}
-						  
-							  <td nowrap="nowrap"  align="left" valign="top" width="30%"><b>Last Updated Detail : Supply</b><br></br>
-								{foreach from = $lastUpdatedDetail['resi_proj_supply'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-								
-							  </td>
-							  
-						
-						{/if}
-						{if count($lastUpdatedDetail['project_availabilities'])>0}
-						 
-							  <td nowrap="nowrap"  align="left" colspan = "7" valign="top"><b>Last Updated Detail : Inventory</b><br></br>
-								{foreach from = $lastUpdatedDetail['project_availabilities'] key=key item = item}
-									
-									<b>Department: </b> {$item['dept']}</br>
-									<b>Name: </b> {$item['name']}</br>
-									<b>last Updated Date: </b> {$item['ACTION_DATE']}</br></br>
-								{/foreach}	
-								
-							  </td>
-							  
-						 
-						{/if}
-						 </tr>
-						 <tr>
-							<td width = "100%" align = "center" colspan = "16" style="padding-left: 30px;">
-							
-								<table align = "center" width = "100%" style = "border:1px solid #c2c2c2;">
-										<tr class="headingrowcolor" height="30px;">
-											<td class="whiteTxt" align = "center" nowrap><b>SNO.</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase<br>Launch <br> Completion Date<br> Submitted Date <br> Booking Status<br> Construction Status </b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Project Type</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Unit Type</b></td>
-											
-											<td class="whiteTxt" align = "center" nowrap><b>No of Flats</b></td>
-                                                                                        <td class="whiteTxt" align = "center" nowrap><b>Edited No of Flats</b></td>
-                                                                                        <td class="whiteTxt" align = "center" nowrap><b>Launched Units</b></td>
-                                                                                        <td class="whiteTxt" align = "center" nowrap><b>Edited Launched Units</b></td>
-											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is flats Information is Currect</b></td> -->
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$arrAvaiPreviousMonthData[0]}</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Available No of Flats<br>in {$arrAvaiPreviousMonthData[1]}</b></td>
-											<!-- <td class="whiteTxt" align = "center" nowrap><b>Available No of Flats Lastest Month</b></td> -->
-											<!-- <td class="whiteTxt" align = "center" nowrap><b>Is Available Flat Information is Currect</b></td> -->
-											<td class="whiteTxt" align = "center" nowrap><b>Edit Reason</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Effective Date</b></td>
-											<td class="whiteTxt" align = "center" nowrap><b>Phase Remark</b></td>
-											
-
-										</tr>
-										{$olderValuePhase = ''}
-										{$cnt = 0}
-										{$totalSumFlat = 0}
-                                                                                {$totalEditedSumFlat = 0}
-                                                                                {$totalLaunchedFlat = 0}
-                                                                                {$totalEditedLaunchedFlat = 0}
-										{$totalSumflatAvail = 0}
-                                                                               {foreach from = $supplyAllArray key=key item = item}
-											{$totalNoOfFlatsPPhase = 0}
-                                                                                        {$totalEditedNoOfFlatsPPhase = 0}
-                                                                                        {$totalLaunchedFlatsPPhase = 0}
-                                                                                        {$totalEditedLaunchedFlatsPPhase = 0}
-											{$availableoOfFlatsPPhase = 0}
-											
-											{$olderValueType = ''}
-											{foreach from = $item key = keyInner item = innerItem}
-												
-												{$totalNoOfFlatsPtype = 0}
-                                                                                                {$totalEditedNoOfFlatsPtype = 0}
-                                                                                                {$totalLaunchedFlatsPtype = 0}
-                                                                                                {$totalEditedLaunchedFlatsPtype = 0}
-												{$availableoOfFlatsPtype = 0}
-												
-												{foreach from = $innerItem key = keylast item = lastItem}
-													
-													{$cnt = $cnt+1}
-													{if ($cnt)%2 == 0}
-															{$color = "bgcolor='#F7F8E0'"}
-													{else}
-														{$color = "bgcolor='#f2f2f2'"}
-													{/if}
-													
-													<tr {$color}  height="30px;">
-														<td valign ="top" align="center">{$cnt}</td>
-														
-														{if $olderValuePhase == '' || $olderValuePhase != $key}
-															<td valign ="top" align = "center" nowrap rowspan = "{count($arrPhaseCount[$key])+1}">
-																{ucfirst($key)}
-																<br>
-																{if $lastItem['LAUNCH_DATE'] != '' && $lastItem['COMPLETION_DATE'] != ''}
-																	
-																	{$lastItem['LAUNCH_DATE']} <br> {$lastItem['COMPLETION_DATE']} <br> {$lastItem['submitted_date']}
-																{else}
-																	--
-																{/if}
-																<br/>
-																{if $lastItem['BOOKING_STATUS_ID'] > 0}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 1}Available{/if}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 2}Sold out{/if}
-																	{if $lastItem['BOOKING_STATUS_ID'] == 3}On Hold{/if}<br>
-																{else}
-																	--<br>
-																{/if}
-                                                                                                                                
-                                                                                                                                {if $lastItem['construction_status'] != ''}
-																	{$lastItem['construction_status']}
-																{else}
-																	--
-																{/if}
-
-															</td>
-															
-														{/if}
-													
-														{$olderValuePhase = $key}
-													
-														{if $olderValueType != $keyInner || $olderValueType == ''}
-														<td valign ="top" align = "center" rowspan = "{count($arrPhaseTypeCount[$key][$keyInner])}">
-															{$keyInner}
-														</td>
-														
-														{/if}
-														{$olderValueType = $keyInner}
-														
-														
-													
-													<td valign ="top" align="center">
-														{if $lastItem['NO_OF_BEDROOMS']}{$lastItem['NO_OF_BEDROOMS']}{else}0{/if}BHK
-													</td>
-													<td valign ="top" align="center" >{$lastItem['NO_OF_FLATS']}
-														{$totalNoOfFlatsPtype = $totalNoOfFlatsPtype+$lastItem['NO_OF_FLATS']}
-                                                                                                                {$totalEditedNoOfFlatsPtype = $totalEditedNoOfFlatsPtype+$lastItem['EDITED_NO_OF_FLATS']}
-                                                                                                                {$totalLaunchedFlatsPtype = $totalLaunchedFlatsPtype+$lastItem['LAUNCHED']}
-                                                                                                                {$totalEditedLaunchedFlatsPtype = $totalEditedLaunchedFlatsPtype+$lastItem['EDITED_LAUNCHED']}
-														{$totalNoOfFlatsPPhase = $totalNoOfFlatsPPhase+$lastItem['NO_OF_FLATS']}
-                                                                                                                {$totalEditedNoOfFlatsPPhase = $totalEditedNoOfFlatsPPhase+$lastItem['EDITED_NO_OF_FLATS']}
-                                                                                                                {$totalLaunchedFlatsPPhase = $totalLaunchedFlatsPPhase+$lastItem['LAUNCHED']}
-                                                                                                                {$totalEditedLaunchedFlatsPPhase = $totalEditedLaunchedFlatsPPhase+$lastItem['EDITED_LAUNCHED']}
-														{if $key != 'No Phase'}
-															{$totalSumFlat = $totalSumFlat+$lastItem['NO_OF_FLATS']}
-                                                                                                                        {$totalEditedSumFlat = $totalEditedSumFlat+$lastItem['EDITED_NO_OF_FLATS']}
-                                                                                                                        {$totalLaunchedFlat = $totalLaunchedFlat+$lastItem['LAUNCHED']}
-                                                                                                                        {$totalEditedLaunchedFlat = $totalEditedLaunchedFlat+$lastItem['EDITED_LAUNCHED']}
-															{$totalSumflatAvail = $totalSumflatAvail+$lastItem['AVAILABLE_NO_FLATS']}																	
-														{/if}
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['NO_OF_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['NO_OF_FLATS']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['NO_OF_FLATS']}</span>
-															{/if}
-														{/if}
-													</td>
-                                                                                                        <td valign ="top" align="center">
-                                                                                                            {$lastItem['EDITED_NO_OF_FLATS']}
-                                                                                                        </td>
-                                                                                                        <td valign ="top" align="center">
-                                                                                                            {$lastItem['LAUNCHED']}
-                                                                                                        </td>
-                                                                                                        <td valign ="top" align="center">
-                                                                                                            {$lastItem['EDITED_LAUNCHED']}
-                                                                                                        </td>
-														<!-- $key->phase_id -->
-														<!-- if key==mykey -->
-																											
-													<!-- <td valign ="top" align="center">
-														 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-														 {if $phasename != '' && $stageName != ''}
-															 {if $lastItem['ACCURATE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] != ''}
-																<br>
-																<span style="background-color: yellow;">
-																	 {if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-																</span>
-															{/if}
-														 {/if}
-													</td> -->
-													<td valign ="top" align="center">{$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPtype = $availableoOfFlatsPtype+$lastItem['AVAILABLE_NO_FLATS']}
-														{$availableoOfFlatsPPhase = $availableoOfFlatsPPhase+$lastItem['AVAILABLE_NO_FLATS']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['AVAILABLE_NO_FLATS'] != $arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['AVAILABLE_NO_FLATS']}</span>
-															{/if}	
-														{/if}										
-													</td>
-													<td valign ="top" align="center">
-														{$monkey=$arrAvaiPreviousMonthData[0]}
-														{foreach from=$PreviousMonthsAvailability[$monkey] key=k2 item=i2}
-															{foreach from=$i2 key=k3 item=i3}
-																{if $lastItem['PHASE_ID']==$k2}
-																	{if $keyInner==$PreviousMonthsAvailability[$monkey][$k2][$k3]['project_type']}
-																	{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$monkey][$k2][$k3]['no_of_bedrooms']}
-																		{if substr($PreviousMonthsAvailability[$monkey][$k2][$k3]['effective_date'],0,7)==$monkey}
-																			{$PreviousMonthsAvailability[$monkey][$k2][$k3]['available_no_of_flats']}	
-																			{else}
-																				{"Not Applicable"}
-																			{/if}
-																		{/if}
-																	{/if}
-																{/if}
-															{/foreach}
-														{/foreach}														
-													</td>	
-													<td valign ="top" align="center">
-														{$monkey=$arrAvaiPreviousMonthData[1]}
-														{foreach from=$PreviousMonthsAvailability[$monkey] key=k2 item=i2}
-															{foreach from=$i2 key=k3 item=i3}
-															{if $lastItem['PHASE_ID']==$k2}
-																{if $keyInner==$PreviousMonthsAvailability[$monkey][$k2][$k3]['project_type']}
-																	{if $lastItem['NO_OF_BEDROOMS']==$PreviousMonthsAvailability[$monkey][$k2][$k3]['no_of_bedrooms']}
-																		{if substr($PreviousMonthsAvailability[$monkey][$k2][$k3]['effective_date'],0,7)==$monkey}					
-																			{$PreviousMonthsAvailability[$monkey][$k2][$k3]['available_no_of_flats']}	
-																		{else}
-																			{"Not Applicable"}
-																		{/if}
-																	{/if}
-																{/if}
-															{/if}
-															{/foreach}
-														{/foreach}														
-													</td>			
-													
-												<!-- 	<td valign ="top" align="center">
-														
-														 {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-													    {if $phasename != '' && $stageName != ''}
-														    {if $lastItem['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] AND $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] != ''}
-																<br>
-																<span style="background-color: yellow;">
-																	{if $arrProjectSupply[$key][$keyInner][$keylast]['ACCURATE_AVAILABLE_NO_OF_FLATS_FLAG'] == 1} Accurate {else} Guessed {/if}
-																</span>
-															{/if}
-														{/if}
-														
-													</td> -->
-													<td valign ="top" align="center">
-														{$lastItem['EDIT_REASON']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['EDIT_REASON'] != $arrProjectSupply[$key][$keyInner][$keylast]['EDIT_REASON']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['EDIT_REASON']}</span>
-															{/if}
-														{/if}
-													</td>
-													<td valign ="top" align ="center" nowrap>
-														{$lastItem['SUBMITTED_DATE']}
-														
-														{if $phasename != '' && $stageName != ''}
-															{if $lastItem['SUBMITTED_DATE'] != $arrProjectSupply[$key][$keyInner][$keylast]['SUBMITTED_DATE']}
-																<br>
-																<span style="background-color: yellow;">{$arrProjectSupply[$key][$keyInner][$keylast]['SUBMITTED_DATE']}</span>
-															{/if}
-														{/if}
-													</td>
-													<td align = "center" nowrap>
-													{if $key != $newK}
-													{if $lastItem['REMARKS'] != ''}
-																
-														{$lastItem['REMARKS']}
-													{else}
-														--
-													{/if}	 {$newK = $key}{/if}
-												</td>
-													 
-												</tr>	
-												{/foreach}
-												{if count($arrPhaseTypeCount[$key][$keyInner])>1}
-													<tr bgcolor ="#FBF2EF" height="30px;">
-														<td align ="right" colspan ="4" nowrap><b>SubTotal {$lastItem['PROJECT_TYPE']}</b></td>
-														<td align ="center"><b> {$totalNoOfFlatsPtype}</b></td>
-                                                                                                                <td align ="center"><b> {$totalEditedNoOfFlatsPtype}</b></td>
-                                                                                                                <td align ="center"><b> {$totalLaunchedFlatsPtype}</b></td>
-                                                                                                                <td align ="center"><b> {$totalEditedLaunchedFlatsPtype}</b></td>
-														<td  align ="center"><b> {$availableoOfFlatsPtype}</b></td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-                                                                                                                <td  align ="left" >&nbsp;</td>
-                                                                                                                
-													</tr>
-												{/if}
-											{/foreach}
-												<tr bgcolor ="#F6D8CE" height="30px;">
-													<td align ="right" colspan ="4" nowrap><b>SubTotal {ucfirst($key)}</b></td>
-													<td align ="center"><b> {$totalNoOfFlatsPPhase}</b></td>
-                                                                                                        <td align ="center"><b> {$totalEditedNoOfFlatsPPhase}</b></td>
-                                                                                                        <td align ="center"><b> {$totalLaunchedFlatsPPhase}</b></td>
-                                                                                                        <td align ="center"><b> {$totalEditedLaunchedFlatsPPhase}</b></td>
-                                                                                                        <td align ="center"><b> {$availableoOfFlatsPPhase}</b></td>
-													{if ucfirst($key) == 'No Phase'}
-														<td  align ="left" colspan ="5"><b> 
-															Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
-															{100-($availableoOfFlatsPPhase*100/$totalNoOfFlatsPPhase)|string_format:"%.2f"}%
-														</b></td>													
-													{else}
-														<td  align ="left">&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-														<td  align ="left" >&nbsp;</td>
-                                                                                                                <td  align ="left" >&nbsp;</td>
-													
-													{/if}
-
-													
-												</tr>			 
-										{/foreach}
-												{if count($supplyAllArray)>1}
-												<tr bgcolor ="#F2F2F2" height="30px;">
-													<td align ="right" colspan ="4" nowrap><b>Grand Total {$flafHideGrandTot}</b></td>
-													<td align ="center"><b> {$totalSumFlat}</b></td>
-                                                                                                        <td align ="center"><b> {$totalEditedSumFlat}</b></td>
-                                                                                                        <td align ="center"><b> {$totalLaunchedFlat}</b></td>
-                                                                                                        <td align ="center"><b> {$totalEditedLaunchedFlat}</b></td>
-													<td align ="center"><b>{$totalSumflatAvail}</b></td>
-													<td  align ="left" colspan ="5"><b> 
-														Sold Out&nbsp;&nbsp;:&nbsp;&nbsp;
-															{100-($totalSumflatAvail*100/$totalSumFlat)|string_format:"%.2f"}%
-														</b></td>
-
-												</tr>
-												{/if}
-												
-								
-							</table>
-						
-				</td>
-		   </tr>
-		   {/if}
-		   <tr><td colspan ="8">&nbsp;</td><tr>
+                                    <table width="100%" align="center" style="border:1px solid #c2c2c2;">
+                                        <tr>
+                                            <td>
+                                                <button onclick="show_project_supplies('{$projectId}', '{$projectDetails[0].PROJECT_PHASE}', '{$isSupplyLaunchVerified}');">Show Project Supplies</button> 
+                                                <div id="show-project-supplies"></div>                                                
+                                            </td>
+                                        </tr>                                        
+                                    </table> 
+                                </td>
+                                    
+                   </tr>                             
+		   <tr><td colspan ="16">&nbsp;</td><tr>
 		   <tr class="headingrowcolor" height="30px;">
-			<td class="whiteTxt" colspan = "8" align ="center">
+			<td class="whiteTxt" colspan = "16" align ="center">
 				<form method = "post" action = "">
 					<input type = "hidden" name = "projectId" id = "projectId" value = "{$projectId}">
 					<input type="submit" name="btnExit" id="btnExit" value="Exit">

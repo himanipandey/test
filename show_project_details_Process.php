@@ -62,7 +62,7 @@ $smarty->assign("otherPricing", $otherPricing);
 /* * ****end display other pricing***** */
 
 //$ProjectPhases = ResiProjectPhase::get_phase_option_hash_by_project($projectId); //To Do
-$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
+/*$optionsDetails = Listings::all(array('joins' => "join resi_project_phase p on (p.phase_id = listings.phase_id and p.version = 'Cms') 
     join resi_project_options o on (o.options_id = option_id)", 'conditions' =>
             array("o.PROJECT_ID = $projectId and OPTION_CATEGORY = 'Actual' and p.status = 'Active' and listings.status = 'Active' and listings.listing_category='Primary'"), "select" =>
             "listings.*,p.phase_name,o.option_name,o.size,o.carpet_area,o.villa_plot_area,o.villa_no_floors"));
@@ -82,15 +82,15 @@ foreach ($optionsDetails as $key => $value) {
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['villa_plot_area'] = $value->villa_plot_area;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['effective_date'] = $listing_price[0]->effective_date;
     $uptionDetailWithPrice[$value->phase_id][$value->option_id]['booking_status_id'] = $value->booking_status_id;
-}
+}*/
 
-$PhaseOptionHash = $ProjectPhases[1];
-$ProjectPhases = $ProjectPhases[0];
-$ProjectOptionDetail = ProjectOptionDetail($projectId);
-$PreviousMonthsData = getPrevMonthProjectData($projectId);
-$PreviousMonthsAvailability = getFlatAvailability($projectId);
+//$PhaseOptionHash = $ProjectPhases[1];
+//$ProjectPhases = $ProjectPhases[0];
+//$ProjectOptionDetail = ProjectOptionDetail($projectId);
+//$PreviousMonthsData = getPrevMonthProjectData($projectId);
+//$PreviousMonthsAvailability = getFlatAvailability($projectId);
 $arrPriceListData = array();
-$cnt = 0;
+/*$cnt = 0;
 $arrPrevMonthDate = array();
 $arrPhase = array();
 foreach ($PreviousMonthsData as $k => $v) {
@@ -113,17 +113,17 @@ foreach ($PreviousMonthsData as $k => $v) {
     if ($cnt > 2 and $cnt <= 4)
         $arrPrevMonthDate[] = $k;
     $cnt++;
-}
+}*/
 //echo "<pre>";
 //print_r($uptionDetailWithPrice);
-$smarty->assign("arrPrevMonthDate", $arrPrevMonthDate);
-$smarty->assign("uptionDetailWithPrice", $uptionDetailWithPrice);
+//$smarty->assign("arrPrevMonthDate", $arrPrevMonthDate);
+//$smarty->assign("uptionDetailWithPrice", $uptionDetailWithPrice);
 
-$smarty->assign("ProjectOptionDetail", $ProjectOptionDetail);
-$smarty->assign("PreviousMonthsData", $PreviousMonthsData);
-$smarty->assign("PreviousMonthsAvailability", $PreviousMonthsAvailability);
+//$smarty->assign("ProjectOptionDetail", $ProjectOptionDetail);
+//$smarty->assign("PreviousMonthsData", $PreviousMonthsData);
+//$smarty->assign("PreviousMonthsAvailability", $PreviousMonthsAvailability);
 //$smarty->assign("ProjectPhases",$ProjectPhases); //To Do
-$smarty->assign("PhaseOptionHash", $PhaseOptionHash);
+//$smarty->assign("PhaseOptionHash", $PhaseOptionHash);
 
 //config sizes flag
 $smarty->assign("configSizeFlag", configSizeCheckFlag($projectId));
@@ -141,21 +141,21 @@ $smarty->assign("configSizeFlag", configSizeCheckFlag($projectId));
   }
   $smarty->assign("arrAllCompletionDateChk",$arrAllCompletionDateChk); */
 //end code for completion date validation for phase label
-$arrOnlyPreviousMonthData = array();
-foreach ($PreviousMonthsData as $k => $v) {
-    if ($k != 'current' && $k != 'latest')
-        $arrOnlyPreviousMonthData[] = $k;
-}
-$smarty->assign("arrOnlyPreviousMonthData", $arrOnlyPreviousMonthData);
+//$arrOnlyPreviousMonthData = array();
+//foreach ($PreviousMonthsData as $k => $v) {
+//    if ($k != 'current' && $k != 'latest')
+//        $arrOnlyPreviousMonthData[] = $k;
+//}
+//$smarty->assign("arrOnlyPreviousMonthData", $arrOnlyPreviousMonthData);
 
-$arrAvaiPreviousMonthData = array();
-foreach ($PreviousMonthsAvailability as $k => $v) {
-    if ($k != 'current' && $k != 'latest')
-        $arrAvaiPreviousMonthData[] = $k;
-}
-//echo "<pre>";
-//print_r($PreviousMonthsAvailability);
-$smarty->assign("arrAvaiPreviousMonthData", $arrAvaiPreviousMonthData);
+//$arrAvaiPreviousMonthData = array();
+//foreach ($PreviousMonthsAvailability as $k => $v) {
+//    if ($k != 'current' && $k != 'latest')
+//        $arrAvaiPreviousMonthData[] = $k;
+//}
+////echo "<pre>";
+////print_r($PreviousMonthsAvailability);
+//$smarty->assign("arrAvaiPreviousMonthData", $arrAvaiPreviousMonthData);
 
 
 $ProjectAmenities = ProjectAmenities($projectId, $arrNotninty, $arrDetail, $arrninty);
@@ -202,6 +202,7 @@ if ($_REQUEST['phaseId'] != -1)
 
 /* * *****supply code start here********* */
 /* * ***** To Do ** */
+/*
 $supplyAll = array();
 $res = ProjectSupply::projectSupplyForProjectPage($projectId);
 $arrPhaseCount = array();
@@ -214,8 +215,9 @@ foreach ($res as $data) {
     $arrPhaseCount[$data['PHASE_NAME']][] = $data['PROJECT_TYPE'];
     $arrPhaseTypeCount[$data['PHASE_NAME']][$data['PROJECT_TYPE']][] = '';
 }
-$supplyAllArray = array();
+$supplyAllArray = array();*/
 $isSupplyLaunchVerified = ProjectSupply::isSupplyLaunchVerified($projectId);
+/*
 foreach ($supplyAll as $k => $v) {
     foreach ($v as $kMiddle => $vMiddle) {
         foreach ($vMiddle as $kLast => $vLast) {
@@ -255,7 +257,7 @@ foreach ($supplyAll as $k => $v) {
 //print_r($supplyAllArray);die;
 $smarty->assign("arrPhaseCount", $arrPhaseCount);
 $smarty->assign("arrPhaseTypeCount", $arrPhaseTypeCount);
-$smarty->assign("supplyAllArray", $supplyAllArray);
+$smarty->assign("supplyAllArray", $supplyAllArray);*/
 $smarty->assign("isSupplyLaunchVerified", $isSupplyLaunchVerified);
 
 // Project Phases
@@ -672,7 +674,7 @@ if ($_POST['forwardFlag'] == 'no') {
 $currentCycle = currentCycleOfProject($projectId, $projectDetails[0]['PROJECT_PHASE'], $projectDetails[0]['PROJECT_STAGE']);
 $smarty->assign('currentCycle', $currentCycle);
 /* * ********************************* */
-include('builder_contact_info_process.php');
+//include('builder_contact_info_process.php');
 
 /* * code for secondary price dispaly*********** */
 include("function/resale_functions.php");
@@ -774,7 +776,8 @@ if (isset($_REQUEST['flag'])) {
         $msg = "callerNumber Not Inserted";
 }
 $smarty->assign("callerMessage", $msg);
-$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
+$smarty->assign("currentUser", $_SESSION['adminId']);
+//$smarty->assign("localityAvgPrice", getLocalityAveragePrice($projectDetails[0]['LOCALITY_ID']));
 
 /* * *****code for check user have access to move in audit1 stage or not********** */
 if ($_SESSION['DEPARTMENT'] == 'CALLCENTER') {

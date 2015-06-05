@@ -174,6 +174,7 @@
               trClone.find("input[name!=projectId]").val('');
               trClone.find(".unit-type").val('Apartment');
               trClone.find("input").removeAttr("readOnly");
+              trClone.find("input").removeAttr("disabled");
               
               $("#tbl_apartment").append(trClone);
           });
@@ -212,6 +213,8 @@
               trClone.find("input[name!=projectId],select").val('');
               var unitTypeVal = $(".unit-type-value").text();
               trClone.find(".unit-type").val(unitTypeVal);
+              trClone.find("input").removeAttr("disabled");
+              trClone.find("input").removeAttr("readonly");
               
               $("#tbl_other").append(trClone);
               
