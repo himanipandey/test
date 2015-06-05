@@ -92,7 +92,7 @@ else if($_POST['task'] == 'delete_listing'){
     }
     
 }
-else {
+else if($_REQUEST["desc_update_script"] != true){
     //$listing_id = $_POST['listing_id'];
     $listing_id='';
     
@@ -267,7 +267,7 @@ else {
     $dataArr["brokerConsent"] = $_POST["broker"];
 
     $dataJson = json_encode($dataArr);
-
+    
         $uri = LISTING_API_URL;
         $uriLogin = ADMIN_USER_LOGIN_API_URL;
         
@@ -366,110 +366,73 @@ function authListing(){
     return $ck_new;
 }
 function createDescription(){
-    $furnished = array("Furnished"=>"A fully furnished", "Semi-Furnished"=>"A semi furnished", "Unfurnished"=>"An unfurnished");
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$carpark,$furnished,$price_per_unit_area,$price,$other_charges;
+    
+    $property_id = $_POST["property_id"];
+    $facing = $_POST["facing"];
+    $floor = $_POST["floor"];
+    $homeLoanBank = $_POST["homeLoanBank"];
+    $bankName = $_POST["loan_bank"];
+    $carpark = $_POST["parking"];
+    $furnished = $_POST["furnished"];
+    $price = $_POST["price"];
+    $price_per_unit_area = $_POST["price_per_unit_area"];
+    $other_charges = $_POST["other_charges"];
+    
+    
     $description = "";
-    $getProjUrl = project_detail."".$_POST["project_id"];
+    $getProjUrl = PROJECT_DETAIL_V4."".$_POST["project_id"];
     $response = \Httpful\Request::get($getProjUrl)->sendsJson()->body('')->send();
+    
     if($response->body->statusCode == "2XX" && $response->body->data){
-        $response = $response->body->data;
-        list($bhk, $bathrooms, $balcony, $city, $size, $unitType, $builderName) = getBhk($response->properties, $_POST["property_id"]);
-        if(!(strpos($unitType, "plot") === FALSE)){
-            return "";
+        if(getBhkNew($response->body->data, $property_id, true) == "plot"){
+                return "";
         }
-        $facing = "";
-        if($_POST["facing"]) {
-            $facing = MasterDirections::find('first',array('conditions'=>array('id=?',$_POST["facing"])));
-            $facing = $facing->direction;
-        }        
-        $description = "A";
-        if($_POST["furnished"] != ""){
-            $description = $furnished[$_POST["furnished"]];
-        }
-        $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
-        $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
-        $projeName = ucwords(strtolower($response->projectDetails->projectName));
-        $description .= " ".$bhk." flat with {$bathroomStr}{$balconyStr}in {$builderName} ".$projeName.", ".ucfirst(strtolower($city)).".";
-        $floor = $_POST["floor"]; $floors = $_POST["total_floor"];
-        $temp .= "";
-        if($facing != "" || $floor != ""){
-            $facing = camel2dashed($facing);
-            $temp .= (($facing !="")? " It is {$facing} facing" :"");
-            if($floor !=""){
-                $floorNoStr = "ground";
-                if($floor != 0){
-                    $floorNoStr = addOrdinalNumberSuffix($floor);
-                }
-                $temp .= ($temp !="")? " and is" :" It is";
-                $temp .= (($floor !="")? " located on {$floorNoStr} floor" : "");
-            }
-            $temp .= ($floor !="" && $floors !="")? "(out of {$floors} total floors)" : "";
-            $temp .= ".";
-        }
-        $description .= $temp;
-        $price = $_POST["price"];
-        if($_POST["price_per_unit_area"]){
-            $price = ($_POST["price_per_unit_area"]*$size) + $_POST["other_charges"];
-        }
-        $price = $price/100000;
-        $priceUnit = "lacs";
-        if($price>=100){
-            $price = $price/100;
-            $priceUnit = "crs";
-        }
-        $price = number_format($price, 2);
-        $description .= " The price of this property is INR {$price} {$priceUnit} (all inclusive, registration charges extra).";
-        if($_POST["homeLoanBank"]){
-            $description .= " The property already has a home loan";
-            if($_POST["loan_bank"] !=""){
-                $bankArray = BankList::find("first",array("conditions"=>array("bank_id=?",$_POST["loan_bank"])));
-                $bank = strtolower($bankArray->bank_name);
-                $description .= " approved by {$bank}";
-            }
-            $description .= ".";
-        }
-        $car = "1";
-        if($_POST["parking"] !="" && $_POST["parking"]>1){
-            $car = $_POST["parking"];
-        }
-        $description .= " It has {$car} car parking and 1 two-wheeler parking.";
-        if(isset($response->specification->flooring)){
-            $obj = $response->specification->flooring;
-
-            if((trim($obj->LivingDining) == trim($obj->MasterBedroom)) && (trim($obj->LivingDining)  == trim($obj->OtherBedroom))){
-                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and other bedrooms.";
-            }else if(trim($obj->LivingDining) == trim($obj->MasterBedroom)){
-                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, master bedroom and ".addFloring($obj->OtherBedroom)." in other bedrooms.";
-            }else if(trim($obj->LivingDining) == trim($obj->OtherBedroom)){
-                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, other bedrooms and ".addFloring($obj->MasterBedroom)." in master bedroom.";
-            }else if(trim($obj->MasterBedroom) == trim($obj->OtherBedroom)){
-                $description .= " It has ".addFloring($obj->MasterBedroom)." in master bedroom, other bedrooms and ".addFloring($obj->LivingDining)." in living/dining room.";
-            }else{
-                $description .= " It has ".addFloring($obj->LivingDining)." in living/dining room, ".addFloring($obj->MasterBedroom). " in master bedroom and ".addFloring($obj->OtherBedroom)." other bedrooms.";
-            }
-
-
-            if(trim($obj->Toilets) == trim($obj->Balcony)){
-                $description .= " Toilets and balcony have ".addFloring($obj->Toilets).".";
-            }else {
-                $description .= " Toilets have ".addFloring($obj->Toilets)." and balconies have ".addFloring($obj->Balcony).".";
-            }
-            if($obj->kitchen){
-                $description .= " Kitchen has ".addFloring($obj->kitchen).".";
-            }
+        $format = mt_rand(1, 10);
+        switch ($format){
+            case 1 :
+            case 10 :
+                $description = descFormat1($response->body->data);
+                break;
+            case 2:
+            case 9:
+                $description = descFormat2($response->body->data);
+                break;
+            case 3:
+            case 8:
+                $description = descFormat3($response->body->data);
+                break;
+            case 4:
+            case 7:
+                $description = descFormat4($response->body->data);
+                break;
+            case 5:
+            case 6:
+                $description = descFormat5($response->body->data);
+                break;
         }
     }
+    
     return ($description);
 }
-function getBhk($propArr, $propId){
+
+
+//For v4
+function getBhkNew($project, $propId, $onlyUnitType=false){
+    $propArr = $project->properties;
     foreach ($propArr as $prop){
         if($prop->propertyId == $propId){
             $unitName = explode("+", $prop->unitName);
-            $city = $prop->project->locality->suburb->city->label;
-            $builderName = ucwords(strtolower($prop->project->builder->name));
-            return array($unitName[0], $prop->bathrooms, $prop->balcony, $city, $prop->size, strtolower($prop->unitType), $builderName);
+            $city = ucfirst(strtolower($project->locality->suburb->city->label));
+            $builderName = ucwords(strtolower($project->builder->name));
+            if($onlyUnitType){
+                return strtolower($prop->unitType);
+            }
+            return array($unitName[0], $prop->bedrooms, $prop->bathrooms, $prop->balcony, $city, $prop->size, $prop->displayCarpetArea, strtolower($prop->unitType), $builderName);
         }
     }
 }
+
 function addOrdinalNumberSuffix($num) {
     if (!in_array(($num % 100),array(11,12,13))){
         switch ($num % 10) {
@@ -493,4 +456,474 @@ function addFloring($string){
     }
     return $string;
 }
+
+function hasVal($data){
+    $data = trim($data);
+    if(!isset($data) || is_null($data) || $data==NULL || $data=="" || $data==false || $data=="false"){
+        return false;
+    }
+    return true;
+}
+function chkAmenities($needle, $haystack){
+    foreach ($haystack as $amenity){
+        if($amenity->amenityMaster->abbreviation == $needle){
+            return strtolower($amenity->amenityDisplayName);
+        }
+    }
+   return false;
+}
+
+function listingPrice($size){
+    global $price_per_unit_area,$price,$other_charges;
+    if($price_per_unit_area){
+        $price = ($price_per_unit_area*$size) + $other_charges;
+    }
+    $tprice = $price/100000;
+    $priceUnit = "lacs";
+    if($tprice>=100){
+        $tprice = $tprice/100;
+        $priceUnit = "crs";
+    }
+    $tprice = number_format($tprice, 2);
+    return $tprice." ".$priceUnit;
+}
+
+
+//*********************************
+
+function descFormat1($proj){
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$carpark,$furnished;
+    
+    $furnishedArr = array("Furnished"=>"A fully furnished", "Semi-Furnished"=>"A semi furnished", "Unfurnished"=>"An unfurnished");
+    $description = "";
+    
+    list($bhk, $bedrooms, $bathrooms, $balcony, $city, $size, $carpetArea, $unitType, $builderName) = getBhkNew($proj, $property_id);
+    
+    $facingDir = "";
+    if($facing) {
+        $facingDir = MasterDirections::find('first',array('conditions'=>array('id=?',$facing)));
+        $facingDir = $facingDir->direction;
+    }
+    $description = "A";
+    if($furnished != ""){
+        $description = $furnishedArr[$furnished];
+    }
+    $bathroomStr = ($bathrooms>1)? "{$bathrooms} bathrooms " : (($bathrooms==1)? "1 bathroom ":"");
+    $balconyStr = ($balcony>1)? "and {$balcony} balconies " : (($balcony==1)? "and 1 balcony ":"");
+    $projeName = ucwords(strtolower($proj->name));
+    $description .= " ".$bhk." {$unitType} with {$bathroomStr}{$balconyStr}in {$builderName} ".$projeName.", ".ucfirst(strtolower($city)).".";
+    
+    $temp .= "";
+    if($facingDir != "" || $floor != ""){
+        $facingDir = camel2dashed($facingDir);
+        $temp .= (($facingDir !="")? " It is {$facingDir} facing" :"");
+        if($floor !=""){
+            $floorNoStr = "ground";
+            if($floor != 0){
+                $floorNoStr = addOrdinalNumberSuffix($floor);
+            }
+            $temp .= ($temp !="")? " and is" :" It is";
+            $temp .= (($floor !="")? " located on the {$floorNoStr} floor" : "");
+        }
+        $temp .= ($floor !="" && $total_floor !="")? " (out of {$total_floor} total floors)" : "";
+        $temp .= ".";
+    }
+    $description .= $temp;
+    
+    $price = listingPrice($size);
+    $description .= " The price of this property is INR {$price} (all inclusive, registration charges extra).";
+    if(hasVal($homeLoanBank)){
+        $description .= " The property already has a home loan";
+        if(hasVal($bankName)){
+            $bankArray = BankList::find("first",array("conditions"=>array("bank_id=?",$bankName)));
+            $bank = strtolower($bankArray->bank_name);
+            $description .= " approved by {$bank}";
+        }
+        $description .= ".";
+    }
+    $car = "1";
+    if(hasVal($carpark) && $carpark > 1){
+        $car = $carpark;
+    }
+    $description .= " It has {$car} car parking.";
+    if(isset($proj->specifications->Flooring)){
+        $obj = $proj->specifications->Flooring;
+
+        if((trim($obj->{'Living/Dining'}) == trim($obj->{'Master Bedroom'})) && (trim($obj->{'Living/Dining'})  == trim($obj->{'Other Bedroom'}))){
+            $description .= " It has ".addFloring($obj->{'Living/Dining'})." in living/dining room, master bedroom and other bedrooms.";
+        }else if(trim($obj->{'Living/Dining'}) == trim($obj->{'Master Bedroom'})){
+            $description .= " It has ".addFloring($obj->{'Living/Dining'})." in living/dining room, master bedroom and ".addFloring($obj->{'Other Bedroom'})." in other bedrooms.";
+        }else if(trim($obj->{'Living/Dining'}) == trim($obj->{'Other Bedroom'})){
+            $description .= " It has ".addFloring($obj->{'Living/Dining'})." in living/dining room, other bedrooms and ".addFloring($obj->{'Master Bedroom'})." in master bedroom.";
+        }else if(trim($obj->{'Master Bedroom'}) == trim($obj->{'Other Bedroom'})){
+            $description .= " It has ".addFloring($obj->{'Master Bedroom'})." in master bedroom, other bedrooms and ".addFloring($obj->{'Living/Dining'})." in living/dining room.";
+        }else{
+            $description .= " It has ".addFloring($obj->{'Living/Dining'})." in living/dining room, ".addFloring($obj->{'Master Bedroom'}). " in master bedroom and ".addFloring($obj->{'Other Bedroom'})." other bedrooms.";
+        }
+
+
+        if(hasVal($obj->Toilets) & (trim($obj->Toilets) == trim($obj->Balcony))){
+            $description .= " Toilets and balcony have ".addFloring($obj->Toilets).".";
+        }else {
+            $description .= " Toilets have ".addFloring($obj->Toilets)." and balconies have ".addFloring($obj->Balcony).".";
+        }
+        if(hasVal($obj->Kitchen)){
+            $description .= " Kitchen has ".addFloring($obj->Kitchen).".";
+        }
+    }
+    
+    return ($description);
+}
+
+function descFormat3($proj){
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$furnished;
+    
+    $projeName = ucwords(strtolower($proj->name));
+    list($bhk, $bedrooms, $bathrooms, $balcony, $city, $size, $carpetArea, $unitType, $builderName) = getBhkNew($proj, $property_id);
+    
+    $furnishedArr = array("Furnished"=>"furnished", "Semi-Furnished"=>"semi furnished", "Unfurnished"=>"unfurnished");
+    
+    $description= "This {FURNISHED-DATA} {UNIT-NAME} {UNIT-TYPE} in {BUILDER-NAME} {PROJECT-NAME} {LOCATED-DATA}. {FACING-DATA} {ROOM-FLOORING} {BALCONY-FLOORING}{PWR-SEC}{SWIM-GYM} This {UNIT-TYPE} is priced at INR {PRICE-DATA} (all inclusive and registration charges are extra). {LOAN-DATA}";
+    
+    $search = array("{FURNISHED-DATA}","{UNIT-NAME}","{UNIT-TYPE}","{BUILDER-NAME}","{PROJECT-NAME}","{LOCATED-DATA}","{FACING-DATA}","{ROOM-FLOORING}","{BALCONY-FLOORING}","{PWR-SEC}","{SWIM-GYM}","{UNIT-TYPE}","{PRICE-DATA}","{LOAN-DATA}");
+    $replace = array($furnishedArr[$furnished],$bhk,$unitType,$builderName,$projeName);
+    
+    $temp = "";
+    if($floor  != ""){
+        $floorNoStr = addOrdinalNumberSuffix($floor);
+        $temp = " is located on the {$floorNoStr} floor of the building";
+        if(hasVal($total_floor)){
+            $temp .= " (building has a total of ".$total_floor." floors)";
+        }
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    if(hasVal($facing)) {
+        $facingDir = MasterDirections::find('first',array('conditions'=>array('id=?',$facing)));
+        $facingDir = camel2dashed($facingDir->direction);
+        $temp = " Its main door is {$facingDir} facing";
+        if(hasVal($proj->specifications->Doors->Main)){
+            $temp .= " and has ".  strtolower($proj->specifications->Doors->Main);
+        }
+        $temp = $temp.".";
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    if(isset($proj->specifications->Flooring)){
+        $obj = $proj->specifications->Flooring;
+        if (hasVal($obj->{'Master Bedroom'}) && ($obj->{'Master Bedroom'} == $obj->{'Other Bedroom'})){
+            $temp = "Its master bedroom and other bedrooms have ".addFloring($obj->{'Master Bedroom'}).".";
+        }else{
+            if(hasVal($obj->{'Master Bedroom'})){
+                $temp = "Its master bedroom has ".addFloring($obj->{'Master Bedroom'});
+            }
+            if(hasVal($obj->{'Other Bedroom'})){
+                $temp .= ($temp !="")? " while" :"Its";
+                $temp = " other bedrooms have ".addFloring($obj->{'Other Bedroom'});
+            }
+            $temp .= ($temp !="")? "." : "";
+        }
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    if(hasVal($obj->Balcony)){
+        $temp = "Balcony has ".addFloring($obj->Balcony).".";
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    $pwrBkp = chkAmenities("Pow", $proj->projectAmenities);
+    $security = chkAmenities("Sec", $proj->projectAmenities);
+    if(hasVal($pwrBkp) && hasVal($security)){
+        $temp = " It has {$pwrBkp} as well as {$security}.";
+    }else if($pwrBkp || $security){
+       $temp = " It has {$pwrBkp}{$security}.";
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    $swim = chkAmenities("Swi", $proj->projectAmenities);
+    $gym = chkAmenities("Gym", $proj->projectAmenities);
+    if(hasVal($swim) && ($gym)){
+        $temp = " The project also has a {$swim} as well as a {$gym}.";
+    }else if(hasVal($swim) || hasVal($gym)){
+       $temp = " The project also has a {$swim}{$gym}.";
+    }
+    $replace[] = $temp;
+    
+    $replace[] = $unitType;
+    $replace[] = listingPrice($size);
+
+    $temp = "";
+    if(hasVal($homeLoanBank)){
+        $temp = " An additional benefit is that it already has a pre-approved loan";
+        if(hasVal($bankName)){
+            $bankArray = BankList::find("first",array("conditions"=>array("bank_id=?",$bankName)));
+            $bank = strtolower($bankArray->bank_name);
+            $temp .= " by {$bank}";
+        }
+        $temp.= ".";
+    }
+    $replace[] = $temp;
+    
+    
+    $description = str_replace($search, $replace, $description);
+    $description =replaceSpaces($description);
+    
+    return $description;
+}
+
+function descFormat4($proj){
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$carpark,$furnished;
+    $furnishedArr = array("Furnished"=>"fully furnished", "Semi-Furnished"=>"semi furnished", "Unfurnished"=>"unfurnished");
+    list($bhk, $bedrooms, $bathrooms, $balcony, $city, $size, $carpetArea, $unitType, $builderName) = getBhkNew($proj, $property_id);
+    $projeName = ucwords(strtolower($proj->name));
+    
+    $description= "This is {A-DATA} {FURNISHED-DATA} highly spacious {BEDROOM-DATA} {UNIT-TYPE} with {BATHROOM-DATA}{BALCONIES-DATA}. {FLOOR-PARKING} {FACING-DATA} {INTERIOR-EXTERIOR} {WINDOWS-INT-DOORS} {ELECTRIC-FITTING} It is priced at INR {PRICE-DATA} (all inclusive, only registration charges are extra).";
+    
+    $search = array("{A-DATA}","{FURNISHED-DATA}","{BEDROOM-DATA}","{UNIT-TYPE}","{BATHROOM-DATA}","{BALCONIES-DATA}","{FLOOR-PARKING}","{FACING-DATA}","{INTERIOR-EXTERIOR}","{WINDOWS-INT-DOORS}","{ELECTRIC-FITTING}","{PRICE-DATA}");
+    $temp = "a";
+    if($furnishedArr[$furnished] == "unfurnished"){
+        $temp = "an";
+    }
+    
+    $replace = array($temp,$furnishedArr[$furnished]);
+    $replace[] = ($bedrooms>1)? $bedrooms." bedrooms" : "1 bedroom";
+    $replace[] = $unitType;
+    $replace[] = ($bathrooms>1)? $bathrooms." bathrooms" : "1 bathroom";
+    $replace[] = ($balcony>1)? " and {$balcony} balconies" : " and 1 balcony";
+    
+    
+    $temp = "";
+    if($floor  != ""){
+        $floorNoStr = addOrdinalNumberSuffix($floor);
+        $temp .= "It is on the {$floorNoStr} floor";
+        if(hasVal($total_floor)){
+            $temp .= " (out of ".$total_floor." floors)";
+        }
+    }
+    $temp .= ($temp ? " and":"It")." has ".(($carpark>1)? $carpark : 1)." car parking";
+    $replace[] = $temp.($temp? ".":"");
+    
+    $temp = "";
+    if(hasVal($facing)) {
+        $facingDir = MasterDirections::find('first',array('conditions'=>array('id=?',$facing)));
+        $facingDir = camel2dashed($facingDir->direction);
+        $temp = " Its main door is facing {$facingDir} direction";
+        if(hasVal($proj->specifications->Doors->Main)){
+            $temp .= " and has ".  strtolower($proj->specifications->Doors->Main);
+        }
+        $temp = $temp.".";
+    }
+    $replace[] = $temp;
+    $obj = $proj->specifications;
+    
+    $temp = "";
+    if($obj){
+        if((hasVal($obj->Walls->Interior)) && ($obj->Walls->Interior == $obj->Walls->Exterior)){
+            $temp = "Its interior and exterior walls are painted with ".$obj->Walls->Interior;
+        }else{
+            if(hasVal($obj->Walls->Interior)){
+                $temp = "Its interior walls are painted with ".$obj->Walls->Interior;
+            }
+            if(hasVal($obj->Walls->Exterior)){
+                $temp .= (($temp !="")? " while its" : "Its")." exterior wall is painted with ".$obj->Walls->Exterior;
+            }
+        }
+    }
+    $replace[] = $temp.(($temp != "")? ".":"");
+    
+    $temp = "";
+    if($obj){
+        if(hasVal($obj->Windows)){
+            $temp = "Its windows are {$obj->Windows}";
+        }
+        if(hasVal($obj->Doors->Internal)){
+            $temp .= ($temp? " and the" : "Its")." internal doors have {$obj->Doors->Internal}";
+        }
+    }
+    $replace[] = $temp.($temp ? ".":"");
+    
+    $temp = "";
+    if($obj){
+        if(hasVal($obj->Fittings->Electrical)){
+            $temp = "The electric fitting is done with {$obj->Fittings->Electrical}.";
+        }
+    }
+    $replace[] = $temp;
+    
+    $replace[] = listingPrice($size);
+    
+    
+    $description = str_replace($search, $replace, $description);
+    $description =replaceSpaces($description);
+    
+    return $description;
+}
+
+function descFormat5($proj){
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$carpark,$furnished;
+    
+    $furnishedArr = array("Furnished"=>"fully furnished", "Semi-Furnished"=>"semi furnished", "Unfurnished"=>"unfurnished");
+    list($bhk, $bedrooms, $bathrooms, $balcony, $city, $size, $carpetArea, $unitType, $builderName) = getBhkNew($proj, $property_id);
+    $projeName = ucwords(strtolower($proj->name));
+    
+    $description= "{A-DATA} {FURNISHED-DATA} {UNIT-NAME} {UNIT-TYPE} in {ADDRESS-DATA} with {BATHROOM-DATA}{BALCONIES-DATA}. It has {CAR-PARKING} covered car parking. {FACING-DATA} Its super area is {SUPER-AREA} sq ft{CARPET-AREA}. {LOCATED-DATA} {FLOORING-SPCF} {WALLS-SPCF} {KITCHEN-BATHROOM} It is available at INR {PRICE-DATA} (all inclusive and registration charges are extra).";
+    
+    $search = array("{A-DATA}","{FURNISHED-DATA}","{UNIT-NAME}","{UNIT-TYPE}","{ADDRESS-DATA}","{BATHROOM-DATA}","{BALCONIES-DATA}","{CAR-PARKING}","{FACING-DATA}","{SUPER-AREA}","{CARPET-AREA}","{LOCATED-DATA}","{FLOORING-SPCF}","{KITCHEN-BATHROOM}","{PRICE-DATA}","{WALLS-SPCF}");
+    $temp = "A";
+    if($furnishedArr[$furnished] == "unfurnished"){
+        $temp = "An";
+    }
+    
+    $replace = array($temp, $furnishedArr[$furnished],$bhk,$unitType);
+    
+    $replace[] = ucwords(strtolower($proj->locality->suburb->label)).", ".$city;
+    
+    $replace[] = ($bathrooms >1)? "{$bathrooms} bathrooms" : (($bathrooms==1)? "1 bathroom":"");
+    $replace[] = (($bathrooms >=1 && $balcony >=1)? " and ":"").(($balcony >1)? "{$balcony} balconies" : (($balcony==1)? "1 balcony":""));
+    $replace[] = ($carpark >1)? $carpark : 1;
+    
+    $temp = "";
+    if(hasVal($facing)) {
+        $facingDir = MasterDirections::find('first',array('conditions'=>array('id=?',$facing)));
+        $facingDir = camel2dashed($facingDir->direction);
+        $temp = " Its is facing {$facingDir}.";
+    }
+    $replace[] = $temp;
+    
+    $replace[] = $size;
+    
+    $temp = "";
+    if($carpetArea > 0){
+        $temp = " whereas carpet area is {$carpetArea} sq ft";
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    if($floor  != ""){
+        $floorNoStr = addOrdinalNumberSuffix($floor);
+        $temp = "It is on the {$floorNoStr} floor of the building";
+        if(hasVal($total_floor)){
+            $temp .= "(total number of floors are ".$total_floor.")";
+        }
+    }
+    $replace[] = $temp;
+    
+    $obj = $proj->specifications->Flooring;
+    $temp = "";
+    if($obj){
+        $temp = " It has ".  addFloring($obj->Kitchen)." in kitchen";
+        if(hasVal($obj->{'Master Bedroom'}) && ($obj->{'Master Bedroom'} == $obj->{'Living/Dining'})){
+            $temp .= " while bedroom and living room have ".addFloring($obj->{'Master Bedroom'});
+        }else{
+            $temp .= " while bedroom has ".addFloring($obj->{'Master Bedroom'})." and living room has ".addFloring($obj->{'Living/Dining'})."";
+        }
+    }
+    $replace[] = $temp.($temp? "." : "");
+    
+    $temp = "";
+    $obj = $proj->specifications->Walls;
+    if($obj){
+        $temp = "Kitchen has ".$obj->Kitchen.".";
+    }
+    $replace[] = $temp;
+    
+    $replace[] = listingPrice($size);
+    
+    $description = str_replace($search, $replace, $description);
+    $description =replaceSpaces($description);
+    
+    return $description;
+}
+
+
+function descFormat2($proj){
+    global $property_id,$floor,$total_floor,$facing,$homeLoanBank,$bankName,$carpark,$furnished;
+    
+    $furnishedArr = array("Furnished"=>"fully furnished", "Semi-Furnished"=>"semi furnished", "Unfurnished"=>"unfurnished");
+    list($bhk, $bedrooms, $bathrooms, $balcony, $city, $size, $carpetArea, $unitType, $builderName) = getBhkNew($proj, $property_id);
+    $projeName = ucwords(strtolower($proj->name));
+    
+    $description= "{FACING-DATA} {FURNISHED-DATA} {UNIT-NAME} {UNIT-TYPE}{LOCATED-DATA}. It has {CAR-PARKING} car parking. {FITTING-ELE} {FITTING-KIT-TOILETS} {WALLS-INT-EXT} {WALLS-KITCH-TLT} It is priced at INR {PRICE-DATA} (all inclusive and registration charges are extra).";
+    
+    $search = array("{FACING-DATA}","{FURNISHED-DATA}","{UNIT-NAME}","{UNIT-TYPE}","{LOCATED-DATA}","{CAR-PARKING}","{FITTING-ELE}","{FITTING-KIT-TOILETS}","{WALLS-INT-EXT}","{WALLS-KITCH-TLT}","{PRICE-DATA}");
+    $replace = array($furnishedArr[$furnished],$bhk,$unitType);
+    
+    $temp = "A ";
+    if(hasVal($facing)) {
+        $facingDir = MasterDirections::find('first',array('conditions'=>array('id=?',$facing)));
+        $facingDir = camel2dashed($facingDir->direction);
+        if($facingDir == "east"){
+            $temp = "An ";
+        }
+        $temp .= "{$facingDir} facing";
+    }
+    $replace = array($temp,$furnishedArr[$furnished],$bhk,$unitType);
+    
+    $temp = "";
+    if($floor  != ""){
+        $floorNoStr = addOrdinalNumberSuffix($floor);
+        $temp = " located on the {$floorNoStr} floor";
+        if(hasVal($total_floor)){
+            $temp .= " (out of ".$total_floor." floors)";
+        }
+        $temp .= " of the building";
+    }
+    $replace[] = $temp;
+    $replace[] = ($carpark >1)? $carpark : 1;
+    
+    $obj = $proj->specifications->Fittings;
+    $temp = "";
+    if(hasVal($obj->Electrical)){
+        $temp = " It has been fitted with ".($obj->Electrical).".";
+    }
+    $replace[] = $temp;
+    
+    $temp = "";
+    if(hasVal($obj->Kitchen)){        
+        $temp = " The kitchen has ".($obj->Kitchen);
+    }
+    if(hasVal($obj->Toilets)){
+        $temp .= (hasVal($temp)? " while its": "Its");
+        $temp .= " toilets have ".($obj->Toilets);
+    }
+    $temp .= (hasVal($temp)? ".": "");
+    $replace[] = $temp;
+    
+    $obj = $proj->specifications->Walls;
+    $temp = "";
+    if(hasVal($obj->Interior)){        
+        $temp = "  Inside, it has been beautifully painted with ".($obj->Interior);
+    }
+    if(hasVal($obj->Exterior)){
+        $temp .= (hasVal($temp)? " while on the outside": " Outside,");
+        $temp .= "  it is painted with ".($obj->Exterior);
+    }
+    $temp .= (hasVal($temp)? ".": "");
+    $replace[] = $temp;
+    
+    $temp = "";
+    if(hasVal($obj->Kitchen)){        
+        $temp = "  Its kitchen has ".($obj->Kitchen);
+    }
+    if(hasVal($obj->Toilets)){
+        $temp .= (hasVal($temp)? " while the": " Its,");
+        $temp .= "  toilets have ".($obj->Toilets);
+    }
+    $temp .= (hasVal($temp)? ".": "");
+    $replace[] = $temp;
+    
+    $replace[] = listingPrice($size);
+    
+    $description = str_replace($search, $replace, $description);
+    $description =replaceSpaces($description);
+    
+    
+    return $description;
+}
+
 ?>
