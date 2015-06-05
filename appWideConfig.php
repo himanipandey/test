@@ -55,6 +55,7 @@ if($_SERVER['SERVER_NAME']=='cms.proptiger.com')
 //    Changed By Jitendra pathak
     define("TYPEAHEAD_API_URL", "https://www.proptiger.com/columbus/app/v3/typeahead");
     define("project_detail", "https://proptiger.com/app/v1/project-detail?projectId=");
+    define("PROJECT_DETAIL_V4", "https://proptiger.com/app/v4/project-detail/");
     define("LISTING_API_URL", "https://proptiger.com/data/v1/entity/user/listing");
     define("RESALE_LISTING_API_V2_URL", "https://proptiger.com/data/v2/entity/resale-listing");
 	define("ADMIN_USER_LOGIN_API_URL", "https://proptiger.com/userservice/app/v1/login?username=api-admin@proptiger.com&password=1234&rememberme=true");
@@ -130,6 +131,7 @@ else{
     define("TYPEAHEAD_API_URL", "https://qa.proptiger-ws.com/columbus/app/v3/typeahead");
 	//define("project_detail", "http://proptiger.com//data/v1/entity/amenity?projectId=513233"); 
 	define("project_detail", "https://qa.proptiger-ws.com/app/v1/project-detail?projectId=");  
+	define("PROJECT_DETAIL_V4", "https://qa.proptiger-ws.com/app/v4/project-detail/");
 	define("LISTING_API_URL", "https://qa.proptiger-ws.com/data/v1/entity/user/listing");
         define("RESALE_LISTING_API_V2_URL", "https://qa.proptiger-ws.com/data/v2/entity/resale-listing");
 	//define("ADMIN_USER_LOGIN_API_URL", "https://qa.proptiger-ws.com/userservice/app/v1/login?username=manish_goyal140789@yahoo.in&password=1234&rememberme=true");
