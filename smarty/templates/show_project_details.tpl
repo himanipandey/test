@@ -454,17 +454,29 @@ function broker_call_edit(callId, brokerId)
 
   function showhideBuilder(plsmns)
   {
-      $.ajax({
-         type: "POST",
-         //dataType:"json",
-         url: 'ajax/show_builder_contact_info.php',
-         data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
-         success:function(msg){
-           if(msg){
-             $('#builder-contact-info').html(msg);
-            }
-         }
-     });
+      if(plsmns == 'plus')
+  	{
+            $.ajax({
+                type: "POST",
+                //dataType:"json",
+                url: 'ajax/show_builder_contact_info.php',
+                data: { 'currentUser':"{$currentUser}",BUILDER_ID:"{$builderDetail['BUILDER_ID']}", BUILDER_NAME:"{$builderDetail['BUILDER_NAME']}", URL:"{$builderDetail['URL']}", WEBSITE:"{$builderDetail['WEBSITE']}" },
+                success:function(msg){
+                  if(msg){
+                    $('#builder-contact-info').html(msg);
+                   }
+                }
+            });
+            document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('minus');><img src = '../images/minus.jpg' width ='20px'></a>";
+            document.getElementById("builder_showHide").style.display = '';
+  	}
+  	else
+  	{
+                $('#builder-contact-info').html('');
+  		document.getElementById("plusMinusImg").innerHTML = "<a href = 'javascript:void(0);' onclick = showhideBuilder('plus');><img src = '../images/plus.jpg' width ='20px'></a>";
+	  	document.getElementById("builder_showHide").style.display = 'none';
+  	}
+      
   	
   }
 /*********builder contact info related js end here*************/
